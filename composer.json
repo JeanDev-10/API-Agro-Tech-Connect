@@ -1,8 +1,11 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
+    "author": {
+        "name": "Jean Rodríguez y Jahir Celorio"
+    },
+    "description": "Agro Tech Connect es una aplicación para publicaciones donde personas del sector agrícola colaboren",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
     "keywords": [
         "laravel",
         "framework"
@@ -10,6 +13,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "dedoc/scramble": "^0.12.16",
         "laravel-lang/common": "^6.7",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",

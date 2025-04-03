@@ -177,7 +177,8 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
 
 
 ## EndPoints disponibles con sus diferentes casos de uso y pruebas
-
+### **URL para consultas de API (excepto Docs)**: `http://localhost/api/v1/`
+- **Acceder a documentación**: `GET /docs/api`
 
 
 ## Autores
