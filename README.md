@@ -1,66 +1,194 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Proyecto Backend Agro Tech Connect
+![Logo](/public/assets/logo_agrotechconnectlight.png)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descripción
+Este es un backend desarrollado en Laravel para la plataforma **Agro Tech Connect**, utilizando diversas tecnologías y herramientas modernas como Docker, Firebase para autenticación, y Redis para optimización del sistema.
 
-## About Laravel
+## Tecnologías utilizadas
+- Laravel
+- Laravel Sail (para gestión de Docker)
+- MySQL (en Docker)
+- Laravel Scramble (documentación)
+- Firebase (Autenticación con Google y Facebook)
+- Laravel Sanctum (Autenticación de API)
+- Laravel Permission (Gestión de roles y permisos)
+- Redis (Optimización de caché y colas de trabajo)
+- Cloudinary (Almacenamiento de imágenes)
+- MailPit (Gestor de correos en Docker)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Instalación y configuración
+Siga los siguientes pasos para configurar el proyecto en su entorno local:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```bash
+# Clonar el repositorio
+git clone https://github.com/JeanDev-10/API-Agro-Tech-Connect.git
+cd API-AgroTechConnect
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# Instalar dependencias de Laravel
+composer install
 
-## Learning Laravel
+# Copiar el archivo de configuración y luego reemplazar las variables de entorno correspondientes
+tcp .env.example .env
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# Generar la clave de la aplicación
+php artisan key:generate
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# Levantar los contenedores con Docker
+./vendor/bin/sail up -d
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Ejecutar migraciones y seeders
+./vendor/bin/sail artisan migrate --seed
 
-## Laravel Sponsors
+# Iniciar el servidor
+./vendor/bin/sail artisan serve
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Correr test
+./vendor/bin/sail artisan test
 
-### Premium Partners
+```
+## Módulos del sistema
+El backend cuenta con los siguientes módulos:
+- **Autenticación**
+- **Publicaciones**
+- **Comentarios y Valoraciones**
+- **Usuarios**
+- **Administración**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Principales Reglas de Negocio
 
-## Contributing
+### Módulo de Autenticación
+#### Registro de Usuarios
+- **Correo**
+  - Formato de correo válido
+  - Correo único
+- **Nombres y Apellidos**
+  - Mínimo 3 y máximo 20 caracteres
+- **Nombre de Usuario**
+  - Usuario único
+  - Longitud de 3 a 10 caracteres
+- **Contraseña**
+  - Mínimo 8 y máximo 15 caracteres
+  - Incluir al menos un carácter especial (@, &, $, %)
+  - Incluir al menos una letra mayúscula
+  - Incluir al menos un número
+- **Confirmar Contraseña**
+  - Debe cumplir los mismos requisitos de la contraseña
+  - Debe coincidir con la contraseña
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Recuperación de Contraseña
+- **Nueva Contraseña**
+  - Mínimo 8 y máximo 15 caracteres
+  - Incluir al menos un carácter especial (@, &, $, %)
+  - Incluir al menos una letra mayúscula
+  - Incluir al menos un número
+  - Debe ser distinta a las usadas previamente
+- **Confirmar Nueva Contraseña**
+  - Debe cumplir los mismos requisitos de la nueva contraseña
+  - Debe coincidir con la nueva contraseña
 
-## Code of Conduct
+### Módulo de Usuario
+- **Personalizar mi perfil**
+  - Descripción de hasta 100 caracteres
+  - Máximo 3 enlaces a redes sociales opcionales
+- **Cambio de contraseña**
+  - Validar la contraseña actual
+  - Nueva contraseña debe cumplir los mismos requisitos de seguridad
+  - No debe ser igual a contraseñas anteriores
+- **Subir un avatar**
+  - Formatos válidos: JPG, PNG, JPEG
+  - Peso máximo: 3 MB
+  - Solo se permite una imagen
+- **Seguir a otro usuario**
+  - No es necesario ser seguido para seguir a otro usuario
+  - No se puede seguir más de una vez al mismo usuario
+  - No se puede seguir a sí mismo ni al administrador
+- **Dejar de seguir a un usuario**
+  - Solo se puede dejar de seguir si previamente se estaba siguiendo
+  - No se puede dejar de seguir a sí mismo ni al administrador
+- **Dar de baja mi cuenta**
+  - Requiere confirmación de contraseña
+  - No se pueden eliminar cuentas de otros usuarios
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Módulo de Publicaciones
+- **Eliminar publicaciones**
+  - No se pueden eliminar publicaciones de otros
+  - La publicación debe existir para eliminarla
+  - No se puede eliminar la misma publicación dos veces
+- **Editar publicaciones**
+  - Solo se pueden editar publicaciones propias
+  - Máximo 250 caracteres
+  - Formatos de imagen permitidos: JPG, PNG, JPEG
+  - Peso máximo: 3 MB
+  - Máximo 10 imágenes
+- **Crear publicaciones**
+  - Máximo 250 caracteres
+  - Formatos de imagen permitidos: JPG, PNG, JPEG
+  - Peso máximo: 3 MB
+  - Máximo 10 imágenes
 
-## Security Vulnerabilities
+### Módulo de Comentar y Valorar
+- **Denunciar publicación**
+  - Un usuario solo puede denunciar una publicación hasta 5 veces
+- **Comentar la publicación**
+  - Máximo 100 caracteres
+  - Formatos de imagen permitidos: JPG, PNG, JPEG
+  - Peso máximo: 3 MB
+  - Máximo 5 imágenes
+- **Editar mi comentario**
+  - Solo se pueden editar comentarios propios
+  - Máximo 100 caracteres
+  - Formatos de imagen permitidos: JPG, PNG, JPEG
+  - Peso máximo: 3 MB
+  - Máximo 5 imágenes
+- **Denunciar un comentario**
+  - Un usuario solo puede denunciar un comentario hasta 5 veces
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Módulo de Administrador
+- **Eliminar cuenta**
+  - Puede eliminar cuentas de usuarios
+  - No puede eliminar su propia cuenta como administrador
 
-## License
+## Rangos de usuario
+El sistema de rangos se basa en la cantidad de "Positivos" obtenidos en comentarios:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Rango            | Requisito                     | Descripción |
+|-----------------|-----------------------------|-------------|
+| Iniciado        | 0 - 49 Positivos             | ¡Bienvenido a la comunidad! Estás comenzando tu viaje como iniciado. |
+| Novato         | 50 - 199 Positivos           | Has recibido tus primeros "Positivos". ¡Sigue participando! |
+| Aprendiz       | 200 - 499 Positivos          | Tus comentarios están siendo valorados. ¡Vas por buen camino! |
+| Contribuyente  | 500 - 999 Positivos          | Eres un miembro activo y valorado en la comunidad. |
+| Veterano       | 1,000 - 2,499 Positivos      | Tus aportes son reconocidos y respetados por la comunidad. |
+| Experto        | 2,500 - 4,999 Positivos      | Eres una voz autorizada en la comunidad. ¡Felicidades! |
+| Maestro        | 5,000 - 9,999 Positivos      | Tus comentarios son referencia para otros usuarios. |
+| Gran Maestro   | 10,000 - 24,999 Positivos    | Eres un pilar de la comunidad. ¡Tu experiencia es invaluable! |
+| Leyenda        | 25,000+ Positivos            | Has alcanzado el máximo reconocimiento. ¡Eres una leyenda! |
+
+![Diseño de insignias](/public/assets/tableiconscolors.png)
+
+
+## Diagramas
+A continuación, se agregarán los diagramas correspondientes al sistema:
+
+### Diagrama de Casos de Uso
+![Diagrama de casos de uso](/public/assets/Agro%20Tech%20Connect%20-%20Casos%20de%20uso-Módulos.png)
+
+### Diagrama de la Base de Datos
+![Diagrama de la Base de Datos](/public/assets/Agro%20Tech%20Connect%20-%20Base%20de%20datos%20con%20notas.png)
+
+
+## EndPoints disponibles con sus diferentes casos de uso y pruebas
+
+
+
+## Autores
+- [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
+- [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)
+
+---
+
+## Licencia
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+---
+Este documento se actualizará conforme avance el desarrollo del proyecto.
