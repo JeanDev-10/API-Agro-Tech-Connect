@@ -189,6 +189,9 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Error de validaciones
     - Credenciales incorrectas
     - Usuario no existe
+- **Cerrar sesión**: `POST /auth/logout`
+    - Logout exitoso
+    - No autenticado
 
 
 ## Autores

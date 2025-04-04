@@ -36,7 +36,17 @@ class AuthController extends Controller
             return $this->authRepository->login($request);
         } catch (ModelNotFoundException) {
             return ApiResponse::error("Usuario no registrado", 404);
-        }  catch (Exception $e) {
+        } catch (Exception $e) {
+            return ApiResponse::error("Ha ocurrido un error: " . $e->getMessage(), 500);
+        }
+    }
+    public function logout()
+    {
+        try {
+            $this->authRepository->logout();
+            return ApiResponse::success("Logout exitoso", 200);
+
+        } catch (Exception $e) {
             return ApiResponse::error("Ha ocurrido un error: " . $e->getMessage(), 500);
         }
     }

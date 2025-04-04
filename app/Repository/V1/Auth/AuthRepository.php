@@ -7,6 +7,7 @@ use App\Http\Responses\V1\ApiResponse;
 use Illuminate\Http\Request;
 use App\Interfaces\V1\Auth\AuthRepositoryInterface;
 use App\Models\V1\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -50,7 +51,7 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function logout()
     {
-        // Implement logout logic here
+        Auth::guard('sanctum')->user()->tokens()->delete();
     }
 
     public function sendVerificationEmail(Request $request)
