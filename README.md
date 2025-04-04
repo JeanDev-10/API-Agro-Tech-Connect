@@ -184,6 +184,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Error de validaciones
     - Email usado
     - Username usado
+- **Inicio de sesión correo y contraseña**: `POST /auth/login`
+    - Login exitoso
+    - Error de validaciones
+    - Credenciales incorrectas
+    - Usuario no existe
 
 
 ## Autores

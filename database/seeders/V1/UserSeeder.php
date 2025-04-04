@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
             'lastname' => 'System',
             'username' => 'admin',
             'email' => 'admin@example.com',
-            'password' => bcrypt('admin123'),
+            'password' => bcrypt('Admin123@'),
             'registration_method' => 'local',
             'email_verified_at' => now(),
         ]);

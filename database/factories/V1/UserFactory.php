@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'lastname' => $this->faker->lastName(),
             'username' => $this->faker->unique()->userName(),
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('password123'), // password
+            'password' => bcrypt('Password123@'), // password
             'email_verified_at' => now(),
             'registration_method' => $this->faker->randomElement(array: ['local', 'google', 'facebook']),
             'firebase_Uuid' => $this->faker->uuid(),
