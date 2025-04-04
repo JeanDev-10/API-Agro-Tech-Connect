@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\V1\AuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/hello', function (Request $request) {
-    return "hello";
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/auth/register', 'register');
 });
