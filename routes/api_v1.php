@@ -1,13 +1,14 @@
 <?php
 
 use App\Http\Controllers\V1\AuthController;
+use App\Http\Middleware\V1\EmailVerification;
 use App\Http\Middleware\V1\ThrottleVerificationEmails;
 use Illuminate\Support\Facades\Route;
 
 Route::group( ['middleware' => ["auth:sanctum"]], function(){
 
     Route::controller(AuthController::class)->group(function () {
-        Route::get('user/profile',  'userProfile')->middleware('verified');
+        Route::get('user/profile',  'userProfile')->middleware(EmailVerification::class);
         Route::post('auth/logout',  'logout');
         Route::post('/email/verify/send', 'sendVerificationEmail')->middleware(ThrottleVerificationEmails::class);
 

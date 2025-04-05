@@ -17,7 +17,6 @@ class AuthRepository implements AuthRepositoryInterface
 {
     public function login(Request $request)
     {
-        // Imple$user = User::where("email", "=", $request->email)->first();
         $user = User::where('registration_method','local')->where("email", "=", $request->email)->with('roles')->first();
         if (isset($user->id)) {
             if (Hash::check($request->password, $user->password)) {
