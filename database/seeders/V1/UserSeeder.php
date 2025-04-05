@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
         Role::create(["name" => "admin"]);
         Role::create(["name" => "client"]);
         $admin->assignRole("admin");
-        /* User::factory()->count(10)->create()->each(function ($user) {
+         /* User::factory()->count(10)->create()->each(function ($user) {
             $user->assignRole('client');
         }); */
     }

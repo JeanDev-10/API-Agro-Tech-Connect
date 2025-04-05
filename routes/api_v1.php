@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Middleware\V1\EmailVerification;
+use App\Http\Middleware\V1\ThrottleRecoveryPasswords;
 use App\Http\Middleware\V1\ThrottleVerificationEmails;
 use Illuminate\Support\Facades\Route;
 
-Route::group( ['middleware' => ["auth:sanctum"]], function(){
+Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     Route::controller(AuthController::class)->group(function () {
         Route::get('user/profile',  'userProfile')->middleware(EmailVerification::class);
@@ -13,12 +14,17 @@ Route::group( ['middleware' => ["auth:sanctum"]], function(){
         Route::post('/email/verify/send', 'sendVerificationEmail')->middleware(ThrottleVerificationEmails::class);
 
         Route::get('/email/verify/{id}/{hash}', 'verifyEmail')
-        ->middleware(['signed'])
-        ->name('verification.verify');
+            ->middleware(['signed'])
+            ->name('verification.verify');
     });
 });
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/auth/register', 'register');
     Route::post('/auth/login', 'login');
+    Route::post('password/forgot', 'forgot_password')->middleware(ThrottleRecoveryPasswords::class);
+    Route::post('password/reset',  'reset_password');
 });
+
+
+

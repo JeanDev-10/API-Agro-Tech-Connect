@@ -193,11 +193,22 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Logout exitoso
     - No autenticado
 - **Confirmación de correo**: `POST /email/verify/{id}/{hash}`
+- **Envio de correo**: `POST /email/verify/send`
     - Verificado exitoso
     - Token modificado
     - Cuenta ya verificada
     - Volver a enviar correo
     - Solo poder enviar 2 correos por cada 1hr con 1hr de validez al enlace
+- **Envio correo reestablecer contraseña**: `POST /password/forgot`
+- **Reestablecer contraseña**: `POST /password/reset`
+    - Pedir enlace sin especificar correo
+    - Pedir enlace exitoso
+    - Pedir enlace con correo inexistente 
+    - Alterar token o email al reestablecer contraseña
+    - Errores de validación al reestablecer contrsaeña
+    - Contraseña usada anteriormente
+    - Error de haber usado más de 2 envios de correos en 1hr
+
 
 
 ## Autores

@@ -7,23 +7,29 @@ use App\Http\Responses\V1\ApiResponse;
 use Illuminate\Http\Request;
 use App\Interfaces\V1\Auth\AuthRepositoryInterface;
 use App\Models\V1\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthRepository implements AuthRepositoryInterface
 {
     public function login(Request $request)
     {
-        $user = User::where('registration_method','local')->where("email", "=", $request->email)->with('roles')->first();
+        $user = User::where('registration_method', 'local')->where("email", "=", $request->email)->with('roles')->first();
         if (isset($user->id)) {
             if (Hash::check($request->password, $user->password)) {
                 //creamos el token
                 $token = $user->createToken("auth_token")->plainTextToken;
                 //si está todo ok
-                return ApiResponse::success("Login exitoso", 200, new LoginResource($user,$token));
+                return ApiResponse::success("Login exitoso", 200, new LoginResource($user, $token));
             } else {
 
                 return ApiResponse::error("Credenciales incorrectas", 401);
@@ -35,7 +41,7 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function register(Request $request)
     {
-        $user=User::create([
+        $user = User::create([
             'name' => $request->name,
             'lastname' => $request->lastname,
             'username' => $request->username,
@@ -50,7 +56,7 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function userProfile()
     {
-       return Auth::guard('sanctum')->user();
+        return Auth::guard('sanctum')->user();
     }
 
     public function logout()
@@ -80,11 +86,38 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function forgot_password(Request $request)
     {
-        // Implement forgot password logic here
+        $user = User::where('email', $request->email)
+            ->where('registration_method', 'local')
+            ->first();
+        if (!$user) {
+            throw new ModelNotFoundException("Usuario no registrado");
+        }
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+            ? ApiResponse::success("Enlace de restablecimiento enviado.", 200)
+            : ApiResponse::error("Error al enviar el enlace de restablecimiento.", 400,["error" => $status]);
     }
 
     public function reset_password(Request $request)
     {
-        // Implement reset password logic here
+        DB::beginTransaction();
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->saveOldPassword();
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+                $user->save();
+                event(new PasswordReset($user));
+            }
+        );
+        DB::commit();
+        return $status === Password::PASSWORD_RESET
+            ? ApiResponse::success("Contraseña cambiada.", 200)
+            : ApiResponse::error("Error al cambiar la contraseña.", 400,["error" => $status]);
     }
 }

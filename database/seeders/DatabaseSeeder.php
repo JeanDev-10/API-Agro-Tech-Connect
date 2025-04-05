@@ -18,6 +18,6 @@ class DatabaseSeeder extends Seeder
 
         //call a seeder
         $this->call(UserSeeder::class);
-        /* $this->call(OldPasswordSeeder::class); */
+       /*   $this->call(OldPasswordSeeder::class); */
     }
 }
