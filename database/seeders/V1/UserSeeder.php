@@ -20,10 +20,10 @@ class UserSeeder extends Seeder
             'registration_method' => 'local',
             'email_verified_at' => now(),
         ]);
-        $role_admin = Role::create(["name" => "admin"]);
+        Role::create(["name" => "admin"]);
         Role::create(["name" => "client"]);
         $admin->assignRole("admin");
-        /* User::factory()->count(50)->create()->each(function ($user) {
+        /* User::factory()->count(10)->create()->each(function ($user) {
             $user->assignRole('client');
         }); */
     }

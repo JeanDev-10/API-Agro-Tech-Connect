@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use Database\Seeders\V1\OldPasswordSeeder;
 use Database\Seeders\V1\UserSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
 
         //call a seeder
         $this->call(UserSeeder::class);
+        /* $this->call(OldPasswordSeeder::class); */
     }
 }

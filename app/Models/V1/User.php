@@ -84,4 +84,21 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return ucwords($value);
     }
+
+
+
+    // Método para guardar password antiguo
+    public function saveOldPassword()
+    {
+        $this->oldPasswords()->create([
+            'password' => $this->password
+        ]);
+    }
+
+
+
+    public function oldPasswords()
+    {
+        return $this->hasMany(OldPassword::class);
+    }
 }
