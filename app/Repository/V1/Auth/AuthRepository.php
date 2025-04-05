@@ -62,7 +62,7 @@ class AuthRepository implements AuthRepositoryInterface
     public function sendVerificationEmail(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return ApiResponse::error("La cuenta ya fue verificado", 301);
+            return ApiResponse::error("La cuenta ya fue verificado", 409);
         }
         $request->user()->sendEmailVerificationNotification();
         return ApiResponse::success("Correo de verificación enviado.", 200);

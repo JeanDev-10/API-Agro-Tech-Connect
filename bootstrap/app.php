@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\V1\ForceJsonRequestHeader;
+use App\Http\Middleware\V1\ThrottleVerificationEmails;
 use App\Http\Responses\V1\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
         $middleware->append(ForceJsonRequestHeader::class);
+        $middleware->append(ThrottleVerificationEmails::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
          $exceptions->render(function (AuthenticationException $e, Request $request) {
@@ -31,5 +33,5 @@ return Application::configure(basePath: dirname(__DIR__))
         });
         $exceptions->render(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) {
             return ApiResponse::error("No tienes permiso para acceder a este recurso", 403);
-        }); 
+        });
     })->create();

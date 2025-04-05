@@ -192,6 +192,12 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
 - **Cerrar sesión**: `POST /auth/logout`
     - Logout exitoso
     - No autenticado
+- **Confirmación de correo**: `POST /email/verify/{id}/{hash}`
+    - Verificado exitoso
+    - Token modificado
+    - Cuenta ya verificada
+    - Volver a enviar correo
+    - Solo poder enviar 2 correos por cada 1hr con 1hr de validez al enlace
 
 
 ## Autores
