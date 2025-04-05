@@ -7,8 +7,10 @@ use App\Http\Responses\V1\ApiResponse;
 use Illuminate\Http\Request;
 use App\Interfaces\V1\Auth\AuthRepositoryInterface;
 use App\Models\V1\User;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthRepository implements AuthRepositoryInterface
@@ -24,7 +26,7 @@ class AuthRepository implements AuthRepositoryInterface
                 //si está todo ok
                 return ApiResponse::success("Login exitoso", 200, new LoginResource($user,$token));
             } else {
-                
+
                 return ApiResponse::error("Credenciales incorrectas", 401);
             }
         } else {
@@ -41,12 +43,15 @@ class AuthRepository implements AuthRepositoryInterface
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $token = $user->createToken("auth_token")->plainTextToken;
         $user->assignRole('client');
+        event(new Registered($user));
+        return $token;
     }
 
     public function userProfile()
     {
-        // Implement user profile logic here
+       return Auth::guard('sanctum')->user();
     }
 
     public function logout()
@@ -56,12 +61,22 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function sendVerificationEmail(Request $request)
     {
-        // Implement send verification email logic here
+        if ($request->user()->hasVerifiedEmail()) {
+            return ApiResponse::error("La cuenta ya fue verificado", 301);
+        }
+        $request->user()->sendEmailVerificationNotification();
+        return ApiResponse::success("Correo de verificación enviado.", 200);
     }
 
-    public function verifyEmail(\Illuminate\Foundation\Auth\EmailVerificationRequest $request)
+    public function verifyEmail(EmailVerificationRequest $request)
     {
-        // Implement verify email logic here
+        if ($request->user()->hasVerifiedEmail()) {
+            return ApiResponse::error("El correo ya fue verificado", 200);
+        }
+
+        if ($request->user()->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+        }
     }
 
     public function forgot_password(Request $request)
