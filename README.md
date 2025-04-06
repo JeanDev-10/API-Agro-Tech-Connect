@@ -208,6 +208,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Errores de validación al reestablecer contrsaeña
     - Contraseña usada anteriormente
     - Error de haber usado más de 2 envios de correos en 1hr
+- **Login Facebook**: `POST /auth/login/facebook`
+- **Login Google**: `POST /auth/login/google`
+    - Error al no mandar el token
+    - Error al mandar token alterado
+    - Registro exitoso con token correcto
 
 
 
