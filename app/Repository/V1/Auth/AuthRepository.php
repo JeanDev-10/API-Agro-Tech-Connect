@@ -2,6 +2,7 @@
 
 namespace App\Repository\V1\Auth;
 
+use App\Events\V1\UserRegisteredEvent;
 use App\Http\Resources\V1\Auth\LoginResource;
 use App\Http\Responses\V1\ApiResponse;
 use Illuminate\Http\Request;
@@ -81,6 +82,7 @@ class AuthRepository implements AuthRepositoryInterface
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
+            event(new UserRegisteredEvent($request->user()));
         }
     }
 

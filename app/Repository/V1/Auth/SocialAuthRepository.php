@@ -2,6 +2,7 @@
 
 namespace App\Repository\V1\Auth;
 
+use App\Events\V1\UserRegisteredEvent;
 use App\Http\Resources\V1\Auth\LoginResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Interfaces\V1\Auth\SocialAuthRepositoryInterface;
@@ -85,6 +86,7 @@ class SocialAuthRepository implements SocialAuthRepositoryInterface
             'url' => $firebaseUser->photoUrl ?? 'https://images.vexels.com/content/145908/preview/male-avatar-maker-2a7919.png',
             'image_uuid' => null,
         ]);
+        event(new UserRegisteredEvent($user));
 
         return $user;
     }

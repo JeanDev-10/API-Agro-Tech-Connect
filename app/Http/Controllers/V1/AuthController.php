@@ -93,7 +93,7 @@ class AuthController extends Controller
     {
         try {
             return $this->authRepository->reset_password($request);
-        } 
+        }
         catch (ModelNotFoundException) {
             return ApiResponse::error("Usuario no registrado", 404);
         } catch (Exception $e) {
