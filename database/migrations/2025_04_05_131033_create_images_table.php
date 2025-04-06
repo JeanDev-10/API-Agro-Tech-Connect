@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('image_Uuid')->nullable();
             $table->morphs('imageable'); // Esto crea imageable_id (bigint) y imageable_type (varchar)
             $table->string('url');
+            $table->index(['imageable_id', 'imageable_type']);
             $table->timestamps();
         });
     }

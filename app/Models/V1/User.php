@@ -56,6 +56,17 @@ class User extends Authenticatable implements MustVerifyEmail,CanResetPassword
         'updated_at' => 'datetime:d/m/Y H:i',
     ];
 
+
+    protected static function booted()
+{
+    static::deleting(function ($user) {
+        // Verificar si existe una imagen antes de intentar eliminarla
+        if ($user->image()->exists()) {
+            $user->image()->delete();
+        }
+    });
+}
+
     /**
      * Mutators para convertir a minúsculas antes de guardar
      */
