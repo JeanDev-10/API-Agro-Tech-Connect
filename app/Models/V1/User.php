@@ -107,4 +107,8 @@ class User extends Authenticatable implements MustVerifyEmail,CanResetPassword
     {
         return $this->hasMany(OldPassword::class);
     }
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 }

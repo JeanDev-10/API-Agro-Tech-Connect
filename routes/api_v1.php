@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\V1\AuthController;
+use App\Http\Controllers\V1\SocialAuthController;
 use App\Http\Middleware\V1\EmailVerification;
 use App\Http\Middleware\V1\ThrottleRecoveryPasswords;
 use App\Http\Middleware\V1\ThrottleVerificationEmails;
@@ -24,6 +25,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/auth/login', 'login');
     Route::post('password/forgot', 'forgot_password')->middleware(ThrottleRecoveryPasswords::class);
     Route::post('password/reset',  'reset_password');
+});
+Route::controller(SocialAuthController::class)->group(function () {
+    Route::post('/auth/login/google', 'loginWithGoogle');
+    Route::post('/auth/login/facebook', 'loginWithFacebook');
 });
 
 
