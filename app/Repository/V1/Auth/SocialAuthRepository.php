@@ -37,16 +37,17 @@ class SocialAuthRepository implements SocialAuthRepositoryInterface
                 // Sincronizar imagen de perfil
                 $this->syncProfileImage($user, $firebaseUser);
             }
+            $userResponse = User::where('registration_method', $socialMedia)->where("firebase_Uuid", "=", $firebaseUser->uid)->with('roles')->first();
 
             // Generar token de Sanctum
-            $token = $user->createToken('social-auth-token')->plainTextToken;
+            $token = $userResponse->createToken('social-auth-token')->plainTextToken;
 
             DB::commit();
 
             return ApiResponse::success(
                 'Autenticación exitosa',
                 200,
-                new LoginResource($user, $token)
+                new LoginResource($userResponse, $token)
             );
 
         } catch (\Exception $e) {

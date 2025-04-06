@@ -87,6 +87,10 @@ class User extends Authenticatable implements MustVerifyEmail,CanResetPassword
     {
         return ucwords($value);
     }
+    public function getUserNameAttribute($value)
+    {
+        return ucwords($value);
+    }
 
     public function sendPasswordResetNotification($token)
     {
