@@ -5,6 +5,7 @@ namespace App\Models\V1;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Notifications\V1\CustomResetPassword;
+use App\Notifications\V1\CustomVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -102,6 +103,8 @@ class User extends Authenticatable implements MustVerifyEmail,CanResetPassword
     {
         return ucwords($value);
     }
+
+
 
     public function sendPasswordResetNotification($token)
     {
