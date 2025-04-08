@@ -233,6 +233,14 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Ver mi información exitoso
     - Ver mi información vacía sin registro
     - Errores de validación 
+- **Crear/Actualizar mi información de usuario (avatar)**: `POST /me/avatar`
+- **Eliminar mi avatar**: `DELETE /me/avatar`
+    - Avatar creado exitoso
+    - Avatar actualizado exitoso
+    - Error no permitido para cuentas sociales (Google,Facebook)
+    - Errores de validación 
+    - Avatar eliminado exitoso
+    - Avatar error no hay nada que eliminar
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

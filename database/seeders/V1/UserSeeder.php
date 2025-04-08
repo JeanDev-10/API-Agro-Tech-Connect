@@ -27,9 +27,10 @@ class UserSeeder extends Seeder
         Permission::firstOrCreate(["name"=>"user.change-password"]);
         Permission::firstOrCreate(["name"=>"user.delete-account"]);
         Permission::firstOrCreate(["name"=>"user.delete-account-social"]);
+        Permission::firstOrCreate(["name"=>"user.upload-avatar"]);
         $admin->assignRole("admin");
         $admin_role->syncPermissions(Permission::all());
-        $client_role->syncPermissions(['user.change-password','']);
+        $client_role->syncPermissions(['user.change-password','user.upload-avatar']);
         $client_role_social->syncPermissions(['user.delete-account-social']);
 
          User::factory()->count(10)->create()->each(function ($user) {
@@ -38,10 +39,10 @@ class UserSeeder extends Seeder
             else{
                 $user->assignRole('client_social');
             }
-            $user->image()->create([
+        /*     $user->image()->create([
                 'url' => $this->generateRandomAvatar($user->email),
                 'image_uuid' => \Illuminate\Support\Str::uuid(),
-            ]);
+            ]); */
         });
     }
     protected function generateRandomAvatar(string $seed): string

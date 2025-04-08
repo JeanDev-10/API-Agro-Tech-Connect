@@ -4,11 +4,13 @@ use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\SocialAuthController;
 use App\Http\Controllers\V1\UserController;
 use App\Http\Controllers\V1\UserInformationController;
+use App\Http\Controllers\V1\AvatarController;
 use App\Http\Middleware\V1\EmailVerification;
 use App\Http\Middleware\V1\ThrottleRecoveryPasswords;
 use App\Http\Middleware\V1\ThrottleVerificationEmails;
 use Illuminate\Support\Facades\Route;
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Http\Request;
 Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     Route::controller(AuthController::class)->group(function () {
@@ -30,6 +32,10 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
             Route::post('/', [UserInformationController::class, 'storeOrUpdate']);
             Route::get('/', [UserInformationController::class, 'show']);
         });
+        Route::prefix('me/avatar')->middleware('permission:user.upload-avatar')->group(function () {
+            Route::post('/', [AvatarController::class, 'update']);
+            Route::delete('/', [AvatarController::class, 'destroy']);
+        });
 
     });
 });
@@ -44,6 +50,4 @@ Route::controller(SocialAuthController::class)->group(function () {
     Route::post('/auth/login/google', 'loginWithGoogle');
     Route::post('/auth/login/facebook', 'loginWithFacebook');
 });
-
-
 
