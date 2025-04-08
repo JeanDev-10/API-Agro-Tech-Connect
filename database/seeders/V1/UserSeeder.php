@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         Permission::firstOrCreate(["name"=>"user.delete-account-social"]);
         $admin->assignRole("admin");
         $admin_role->syncPermissions(Permission::all());
-        $client_role->syncPermissions(['user.change-password','user.delete-account']);
+        $client_role->syncPermissions(['user.change-password','']);
         $client_role_social->syncPermissions(['user.delete-account-social']);
 
          User::factory()->count(10)->create()->each(function ($user) {

@@ -23,11 +23,11 @@ class UserRepository implements UserRepositoryInterface
         // Eliminar tokens
         $userData = $user->replicate();
         $userData->setHidden([]);
-        event(new UserDeletedAccountEvent($userData));
         $user->tokens()->delete();
 
         // Eliminar usuario
         $user->delete();
         DB::commit();
+        event(new UserDeletedAccountEvent($userData));
     }
 }
