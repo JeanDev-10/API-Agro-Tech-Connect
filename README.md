@@ -219,6 +219,14 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Errores de validación
     - Error contraseña antes fue usada
     - Error no estás autorizado (para usuarios de Google y Facebook)
+- **Eliminar cuenta local**: `PUT /me/`
+- **Eliminar cuenta social**: `PUT /me/social`
+    - Eliminar cuenta exitoso local
+    - Eliminar cuenta exitoso social
+    - Eliminar cuenta error contraseña incorrecta
+    - Eliminar cuenta error validaciones
+    - Error eliminar cuenta local con endpoint social 
+    - Error eliminar cuenta social con endpoint local 
 
 
 

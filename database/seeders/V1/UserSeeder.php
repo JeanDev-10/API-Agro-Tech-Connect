@@ -25,9 +25,13 @@ class UserSeeder extends Seeder
         $client_role=Role::create(["name" => "client"]);
         $client_role_social=Role::create(["name" => "client_social"]);
         Permission::firstOrCreate(["name"=>"user.change-password"]);
+        Permission::firstOrCreate(["name"=>"user.delete-account"]);
+        Permission::firstOrCreate(["name"=>"user.delete-account-social"]);
         $admin->assignRole("admin");
         $admin_role->syncPermissions(Permission::all());
-        $client_role->syncPermissions(['user.change-password']);
+        $client_role->syncPermissions(['user.change-password','user.delete-account']);
+        $client_role_social->syncPermissions(['user.delete-account-social']);
+
          User::factory()->count(10)->create()->each(function ($user) {
             if($user->registration_method == 'local')
                 $user->assignRole('client');

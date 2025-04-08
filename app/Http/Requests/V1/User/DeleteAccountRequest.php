@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\Password;
 
-class ChangePasswordRequest extends FormRequest
+class DeleteAccountRequest extends FormRequest
 {
     protected User $user;
     /**
@@ -54,18 +54,6 @@ class ChangePasswordRequest extends FormRequest
                         $fail('La contraseña actual no es correcta.');
                     }
                 }
-            ],
-            'new_password' => [
-                'required',
-                'string',
-                'confirmed',
-                'different:password',
-                Password::min(8)
-                    ->max(15)
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols(),
-                new NotInHistoryPassword($this->user),
             ],
         ];
     }

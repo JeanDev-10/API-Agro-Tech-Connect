@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notification;
 class UserChangePasswordNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+    public $tries = 3; // Número de reintentos
 
     /**
      * Create a new notification instance.

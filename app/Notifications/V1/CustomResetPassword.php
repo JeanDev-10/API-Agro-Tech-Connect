@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 class CustomResetPassword extends Notification implements ShouldQueue
 {
     use Queueable;
-
+    public $tries = 3; // Número de reintentos
     public function __construct(protected $token)
     {
     }

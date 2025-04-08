@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SendWelcomeNotification extends Notification implements ShouldQueue
+class UserDeletedAccountNotification extends Notification
 {
     use Queueable;
     public $tries = 3; // Número de reintentos
@@ -16,7 +16,6 @@ class SendWelcomeNotification extends Notification implements ShouldQueue
      */
     public function __construct()
     {
-        //
     }
 
     /**
@@ -35,11 +34,15 @@ class SendWelcomeNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Bienvenido a nuestra plataforma Agro Tech Connect')
-            ->greeting('¡Hola, ' . $notifiable->name . '!')
-            ->line('Gracias por registrarte en nuestra plataforma.')
-            ->action('Ir a la plataforma', url(config('app.frontend_url').'/dashboard'))
-            ->line('¡Esperamos que disfrutes la experiencia!');
+            ->subject('Tu cuenta ha sido eliminada - ' . config('app.name'))
+            ->greeting('Hola ' . $notifiable->name)
+            ->line('Acabamos de completar la eliminación de tu cuenta.')
+            ->line('**Detalles importantes:**')
+            ->line('Todos tus datos personales han sido eliminados de nuestros sistemas')
+            ->line('') // Espacio en blanco
+            ->line('Si deseas volver a unirte en el futuro, estarás siempre bienvenido.')
+            ->line('') // Espacio en blanco
+            ->line('Gracias por habernos permitido ser parte de tu experiencia.');
     }
 
     /**

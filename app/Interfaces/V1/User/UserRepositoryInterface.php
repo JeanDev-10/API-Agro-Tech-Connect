@@ -5,4 +5,5 @@ use Illuminate\Http\Request;
 
 interface UserRepositoryInterface{
     public function changePassword($user,Request $request);
+    public function deleteMe($user);
 }

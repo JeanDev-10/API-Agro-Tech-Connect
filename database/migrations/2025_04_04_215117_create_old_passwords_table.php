@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('old_passwords', function (Blueprint $table) {
             $table->id();
             $table->string('password');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
