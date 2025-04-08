@@ -227,8 +227,12 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Eliminar cuenta error validaciones
     - Error eliminar cuenta local con endpoint social 
     - Error eliminar cuenta social con endpoint local 
-
-
+- **Crear/Actualizar mi información de usuario**: `POST /me/user-information`
+    - Creado exitoso
+    - Editado exitoso
+    - Ver mi información exitoso
+    - Ver mi información vacía sin registro
+    - Errores de validación 
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

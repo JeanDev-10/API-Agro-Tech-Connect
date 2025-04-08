@@ -3,6 +3,7 @@
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\SocialAuthController;
 use App\Http\Controllers\V1\UserController;
+use App\Http\Controllers\V1\UserInformationController;
 use App\Http\Middleware\V1\EmailVerification;
 use App\Http\Middleware\V1\ThrottleRecoveryPasswords;
 use App\Http\Middleware\V1\ThrottleVerificationEmails;
@@ -25,6 +26,10 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         Route::put('me/password',  [UserController::class,'changePassword'])->middleware('permission:user.change-password');;
         Route::put('me',  [UserController::class,'deleteMe'])->middleware('permission:user.delete-account');;
         Route::put('me/social',  [UserController::class,'deleteMeSocial'])->middleware('permission:user.delete-account-social');;
+        Route::prefix('me/user-information')->group(function () {
+            Route::post('/', [UserInformationController::class, 'storeOrUpdate']);
+            Route::get('/', [UserInformationController::class, 'show']);
+        });
 
     });
 });
