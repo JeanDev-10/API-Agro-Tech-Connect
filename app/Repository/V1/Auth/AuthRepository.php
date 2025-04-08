@@ -59,6 +59,10 @@ class AuthRepository implements AuthRepositoryInterface
     {
         return Auth::guard('sanctum')->user();
     }
+    public function userLoggedIn()
+    {
+        return Auth::guard('sanctum')->user();
+    }
 
     public function logout()
     {

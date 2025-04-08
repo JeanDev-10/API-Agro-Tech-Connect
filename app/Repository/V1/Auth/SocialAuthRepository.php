@@ -79,7 +79,7 @@ class SocialAuthRepository implements SocialAuthRepositoryInterface
             'email_verified_at' => now(),
         ]);
 
-        $user->assignRole('client');
+        $user->assignRole('client_social');
 
         // Crear imagen de perfil
         $user->image()->create([

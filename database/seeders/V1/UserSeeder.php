@@ -4,6 +4,7 @@ namespace Database\Seeders\V1;
 
 use App\Models\V1\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
@@ -20,11 +21,19 @@ class UserSeeder extends Seeder
             'registration_method' => 'local',
             'email_verified_at' => now(),
         ]);
-        Role::create(["name" => "admin"]);
-        Role::create(["name" => "client"]);
+        $admin_role=Role::create(["name" => "admin"]);
+        $client_role=Role::create(["name" => "client"]);
+        $client_role_social=Role::create(["name" => "client_social"]);
+        Permission::firstOrCreate(["name"=>"user.change-password"]);
         $admin->assignRole("admin");
+        $admin_role->syncPermissions(Permission::all());
+        $client_role->syncPermissions(['user.change-password']);
          User::factory()->count(10)->create()->each(function ($user) {
-            $user->assignRole('client');
+            if($user->registration_method == 'local')
+                $user->assignRole('client');
+            else{
+                $user->assignRole('client_social');
+            }
             $user->image()->create([
                 'url' => $this->generateRandomAvatar($user->email),
                 'image_uuid' => \Illuminate\Support\Str::uuid(),

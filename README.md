@@ -213,6 +213,12 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Error al no mandar el token
     - Error al mandar token alterado
     - Registro exitoso con token correcto
+- **Cambiar contraseña**: `PUT /me/password`
+    - Cambio exitoso
+    - Contraseña actual incorrecta
+    - Errores de validación
+    - Error contraseña antes fue usada
+    - Error no estás autorizado (para usuarios de Google y Facebook)
 
 
 
