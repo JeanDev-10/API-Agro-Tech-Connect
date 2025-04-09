@@ -27,14 +27,14 @@ class FollowController extends Controller
             $follower = $this->authRepository->userLoggedIn();
             $followed = $request->getDecryptedUserId();
             $userFollowed=User::find($followed);
+            $userFollower=User::find($follower->id);
             if(!$userFollowed){
                 return ApiResponse::error(
                     'El usuario no existe',
                     404
                 );
             }
-
-            $follow = $this->followRepo->followUser($follower, $userFollowed);
+            $follow = $this->followRepo->followUser($userFollower, $userFollowed);
 
             DB::commit();
 

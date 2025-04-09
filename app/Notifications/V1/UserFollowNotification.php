@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class UserFollowNotification extends Notification implements ShouldQueue
 {
@@ -38,7 +39,7 @@ class UserFollowNotification extends Notification implements ShouldQueue
         return [
             'message' => $this->follower->name . ' te ha comenzado a seguir',
             'follower_id' => $this->follower->id,
-            'url_avatar' => optional($this->follower->image)->url,
+            'url_avatar' => $this->follower->image->url ?? null,
             'follower_name' => $this->follower->name,
             'type' => 'new_follower'
         ];
