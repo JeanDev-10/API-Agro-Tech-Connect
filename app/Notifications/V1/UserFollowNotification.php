@@ -37,7 +37,7 @@ class UserFollowNotification extends Notification implements ShouldQueue
     {
         return [
             'message' => $this->follower->name . ' te ha comenzado a seguir',
-            'follower_id' => Crypt::encrypt($this->follower->id),
+            'follower_id' => $this->follower->id,
             'url_avatar' => optional($this->follower->image)->url,
             'follower_name' => $this->follower->name,
             'type' => 'new_follower'

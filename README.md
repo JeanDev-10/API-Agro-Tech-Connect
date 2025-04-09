@@ -1,5 +1,5 @@
 # Proyecto Backend Agro Tech Connect
-![Logo](/public/assets/logo_agrotechconnectlight.png)
+![Logo](/public/assets/logo_agrotechconnectlblack.png.png)
 
 ## Descripción
 Este es un backend desarrollado en Laravel para la plataforma **Agro Tech Connect**, utilizando diversas tecnologías y herramientas modernas como Docker, Firebase para autenticación, y Redis para optimización del sistema.

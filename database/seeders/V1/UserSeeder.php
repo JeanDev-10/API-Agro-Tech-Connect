@@ -21,28 +21,28 @@ class UserSeeder extends Seeder
             'registration_method' => 'local',
             'email_verified_at' => now(),
         ]);
-        $admin_role=Role::create(["name" => "admin"]);
-        $client_role=Role::create(["name" => "client"]);
-        $client_role_social=Role::create(["name" => "client_social"]);
-        Permission::firstOrCreate(["name"=>"user.change-password"]);
-        Permission::firstOrCreate(["name"=>"user.delete-account"]);
-        Permission::firstOrCreate(["name"=>"user.delete-account-social"]);
-        Permission::firstOrCreate(["name"=>"user.upload-avatar"]);
+        $admin_role = Role::create(["name" => "admin"]);
+        $client_role = Role::create(["name" => "client"]);
+        $client_role_social = Role::create(["name" => "client_social"]);
+        Permission::firstOrCreate(["name" => "user.change-password"]);
+        Permission::firstOrCreate(["name" => "user.delete-account"]);
+        Permission::firstOrCreate(["name" => "user.delete-account-social"]);
+        Permission::firstOrCreate(["name" => "user.upload-avatar"]);
         $admin->assignRole("admin");
         $admin_role->syncPermissions(Permission::all());
-        $client_role->syncPermissions(['user.change-password','user.upload-avatar']);
+        $client_role->syncPermissions(['user.change-password', 'user.upload-avatar']);
         $client_role_social->syncPermissions(['user.delete-account-social']);
 
-         User::factory()->count(10)->create()->each(function ($user) {
-            if($user->registration_method == 'local')
+        User::factory()->count(10)->create()->each(function ($user) {
+            if ($user->registration_method == 'local')
                 $user->assignRole('client');
-            else{
+            else {
                 $user->assignRole('client_social');
             }
-        /*     $user->image()->create([
+            $user->image()->create([
                 'url' => $this->generateRandomAvatar($user->email),
                 'image_uuid' => \Illuminate\Support\Str::uuid(),
-            ]); */
+            ]);
         });
     }
     protected function generateRandomAvatar(string $seed): string

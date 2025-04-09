@@ -21,6 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(UserInformationSeeder::class);
         $this->call(OldPasswordSeeder::class);
-        /* $this->call(FollowSeeder::class); */
+        $this->call(FollowSeeder::class);
     }
 }

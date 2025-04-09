@@ -81,12 +81,14 @@ class AuthRepository implements AuthRepositoryInterface
     public function verifyEmail(EmailVerificationRequest $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return ApiResponse::error("El correo ya fue verificado", 200);
+            return ApiResponse::error("El correo ya fue verificado", 301);
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
             event(new UserRegisteredEvent($request->user()));
+            return ApiResponse::success("Correo electrónico verificado exitosamente.", 200);
+
         }
     }
 

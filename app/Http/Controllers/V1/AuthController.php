@@ -65,8 +65,7 @@ class AuthController extends Controller
     public function verifyEmail(EmailVerificationRequest $request)
     {
         try {
-            $this->authRepository->verifyEmail($request);
-            return ApiResponse::success("Correo electrónico verificado exitosamente.", 200);
+            return $this->authRepository->verifyEmail($request);
         } catch (Exception $e) {
             return ApiResponse::error("Ha ocurrido un error: " . $e->getMessage(), 500);
         }
@@ -93,8 +92,7 @@ class AuthController extends Controller
     {
         try {
             return $this->authRepository->reset_password($request);
-        }
-        catch (ModelNotFoundException) {
+        } catch (ModelNotFoundException) {
             return ApiResponse::error("Usuario no registrado", 404);
         } catch (Exception $e) {
             DB::rollBack();
