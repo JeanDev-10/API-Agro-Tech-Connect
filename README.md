@@ -241,6 +241,24 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Errores de validación 
     - Avatar eliminado exitoso
     - Avatar error no hay nada que eliminar
+- **Seguir a un usuario**: `POST /users/follow`
+    - Seguir exitoso
+    - Error user_id modificado hash no valido
+    - Error usuario a seguir no existe
+    - Error ya estás siguiendo a ese usuario
+    - Error intentaste seguirte a ti mismo
+    - Error intentaste seguir al administrador
+- **Dejar de seguir a un usuario**: `POST /users/unfollow`
+    - Dejar de seguir exitoso
+    - Error user_id modificado hash no valido
+    - Error usuario a seguir no existe
+    - Error no sigues a este usuario para dejarlo de seguir
+- **Obtener notificaciones**: `GET /notifications`
+- **Ver notificaciones sin leer**: `GET /notifications/unread`
+- **Ver una notificación**: `GET /notifications/{id}`
+- **Marcar como leida una notificación**: `PUT /notifications/{id}`
+- **Marcar como leida todas las notificación**: `PUT /notifications/read-all`
+    
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
