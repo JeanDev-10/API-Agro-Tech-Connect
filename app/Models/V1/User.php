@@ -14,7 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail,CanResetPassword
+class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
@@ -59,14 +59,14 @@ class User extends Authenticatable implements MustVerifyEmail,CanResetPassword
 
 
     protected static function booted()
-{
-    static::deleting(function ($user) {
-        // Verificar si existe una imagen antes de intentar eliminarla
-        if ($user->image()->exists()) {
-            $user->image()->delete();
-        }
-    });
-}
+    {
+        static::deleting(function ($user) {
+            // Verificar si existe una imagen antes de intentar eliminarla
+            if ($user->image()->exists()) {
+                $user->image()->delete();
+            }
+        });
+    }
 
     /**
      * Mutators para convertir a minúsculas antes de guardar
@@ -128,5 +128,38 @@ class User extends Authenticatable implements MustVerifyEmail,CanResetPassword
     public function image()
     {
         return $this->morphOne(Image::class, 'imageable');
+    }
+
+     /**
+     * Seguimientos donde este usuario es el seguidor
+     */
+    public function followings()
+    {
+        return $this->hasMany(Follow::class, 'follower_id');
+    }
+
+    /**
+     * Seguimientos donde este usuario es el seguido
+     */
+    public function followers()
+    {
+        return $this->hasMany(Follow::class, 'followed_id');
+    }
+
+
+    /**
+     * Verificar si el usuario sigue a otro
+     */
+    public function isFollowing(User $user): bool
+    {
+        return $this->followings()->where('followed_id', $user->id)->exists();
+    }
+
+    /**
+     * Verificar si el usuario es seguido por otro
+     */
+    public function isFollowedBy(User $user): bool
+    {
+        return $this->followers()->where('follower_id', $user->id)->exists();
     }
 }

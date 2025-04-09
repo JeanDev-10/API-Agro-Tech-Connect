@@ -5,6 +5,8 @@ use App\Http\Controllers\V1\SocialAuthController;
 use App\Http\Controllers\V1\UserController;
 use App\Http\Controllers\V1\UserInformationController;
 use App\Http\Controllers\V1\AvatarController;
+use App\Http\Controllers\V1\FollowController;
+use App\Http\Controllers\V1\NotificationController;
 use App\Http\Middleware\V1\EmailVerification;
 use App\Http\Middleware\V1\ThrottleRecoveryPasswords;
 use App\Http\Middleware\V1\ThrottleVerificationEmails;
@@ -35,6 +37,18 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         Route::prefix('me/avatar')->middleware('permission:user.upload-avatar')->group(function () {
             Route::post('/', [AvatarController::class, 'update']);
             Route::delete('/', [AvatarController::class, 'destroy']);
+        });
+        Route::prefix('users')->group(function () {
+            // Seguir/Dejar de seguir
+            Route::post('/follow', [FollowController::class, 'follow']);
+            Route::delete('/unfollow', [FollowController::class, 'unfollow']);
+        });
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [NotificationController::class, 'index']);
+            Route::get('/unread', [NotificationController::class, 'unread']);
+            Route::get('/{id}', [NotificationController::class, 'show']);
+            Route::put('/{id}/read', [NotificationController::class, 'markAsRead']);
+            Route::put('/read-all', [NotificationController::class, 'markAllAsRead']);
         });
 
     });

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\V1\FollowSeeder;
 use Database\Seeders\V1\OldPasswordSeeder;
 use Database\Seeders\V1\UserInformationSeeder;
 use Database\Seeders\V1\UserSeeder;
@@ -20,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(UserInformationSeeder::class);
         $this->call(OldPasswordSeeder::class);
+        /* $this->call(FollowSeeder::class); */
     }
 }
