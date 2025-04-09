@@ -30,17 +30,5 @@ class FollowSeeder extends Seeder
                 ]);
             });
         });
-
-        // Asegurar que el admin tenga seguidores
-        $admin = User::find(1);
-        if ($admin) {
-            $followers = $users->random(rand(3, 5));
-            $followers->each(function ($follower) use ($admin) {
-                Follow::firstOrCreate([
-                    'follower_id' => $follower->id,
-                    'followed_id' => $admin->id
-                ]);
-            });
-        }
     }
 }
