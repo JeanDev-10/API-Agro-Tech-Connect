@@ -6,7 +6,6 @@ use App\Events\V1\UserFollowEvent;
 use App\Interfaces\V1\User\FollowRepositoryInterface;
 use App\Models\V1\Follow;
 use App\Models\V1\User;
-use App\Notifications\V1\NewFollowerNotification;
 use Exception;
 
 class FollowRepository implements FollowRepositoryInterface
