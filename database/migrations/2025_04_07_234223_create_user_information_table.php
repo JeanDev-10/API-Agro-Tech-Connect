@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_informations', function (Blueprint $table) {
             $table->id(); // PK id int
-            $table->text('description')->nullable(); // description con soporte para emojis
+            $table->text('description')->nullable()->collation('utf8mb4_unicode_ci');; // description con soporte para emojis
             $table->string('link1', 255)->nullable(); // link1 varchar
             $table->string('link2', 255)->nullable(); // link2 varchar
             $table->string('link3', 255)->nullable(); // link3 varchar
@@ -22,7 +21,7 @@ return new class extends Migration
 
             $table->timestamps(); // created_at y updated_at
         });
-        DB::statement('ALTER TABLE user_informations MODIFY description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+
     }
 
     /**
