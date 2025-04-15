@@ -48,7 +48,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
             Route::delete('/unfollow', [FollowController::class, 'unfollow']);
             // seguidores y seguidos del usuario
             Route::get('{id}/followers', [FollowController::class, 'followers']);
-            Route::get('/following', [FollowController::class, 'following']);
+            Route::get('{id}/following', [FollowController::class, 'following']);
         });
         Route::prefix('notifications')->group(function () {
             Route::get('/', [NotificationController::class, 'index']);

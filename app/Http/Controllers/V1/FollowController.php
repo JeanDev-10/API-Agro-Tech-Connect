@@ -112,15 +112,25 @@ class FollowController extends Controller
         }
     }
 
-    public function following(User $user)
+    public function following($id)
     {
         try {
+            $id = Crypt::decrypt($id);
+            $user = User::where('id', $id)->first();
+            if (!$user) {
+                return ApiResponse::error(
+                    'El usuario no existe',
+                    404
+                );
+            }
             $following = $this->followRepo->getUserFollowing($user);
 
             return ApiResponse::success(
                 'Lista de seguidos obtenida',
                 200,
-                ['following' => $following]
+                $following->through(function ($item) {
+                    return new FollowResource($item);
+                })
             );
         } catch (Exception $e) {
             return ApiResponse::error(

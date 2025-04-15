@@ -269,6 +269,10 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Exitoso
     - No existe usuario
     - Id cifrado alterado
+- **Ver seguidos de un usuario**: `GET /users/{id}/following`
+    - Exitoso
+    - No existe usuario
+    - Id cifrado alterado
     
 
 ## Autores
