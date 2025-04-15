@@ -10,15 +10,15 @@ use App\Models\V1\User;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\User\FollowRepository;
 use Exception;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 class FollowController extends Controller
 {
-    public function __construct(private FollowRepository $followRepo,
-    private AuthRepository $authRepository
-    )
-    {
-    }
+    public function __construct(
+        private FollowRepository $followRepo,
+        private AuthRepository $authRepository
+    ) {}
 
     public function follow(FollowRequest $request)
     {
@@ -27,9 +27,9 @@ class FollowController extends Controller
 
             $follower = $this->authRepository->userLoggedIn();
             $followed = $request->getDecryptedUserId();
-            $userFollowed=User::find($followed);
-            $userFollower=User::find($follower->id);
-            if(!$userFollowed){
+            $userFollowed = User::find($followed);
+            $userFollower = User::find($follower->id);
+            if (!$userFollowed) {
                 return ApiResponse::error(
                     'El usuario no existe',
                     404
@@ -44,7 +44,6 @@ class FollowController extends Controller
                 201,
                 ['follow_id' => $follow->id]
             );
-
         } catch (Exception $e) {
             DB::rollBack();
             return ApiResponse::error(
@@ -61,8 +60,8 @@ class FollowController extends Controller
 
             $follower = $this->authRepository->userLoggedIn();
             $followed = $request->getDecryptedUserId();
-            $userFollowed=User::find($followed);
-            if(!$userFollowed){
+            $userFollowed = User::find($followed);
+            if (!$userFollowed) {
                 return ApiResponse::error(
                     'El usuario no existe',
                     404
@@ -76,7 +75,6 @@ class FollowController extends Controller
                 'Has dejado de seguir a este usuario',
                 200
             );
-
         } catch (Exception $e) {
             DB::rollBack();
             return ApiResponse::error(
@@ -86,17 +84,26 @@ class FollowController extends Controller
         }
     }
 
-    public function followers(User $user)
+    public function followers($id)
     {
         try {
+            $id = Crypt::decrypt($id);
+            $user = User::where('id', $id)->first();
+            if (!$user) {
+                return ApiResponse::error(
+                    'El usuario no existe',
+                    404
+                );
+            }
             $followers = $this->followRepo->getUserFollowers($user);
 
             return ApiResponse::success(
                 'Lista de seguidores obtenida',
                 200,
-                ['followers' => $followers]
+                $followers->through(function ($item) {
+                    return new FollowResource($item);
+                })
             );
-
         } catch (Exception $e) {
             return ApiResponse::error(
                 'Error al obtener seguidores: ' . $e->getMessage(),
@@ -115,7 +122,6 @@ class FollowController extends Controller
                 200,
                 ['following' => $following]
             );
-
         } catch (Exception $e) {
             return ApiResponse::error(
                 'Error al obtener usuarios seguidos: ' . $e->getMessage(),
@@ -135,7 +141,6 @@ class FollowController extends Controller
                     return new FollowResource($item);
                 })
             );
-
         } catch (Exception $e) {
             return ApiResponse::error(
                 'Error al obtener seguidores: ' . $e->getMessage(),
@@ -156,7 +161,6 @@ class FollowController extends Controller
                     return new FollowResource($item);
                 })
             );
-
         } catch (Exception $e) {
             return ApiResponse::error(
                 'Error al obtener usuarios seguidos: ' . $e->getMessage(),
@@ -167,7 +171,7 @@ class FollowController extends Controller
 
     protected function getStatusCodeFromException(Exception $e): int
     {
-        return match($e->getMessage()) {
+        return match ($e->getMessage()) {
             'Ya estás siguiendo a este usuario.' => 409,
             'No estás siguiendo a este usuario.' => 404,
             'No puedes seguirte a ti mismo.',
