@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\User\FollowRequest;
+use App\Http\Resources\V1\User\FollowResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\User;
 use App\Repository\V1\Auth\AuthRepository;
@@ -113,6 +114,47 @@ class FollowController extends Controller
                 'Lista de seguidos obtenida',
                 200,
                 ['following' => $following]
+            );
+
+        } catch (Exception $e) {
+            return ApiResponse::error(
+                'Error al obtener usuarios seguidos: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+    public function meFollowers()
+    {
+        try {
+            $user = $this->authRepository->userLoggedIn();
+            $followers = $this->followRepo->getUserFollowers($user);
+            return ApiResponse::success(
+                'Lista de seguidos obtenida',
+                200,
+                $followers->through(function ($item) {
+                    return new FollowResource($item);
+                })
+            );
+
+        } catch (Exception $e) {
+            return ApiResponse::error(
+                'Error al obtener seguidores: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+    public function meFollowing()
+    {
+        try {
+            $user = $this->authRepository->userLoggedIn();
+            $following = $this->followRepo->getUserFollowing($user);
+            return ApiResponse::success(
+                'Lista de seguidos obtenida',
+                200,
+                $following->through(function ($item) {
+                    return new FollowResource($item);
+                })
             );
 
         } catch (Exception $e) {

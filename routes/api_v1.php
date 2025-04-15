@@ -27,6 +27,9 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
     // middleware for email verification
     Route::group(['middleware' => [EmailVerification::class]], function () {
         Route::get('me/profile',  [AuthController::class,'userProfile']);
+        //mis seguidores y seguidos
+        Route::get('me/followers',  [FollowController::class,'meFollowers']);
+        Route::get('me/following',  [FollowController::class,'meFollowing']);
         Route::get('user/profile/{id}',  [AuthController::class,'userProfileUserId']);
         Route::put('me/password',  [UserController::class,'changePassword'])->middleware('permission:user.change-password');;
         Route::put('me',  [UserController::class,'deleteMe'])->middleware('permission:user.delete-account');;
@@ -43,6 +46,9 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
             // Seguir/Dejar de seguir
             Route::post('/follow', [FollowController::class, 'follow']);
             Route::delete('/unfollow', [FollowController::class, 'unfollow']);
+            // seguidores y seguidos del usuario
+            Route::get('/followers', [FollowController::class, 'followers']);
+            Route::get('/following', [FollowController::class, 'following']);
         });
         Route::prefix('notifications')->group(function () {
             Route::get('/', [NotificationController::class, 'index']);

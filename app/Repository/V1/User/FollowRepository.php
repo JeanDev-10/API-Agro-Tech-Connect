@@ -60,11 +60,11 @@ class FollowRepository implements FollowRepositoryInterface
 
     public function getUserFollowers(User $user)
     {
-        return $user->followerUsers()->paginate(10);
+        return $user->followers()->with('follower.image')->paginate(10);
     }
 
     public function getUserFollowing(User $user)
     {
-        return $user->followingUsers()->paginate(10);
+        return $user->followings()->with('followed.image')->paginate(10);
     }
 }
