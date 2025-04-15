@@ -39,17 +39,7 @@ class UserSeeder extends Seeder
             else {
                 $user->assignRole('client_social');
             }
-            $user->image()->create([
-                'url' => $this->generateRandomAvatar($user->email),
-                'image_uuid' => \Illuminate\Support\Str::uuid(),
-            ]);
         });
     }
-    protected function generateRandomAvatar(string $seed): string
-    {
-        $styles = ['adventurer', 'avataaars', 'big-ears', 'bottts', 'croodles'];
-        $style = $styles[rand(0, count($styles) - 1)];
 
-        return "https://avatars.dicebear.com/api/{$style}/{$seed}.svg";
-    }
 }

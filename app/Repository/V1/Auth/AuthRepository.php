@@ -57,7 +57,17 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function userProfile()
     {
-        return Auth::guard('sanctum')->user();
+        $id = Auth::guard('sanctum')->user()->id;
+        $user = User::where('id', $id)->with('roles', 'ranges', 'image', 'followings', 'followers', 'posts', 'comments', 'replayComments', 'reactions', 'complaints')->first();
+        return $user;
+    }
+    public function userProfileUserId($id)
+    {
+        $user = User::where('id', $id)->with('roles', 'ranges', 'image', 'followings', 'followers', 'posts', 'comments', 'replayComments', 'reactions', 'complaints')->first();
+        if (!$user) {
+            throw new ModelNotFoundException("Usuario no encontrado");
+        }
+        return $user;
     }
     public function userLoggedIn()
     {
@@ -88,7 +98,6 @@ class AuthRepository implements AuthRepositoryInterface
             event(new Verified($request->user()));
             event(new UserRegisteredEvent($request->user()));
             return ApiResponse::success("Correo electrónico verificado exitosamente.", 200);
-
         }
     }
 
@@ -106,7 +115,7 @@ class AuthRepository implements AuthRepositoryInterface
 
         return $status === Password::RESET_LINK_SENT
             ? ApiResponse::success("Enlace de restablecimiento enviado.", 200)
-            : ApiResponse::error("Error al enviar el enlace de restablecimiento.", 400,["error" => $status]);
+            : ApiResponse::error("Error al enviar el enlace de restablecimiento.", 400, ["error" => $status]);
     }
 
     public function reset_password(Request $request)
@@ -126,6 +135,6 @@ class AuthRepository implements AuthRepositoryInterface
         DB::commit();
         return $status === Password::PASSWORD_RESET
             ? ApiResponse::success("Contraseña cambiada.", 200)
-            : ApiResponse::error("Error al cambiar la contraseña.", 400,["error" => $status]);
+            : ApiResponse::error("Error al cambiar la contraseña.", 400, ["error" => $status]);
     }
 }

@@ -26,7 +26,8 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     // middleware for email verification
     Route::group(['middleware' => [EmailVerification::class]], function () {
-        Route::get('user/profile',  [AuthController::class,'userProfile']);
+        Route::get('me/profile',  [AuthController::class,'userProfile']);
+        Route::get('user/profile/{id}',  [AuthController::class,'userProfileUserId']);
         Route::put('me/password',  [UserController::class,'changePassword'])->middleware('permission:user.change-password');;
         Route::put('me',  [UserController::class,'deleteMe'])->middleware('permission:user.delete-account');;
         Route::put('me/social',  [UserController::class,'deleteMeSocial'])->middleware('permission:user.delete-account-social');;

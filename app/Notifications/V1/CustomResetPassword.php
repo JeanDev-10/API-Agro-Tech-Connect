@@ -23,7 +23,7 @@ class CustomResetPassword extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         // Genera una URL personalizada para el frontend
-        $frontendUrl = config('app.frontend_url') . '/reset-password?token=' . $this->token . '&email=' . urlencode($notifiable->email);
+        $frontendUrl = config('app.frontend_url') . '/menu/reset-password?token=' . $this->token . '&email=' . urlencode($notifiable->email);
 
         return (new MailMessage)
             ->subject('Restablecer Contraseña')

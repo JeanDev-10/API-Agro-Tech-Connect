@@ -18,8 +18,7 @@ class NotificationController extends Controller
     {
         try {
             $user = $this->authRepository->userLoggedIn();
-            $notifications = $this->notificationRepo
-                ->getUserNotifications($user);
+            $notifications = $this->notificationRepo->getUserNotifications($user);
             $counts = $this->notificationRepo->getNotificationsCount($request->user());
 
             return ApiResponse::success(
@@ -44,8 +43,7 @@ class NotificationController extends Controller
         try {
             $user = $this->authRepository->userLoggedIn();
 
-            $notifications = $this->notificationRepo
-                ->getUnreadNotifications($user);
+            $notifications = $this->notificationRepo->getUnreadNotifications($user);
             $counts = $this->notificationRepo->getNotificationsCount($request->user());
 
             return ApiResponse::success(

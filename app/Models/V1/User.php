@@ -130,7 +130,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->morphOne(Image::class, 'imageable');
     }
 
-     /**
+    /**
      * Seguimientos donde este usuario es el seguidor
      */
     public function followings()
@@ -161,5 +161,35 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function isFollowedBy(User $user): bool
     {
         return $this->followers()->where('follower_id', $user->id)->exists();
+    }
+
+
+    public function ranges()
+    {
+        return $this->belongsToMany(Range::class)->withTimestamps();
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function replayComments()
+    {
+        return $this->hasMany(ReplayComment::class);
+    }
+
+    public function reactions()
+    {
+        return $this->hasMany(Reaction::class);
+    }
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class);
     }
 }

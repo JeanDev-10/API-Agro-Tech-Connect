@@ -258,6 +258,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
 - **Ver una notificación**: `GET /notifications/{id}`
 - **Marcar como leida una notificación**: `PUT /notifications/{id}`
 - **Marcar como leida todas las notificación**: `PUT /notifications/read-all`
+- **Ver mi perfil**: `GET /me/profile`
+- **Ver perfil de otro usuario**: `GET /user/profile`
+    - Exitoso
+    - No existe usuario
+    - Id cifrado alterado
     
 
 ## Autores

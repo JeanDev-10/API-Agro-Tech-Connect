@@ -8,6 +8,7 @@ interface AuthRepositoryInterface{
     public function login(Request $request);
     public function register(Request $request);
     public function userProfile();
+    public function userProfileUserId($id);
     public function userLoggedIn();
     public function logout();
     public function sendVerificationEmail(Request $request);
