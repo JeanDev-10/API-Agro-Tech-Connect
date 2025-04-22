@@ -15,7 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
     'frontend_url' => env('APP_FRONTEND_URL', 'http://localhost:4200'),
-    'frontend_url_path_email_confirmation' => env('APP_FRONTEND_URL_PATH_EMAIL_VERIFICATION', '/menu/email/verify?'),
+    'frontend_url_path_email_confirmation' => env('APP_FRONTEND_URL_PATH_EMAIL_VERIFICATION', '/email/verify?'),
 
     /*
     |--------------------------------------------------------------------------
