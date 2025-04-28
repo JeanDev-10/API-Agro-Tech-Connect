@@ -63,4 +63,13 @@ class Post extends Model
     {
         return $this->morphMany(Complaint::class, 'complaintable');
     }
+    public function positiveReactions()
+    {
+        return $this->reactions()->where('type', 'positivo');
+    }
+
+    public function negativeReactions()
+    {
+        return $this->reactions()->where('type', 'negativo');
+    }
 }

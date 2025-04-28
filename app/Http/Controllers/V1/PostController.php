@@ -3,18 +3,33 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\Post\PostResource;
+use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Post;
+use App\Repository\V1\Post\PostRepository;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct(private PostRepository $postRepository) {}
+
+    public function index(Request $request)
     {
-        //
+        try {
+            $filters = $request->only(['year', 'month', 'search']);
+            $posts = $this->postRepository->index($filters);
+            return ApiResponse::success(
+                'Listado de Posts',
+                200,
+                $posts->through(function ($post) {
+                    return new PostResource($post);
+                })
+            );
+        } catch (\Exception $e) {
+            return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
+        }
     }
+
 
     /**
      * Store a newly created resource in storage.

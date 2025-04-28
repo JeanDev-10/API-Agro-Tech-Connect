@@ -50,7 +50,8 @@ php artisan key:generate
 El backend cuenta con los siguientes módulos:
 - **Autenticación**
 - **Publicaciones**
-- **Comentarios y Valoraciones**
+- **Comentarios**
+- **Valoraciones**
 - **Usuarios**
 - **Administración**
 
@@ -125,10 +126,11 @@ El backend cuenta con los siguientes módulos:
   - Formatos de imagen permitidos: JPG, PNG, JPEG
   - Peso máximo: 3 MB
   - Máximo 10 imágenes
-
-### Módulo de Comentar y Valorar
 - **Denunciar publicación**
   - Un usuario solo puede denunciar una publicación hasta 5 veces
+
+### Módulo de Comentar 
+
 - **Comentar la publicación**
   - Máximo 100 caracteres
   - Formatos de imagen permitidos: JPG, PNG, JPEG
@@ -142,6 +144,8 @@ El backend cuenta con los siguientes módulos:
   - Máximo 5 imágenes
 - **Denunciar un comentario**
   - Un usuario solo puede denunciar un comentario hasta 5 veces
+- **Denunciar una respuesta de comentario**
+  - Un usuario solo puede denunciar una respuesta comentario hasta 5 veces
 
 ### Módulo de Administrador
 - **Eliminar cuenta**
@@ -273,7 +277,10 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Exitoso
     - No existe usuario
     - Id cifrado alterado
-    
+- **Ver todos los posts**: `GET /posts`
+    - Exitoso
+    - Exitoso con filtros
+    - Exitoso filtros sin coicidencias   
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

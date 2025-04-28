@@ -29,6 +29,8 @@ class PostResource extends JsonResource
             'updated_at' => $this->updated_at->format('d/m/Y H:i'),
 
             // Relaciones principales
+            'positive_reactions_count' => $this->positiveReactions()->count(),
+            'negative_reactions_count' => $this->negativeReactions()->count(),
             'user' => new UserResource($this->whenLoaded('user')),
 
             // Relaciones con carga condicional

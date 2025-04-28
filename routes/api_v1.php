@@ -7,12 +7,14 @@ use App\Http\Controllers\V1\UserInformationController;
 use App\Http\Controllers\V1\AvatarController;
 use App\Http\Controllers\V1\FollowController;
 use App\Http\Controllers\V1\NotificationController;
+use App\Http\Controllers\V1\PostController;
 use App\Http\Middleware\V1\EmailVerification;
 use App\Http\Middleware\V1\ThrottleRecoveryPasswords;
 use App\Http\Middleware\V1\ThrottleVerificationEmails;
 use Illuminate\Support\Facades\Route;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
+
 Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     Route::controller(AuthController::class)->group(function () {
@@ -26,14 +28,14 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     // middleware for email verification
     Route::group(['middleware' => [EmailVerification::class]], function () {
-        Route::get('me/profile',  [AuthController::class,'userProfile']);
+        Route::get('me/profile',  [AuthController::class, 'userProfile']);
         //mis seguidores y seguidos
-        Route::get('me/followers',  [FollowController::class,'meFollowers']);
-        Route::get('me/following',  [FollowController::class,'meFollowing']);
-        Route::get('user/profile/{id}',  [AuthController::class,'userProfileUserId']);
-        Route::put('me/password',  [UserController::class,'changePassword'])->middleware('permission:user.change-password');;
-        Route::put('me',  [UserController::class,'deleteMe'])->middleware('permission:user.delete-account');;
-        Route::put('me/social',  [UserController::class,'deleteMeSocial'])->middleware('permission:user.delete-account-social');;
+        Route::get('me/followers',  [FollowController::class, 'meFollowers']);
+        Route::get('me/following',  [FollowController::class, 'meFollowing']);
+        Route::get('user/profile/{id}',  [AuthController::class, 'userProfileUserId']);
+        Route::put('me/password',  [UserController::class, 'changePassword'])->middleware('permission:user.change-password');;
+        Route::put('me',  [UserController::class, 'deleteMe'])->middleware('permission:user.delete-account');;
+        Route::put('me/social',  [UserController::class, 'deleteMeSocial'])->middleware('permission:user.delete-account-social');;
         Route::prefix('me/user-information')->group(function () {
             Route::post('/', [UserInformationController::class, 'storeOrUpdate']);
             Route::get('/', [UserInformationController::class, 'show']);
@@ -57,7 +59,11 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
             Route::put('/{id}/read', [NotificationController::class, 'markAsRead']);
             Route::put('/read-all', [NotificationController::class, 'markAllAsRead']);
         });
-
+        Route::prefix('posts')->group(function () {
+            Route::controller(PostController::class)->group(function () {
+                Route::get('/', 'index');
+            });
+        });
     });
 });
 
@@ -71,4 +77,3 @@ Route::controller(SocialAuthController::class)->group(function () {
     Route::post('/auth/login/google', 'loginWithGoogle');
     Route::post('/auth/login/facebook', 'loginWithFacebook');
 });
-
