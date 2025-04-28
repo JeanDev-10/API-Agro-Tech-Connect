@@ -31,9 +31,9 @@ class UserRepository implements UserRepositoryInterface
         DB::commit();
         event(new UserDeletedAccountEvent($userData));
     }
-    public function mePosts($filters,$user_id)
+    public function mePosts($filters, $user_id)
     {
-        $query = Post::where('user_id',$user_id)->with(['images','user.image'])
+        $query = Post::where('user_id', $user_id)->with(['images', 'user.image'])
             ->withCount(['comments', 'reactions']);
 
         // Filtro por año y mes
@@ -49,7 +49,37 @@ class UserRepository implements UserRepositoryInterface
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {
                 $q->where('title', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+            });
+        }
+
+        return $query->paginate(10);
+    }
+    public function meFollowingPosts($filters, $user_id)
+    {
+
+        $query =  Post::whereHas('user', function ($query) use ($user_id) {
+            // Solo posts de usuarios que el usuario actual sigue
+            $query->whereHas('followers', function ($q) use ($user_id) {
+                $q->where('follower_id', $user_id);
+            });
+        })->with(['images', 'user.image'])
+            ->withCount(['comments', 'reactions']);
+
+        // Filtro por año y mes
+        if (isset($filters['year'])) {
+            $query->whereYear('created_at', $filters['year']);
+        }
+
+        if (isset($filters['month'])) {
+            $query->whereMonth('created_at', $filters['month']);
+        }
+
+        // Búsqueda avanzada por texto o palabras clave
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('title', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
 

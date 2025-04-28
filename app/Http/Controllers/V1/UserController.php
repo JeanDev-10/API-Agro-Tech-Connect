@@ -80,4 +80,23 @@ class UserController extends Controller
             return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
         }
     }
+    public function meFollowingPosts(Request $request){
+        try {
+            $user_id= $this->authRepository->userLoggedIn()->id;
+            $filters = $request->only(['year', 'month', 'search']);
+            $posts = $this->userRepository->meFollowingPosts($filters,$user_id);
+            if($posts->isEmpty()) {
+                return ApiResponse::error("No se encontraron posts", 404);
+            }
+            return ApiResponse::success(
+                'Listado de Posts',
+                200,
+                $posts->through(function ($post) {
+                    return new PostResource($post);
+                })
+            );
+        } catch (Exception $e) {
+            return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
+        }
+    }
 }

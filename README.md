@@ -285,6 +285,10 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Exitoso
     - Exitoso con filtros
     - Filtros sin coicidencias  
+- **Ver posts de personas que sigo**: `GET me/following/posts`
+    - Exitoso
+    - Exitoso con filtros
+    - Filtros sin coicidencias  
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

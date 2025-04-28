@@ -34,6 +34,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         Route::get('me/following',  [FollowController::class, 'meFollowing']);
         Route::get('user/profile/{id}',  [AuthController::class, 'userProfileUserId']);
         Route::get('me/posts',  [UserController::class, 'mePosts']);
+        Route::get('me/following/posts',  [UserController::class, 'meFollowingPosts']);
         Route::put('me/password',  [UserController::class, 'changePassword'])->middleware('permission:user.change-password');;
         Route::put('me',  [UserController::class, 'deleteMe'])->middleware('permission:user.delete-account');;
         Route::put('me/social',  [UserController::class, 'deleteMeSocial'])->middleware('permission:user.delete-account-social');;
