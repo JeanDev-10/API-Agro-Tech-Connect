@@ -47,6 +47,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
             Route::delete('/', [AvatarController::class, 'destroy']);
         });
         Route::prefix('users')->group(function () {
+            Route::get('/{id}/posts', [UserController::class, 'userPosts']);
             // Seguir/Dejar de seguir
             Route::post('/follow', [FollowController::class, 'follow']);
             Route::delete('/unfollow', [FollowController::class, 'unfollow']);

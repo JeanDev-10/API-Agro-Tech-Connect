@@ -289,6 +289,12 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Exitoso
     - Exitoso con filtros
     - Filtros sin coicidencias  
+- **Ver posts de una persona en especifíco**: `GET me/following/posts`
+    - Exitoso
+    - Exitoso con filtros
+    - Filtros sin coicidencias  
+    - Id cifrado alterado
+    - Usuario no existe  
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

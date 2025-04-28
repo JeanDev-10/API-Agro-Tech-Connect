@@ -10,7 +10,9 @@ use App\Http\Responses\V1\ApiResponse;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\User\UserRepository;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -96,6 +98,28 @@ class UserController extends Controller
                 })
             );
         } catch (Exception $e) {
+            return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
+        }
+    }
+    public function userPosts(Request $request){
+        try {
+            $user=$this->authRepository->userProfileUserId(Crypt::decrypt($request->id));
+            $filters = $request->only(['year', 'month', 'search']);
+            $posts = $this->userRepository->userPosts($filters,$user->id);
+            if($posts->isEmpty()) {
+                return ApiResponse::error("No se encontraron posts", 404);
+            }
+            return ApiResponse::success(
+                'Listado de Posts',
+                200,
+                $posts->through(function ($post) {
+                    return new PostResource($post);
+                })
+            );
+        }catch(ModelNotFoundException $e) {
+            return ApiResponse::error("Usuario no existe", 404);
+        } 
+        catch (Exception $e) {
             return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
         }
     }

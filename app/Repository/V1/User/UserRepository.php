@@ -85,4 +85,28 @@ class UserRepository implements UserRepositoryInterface
 
         return $query->paginate(10);
     }
+    public function userPosts($filters, $user_id)
+    {
+        $query =  Post::where('user_id',$user_id)->with(['images', 'user.image'])
+            ->withCount(['comments', 'reactions']);
+
+        // Filtro por año y mes
+        if (isset($filters['year'])) {
+            $query->whereYear('created_at', $filters['year']);
+        }
+
+        if (isset($filters['month'])) {
+            $query->whereMonth('created_at', $filters['month']);
+        }
+
+        // Búsqueda avanzada por texto o palabras clave
+        if (isset($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('title', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+            });
+        }
+
+        return $query->paginate(10);
+    }
 }
