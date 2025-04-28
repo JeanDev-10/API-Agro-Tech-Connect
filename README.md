@@ -281,7 +281,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Exitoso
     - Exitoso con filtros
     - Filtros sin coicidencias  
-     
+- **Ver todos mis posts**: `GET me/posts`
+    - Exitoso
+    - Exitoso con filtros
+    - Filtros sin coicidencias  
+
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)
