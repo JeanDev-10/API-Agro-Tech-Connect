@@ -18,6 +18,9 @@ class PostController extends Controller
         try {
             $filters = $request->only(['year', 'month', 'search']);
             $posts = $this->postRepository->index($filters);
+            if($posts->isEmpty()) {
+                return ApiResponse::error("No se encontraron posts", 404);
+            }
             return ApiResponse::success(
                 'Listado de Posts',
                 200,

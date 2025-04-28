@@ -280,8 +280,8 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
 - **Ver todos los posts**: `GET /posts`
     - Exitoso
     - Exitoso con filtros
-    - Exitoso filtros sin coicidencias   
-
+    - Filtros sin coicidencias  
+     
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)
