@@ -31,4 +31,9 @@ class PostRepository implements PostRepositoryInterface
 
         return $query->paginate(10);
     }
+	public function show($id)
+	{
+		 return Post::with(['images','user.image'])
+            ->withCount(['comments', 'reactions'])->find($id);;
+    }
 }

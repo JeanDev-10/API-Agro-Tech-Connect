@@ -8,6 +8,7 @@ use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Post;
 use App\Repository\V1\Post\PostRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class PostController extends Controller
 {
@@ -18,7 +19,7 @@ class PostController extends Controller
         try {
             $filters = $request->only(['year', 'month', 'search']);
             $posts = $this->postRepository->index($filters);
-            if($posts->isEmpty()) {
+            if ($posts->isEmpty()) {
                 return ApiResponse::error("No se encontraron posts", 404);
             }
             return ApiResponse::success(
@@ -45,9 +46,22 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        try {
+            $post_id = Crypt::decrypt($id);
+            $post = $this->postRepository->show($post_id);
+            if (!$post) {
+                return ApiResponse::error("No se encontró el post", 404);
+            }
+            return ApiResponse::success(
+                'Post encontrado',
+                200,
+                new PostResource($post)
+            );
+        } catch (\Exception $e) {
+            return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
+        }
     }
 
     /**

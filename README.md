@@ -295,6 +295,10 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Filtros sin coicidencias  
     - Id cifrado alterado
     - Usuario no existe  
+- **Ver un posts**: `GET /posts/{id}`
+    - Exitoso
+    - Id cifrado alterado
+    - Post no encontrado 
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
