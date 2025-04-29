@@ -299,6 +299,13 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Exitoso
     - Id cifrado alterado
     - Post no encontrado 
+- **denunciar un posts**: `POST /posts/{id}/complaint`
+    - Exitoso
+    - Id cifrado alterado
+    - Post no encontrado 
+    - Limite de 5 denuncias por post
+    - Errores de validación
+    - No autorizado
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
