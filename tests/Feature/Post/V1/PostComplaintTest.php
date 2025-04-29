@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\V1\Post;
+namespace Tests\Feature\Post\V1;
 
 use App\Models\V1\Complaint;
 use App\Models\V1\Post;
