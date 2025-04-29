@@ -37,6 +37,7 @@ class UserFollowNotification extends Notification implements ShouldQueue
     public function toArray($notifiable): array
     {
         return [
+            'title' => 'Nuevo seguidor',
             'message' => $this->follower->name . ' te ha comenzado a seguir',
             'follower_id' => $this->follower->id,
             'url_avatar' => $this->follower->image->url ?? null,

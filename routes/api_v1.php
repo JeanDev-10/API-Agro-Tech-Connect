@@ -5,6 +5,7 @@ use App\Http\Controllers\V1\SocialAuthController;
 use App\Http\Controllers\V1\UserController;
 use App\Http\Controllers\V1\UserInformationController;
 use App\Http\Controllers\V1\AvatarController;
+use App\Http\Controllers\V1\ComplaintController;
 use App\Http\Controllers\V1\FollowController;
 use App\Http\Controllers\V1\NotificationController;
 use App\Http\Controllers\V1\PostController;
@@ -67,6 +68,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::get('/', 'index');
                 Route::get('/{id}', 'show');
             });
+            Route::post('/{id}/complaint', [ComplaintController::class, 'reportPost'])->middleware('permission:post.create-complaint');
         });
     });
 });
