@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('description');
             $table->morphs('complaintable'); // Crea complaintable_id y complaintable_type
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete()->onDelete('cascade');
             $table->timestamps();
 
             // Índice para mejorar búsquedas polimórficas

@@ -48,6 +48,10 @@ class Complaint extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withDefault([
+            'name' => 'Usuario eliminado',
+            'email' => 'deleted@example.com',
+            'username' => 'deleted_user'
+        ]);
     }
 }

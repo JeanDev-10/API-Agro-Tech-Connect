@@ -20,6 +20,16 @@ class ReplayComment extends Model
         'user_id'
     ];
 
+
+    protected static function booted()
+    {
+        static::deleting(function ($replayComment) {
+            // Eliminar todas las imágenes asociadas a la respuesta
+            if($replayComment->images()->exists()) {
+                $replayComment->images()->delete();
+            }
+        });
+    }
     public function setCommentAttribute($value)
     {
         $this->attributes['comment'] = mb_strtolower($value, 'UTF-8');
@@ -32,12 +42,18 @@ class ReplayComment extends Model
 
     public function comment(): BelongsTo
     {
-        return $this->belongsTo(Comment::class);
+        return $this->belongsTo(Comment::class)->withDefault([
+            'comment' => 'Comentario eliminado'
+        ]);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withDefault([
+            'name' => 'Usuario eliminado',
+            'email' => 'deleted@example.com',
+            'username' => 'deleted_user'
+        ]);
     }
     public function images()
     {

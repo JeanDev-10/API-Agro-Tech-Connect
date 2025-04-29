@@ -295,17 +295,24 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Filtros sin coicidencias  
     - Id cifrado alterado
     - Usuario no existe  
-- **Ver un posts**: `GET /posts/{id}`
+- **Ver un post**: `GET /posts/{id}`
     - Exitoso
     - Id cifrado alterado
     - Post no encontrado 
-- **denunciar un posts**: `POST /posts/{id}/complaint`
+- **Denunciar un post**: `POST /posts/{id}/complaint`
     - Exitoso
     - Id cifrado alterado
     - Post no encontrado 
     - Limite de 5 denuncias por post
     - Errores de validación
     - No autorizado
+- **Crear un post**: `POST /posts`
+    - Exitoso título y descripción
+    - Exitoso título, descripción e imágenes
+    - Error imágenes exceden tamaño (max 3MB)
+    - Error imágenes formato incorrecto
+    - Error al intentar subir más de 10 imágenes
+    - Errores de validación
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\Post\StorePostRequest;
 use App\Http\Resources\V1\Post\PostResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Post;
 use App\Repository\V1\Post\PostRepository;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
@@ -29,7 +31,7 @@ class PostController extends Controller
                     return new PostResource($post);
                 })
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
         }
     }
@@ -38,9 +40,24 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        //
+        try {
+            $post = $this->postRepository->createPostWithImages(
+                $request->validated(),
+                $request->file('images')
+            );
+            return ApiResponse::success(
+                'Publicación creada exitosamente',
+                201,
+                new PostResource($post)
+            );
+        } catch (Exception $e) {
+            return ApiResponse::error(
+                'Error al crear la publicación: ' . $e->getMessage(),
+                500
+            );
+        }
     }
 
     /**

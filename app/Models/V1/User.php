@@ -58,13 +58,25 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     ];
 
 
+
     protected static function booted()
     {
         static::deleting(function ($user) {
-            // Verificar si existe una imagen antes de intentar eliminarla
+            // Solo eliminar la imagen del usuario, no los posts
             if ($user->image()->exists()) {
                 $user->image()->delete();
             }
+
+            // Actualizar los posts para establecer user_id como null
+            $user->posts()->update(['user_id' => null]);
+
+            // Actualizar comentarios y respuestas para establecer user_id como null
+            $user->comments()->update(['user_id' => null]);
+            $user->replayComments()->update(['user_id' => null]);
+
+            // Actualizar reacciones para establecer user_id como null
+            $user->reactions()->update(['user_id' => null]);
+            $user->complaints()->update(['user_id' => null]); // Mantener denuncias pero sin usuario
         });
     }
 

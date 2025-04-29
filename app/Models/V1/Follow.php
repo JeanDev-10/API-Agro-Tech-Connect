@@ -16,7 +16,11 @@ class Follow extends Model
 
     public function follower()
     {
-        return $this->belongsTo(User::class, 'follower_id');
+        return $this->belongsTo(User::class, 'follower_id')->withDefault([
+            'name' => 'Usuario eliminado',
+            'email' => 'deleted@example.com',
+            'username' => 'deleted_user'
+        ]);
     }
 
     /**
@@ -24,6 +28,10 @@ class Follow extends Model
      */
     public function followed()
     {
-        return $this->belongsTo(User::class, 'followed_id');
+        return $this->belongsTo(User::class, 'followed_id')->withDefault([
+            'name' => 'Usuario eliminado',
+            'email' => 'deleted@example.com',
+            'username' => 'deleted_user'
+        ]);
     }
 }

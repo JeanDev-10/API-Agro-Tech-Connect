@@ -19,6 +19,20 @@ class Post extends Model
         'description',
         'user_id'
     ];
+    protected static function booted()
+    {
+        static::deleting(function ($post) {
+            // Eliminar todas las imágenes asociadas al post
+            if ($post->images()->exists()) {
+                $post->images()->delete();
+            }
+            // Eliminar todos los comentarios (que a su vez eliminarán sus respuestas e imágenes)
+            $post->comments()->delete();
+
+            // Eliminar todas las reacciones asociadas al post
+            $post->reactions()->delete();
+        });
+    }
 
     public function setTitleAttribute($value)
     {
@@ -42,7 +56,11 @@ class Post extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withDefault([
+            'name' => 'Usuario eliminado',
+            'email' => 'deleted@example.com',
+            'username' => 'deleted_user'
+        ]);
     }
 
     public function comments(): HasMany

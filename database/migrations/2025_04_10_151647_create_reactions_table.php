@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reactions', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['positivo', 'negativo']);
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete()->onUpdate('cascade');
             $table->timestamps();
             // para crear los dos campos para poliformicos
             $table->morphs('reactionable');

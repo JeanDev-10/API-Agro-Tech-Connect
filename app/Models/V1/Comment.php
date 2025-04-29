@@ -19,6 +19,18 @@ class Comment extends Model
         'user_id'
     ];
 
+    protected static function booted()
+    {
+        static::deleting(function ($comment) {
+            // Eliminar todas las respuestas al comentario
+            $comment->replayComments()->delete();
+
+            // Eliminar todas las imágenes asociadas al comentario
+            if($comment->images()->exists()) {
+                $comment->images()->delete();
+            }
+        });
+    }
     public function setCommentAttribute($value)
     {
         $this->attributes['comment'] = mb_strtolower($value, 'UTF-8');
@@ -31,12 +43,19 @@ class Comment extends Model
 
     public function post(): BelongsTo
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(Post::class)->withDefault([
+            'title' => 'Publicación eliminada',
+            'description' => 'Esta publicación ha sido eliminada'
+        ]);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withDefault([
+            'name' => 'Usuario eliminado',
+            'email' => 'deleted@example.com',
+            'username' => 'deleted_user'
+        ]);
     }
 
     public function images()
