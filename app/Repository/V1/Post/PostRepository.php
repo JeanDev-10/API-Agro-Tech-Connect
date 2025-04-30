@@ -47,23 +47,23 @@ class PostRepository implements PostRepositoryInterface
 
     public function createPostWithImages(array $data, $images = null): Post
     {
-            // Crear el post
-            $user_id = $this->authRepository->userLoggedIn()->id;
-            $post = Post::create([
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'user_id' => $user_id,
-            ]);
+        // Crear el post
+        $user_id = $this->authRepository->userLoggedIn()->id;
+        $post = Post::create([
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'user_id' => $user_id,
+        ]);
 
-            // Subir imágenes si existen
-            if ($images && count($images) > 0) {
-                $this->attachImagesToPost($post, $images);
-            }
+        // Subir imágenes si existen
+        if ($images && count($images) > 0) {
+            $this->attachImagesToPost($post, $images);
+        }
 
-            // Notificar a seguidores
-            $this->notifyFollowers($post);
+        // Notificar a seguidores
+        $this->notifyFollowers($post);
 
-            return $post->load('images', 'user.image');
+        return $post->load('images', 'user.image');
     }
 
     public function attachImagesToPost(Post $post, array $images): void
@@ -88,22 +88,22 @@ class PostRepository implements PostRepositoryInterface
 
     public function updatePostWithImages(Post $post, array $data, $images = null): Post
     {
-            // Actualizar datos básicos
-            $post->update([
-                'title' => $data['title'] ?? $post->title,
-                'description' => $data['description'] ?? $post->description,
-            ]);
+        // Actualizar datos básicos
+        $post->update([
+            'title' => $data['title'] ?? $post->title,
+            'description' => $data['description'] ?? $post->description,
+        ]);
 
-            // Procesar imágenes si se enviaron
-            if ($images) {
-                // Eliminar imágenes antiguas
-                $this->deleteOldImages($post);
+        // Procesar imágenes si se enviaron
+        if ($images) {
+            // Eliminar imágenes antiguas
+            $this->deleteOldImages($post);
 
-                // Subir nuevas imágenes
-                $this->attachImagesToPost($post, $images);
-            }
+            // Subir nuevas imágenes
+            $this->attachImagesToPost($post, $images);
+        }
 
-            return $post->fresh()->load('images', 'user.image');
+        return $post->fresh()->load('images', 'user.image');
     }
 
     public function deleteOldImages(Post $post): void
@@ -119,5 +119,66 @@ class PostRepository implements PostRepositoryInterface
         if (!empty($pathsToDelete)) {
             $this->imageService->deleteImages($pathsToDelete);
         }
+    }
+    public function deletePostWithRelations(Post $post): void
+    {
+            // Eliminar imágenes del storage y BD
+            $this->deletePostImages($post);
+
+            // Eliminar comentarios y sus relaciones
+            $this->deleteCommentsWithRelations($post);
+
+            // Finalmente eliminar el post
+            $post->delete();
+    }
+
+    protected function deletePostImages(Post $post): void
+    {
+        $imagePaths = $post->images->pluck('image_Uuid')->toArray();
+
+        // Eliminar de BD
+        $post->images()->delete();
+
+        // Eliminar del storage
+        if (!empty($imagePaths)) {
+            $this->imageService->deleteImages($imagePaths);
+        }
+    }
+
+    protected function deleteCommentsWithRelations(Post $post): void
+    {
+        $post->comments->each(function ($comment) {
+            // Eliminar respuestas a comentarios y sus imágenes
+            $this->deleteRepliesWithImages($comment);
+
+            // Eliminar imágenes del comentario principal
+            if ($comment->images->isNotEmpty()) {
+                $this->deleteCommentImages($comment);
+            }
+
+            // Eliminar el comentario
+            $comment->delete();
+        });
+    }
+
+    protected function deleteRepliesWithImages($comment): void
+    {
+        $comment->replies->each(function ($reply) {
+            // Eliminar imágenes de las respuestas
+            if ($reply->images->isNotEmpty()) {
+                $imagePaths = $reply->images->pluck('image_Uuid')->toArray();
+                $reply->images()->delete();
+                $this->imageService->deleteImages($imagePaths);
+            }
+
+            $reply->delete();
+        });
+    }
+
+    protected function deleteCommentImages($comment): void
+    {
+        $imagePaths = $comment->images->pluck('image_Uuid')->toArray();
+        $comment->images()->delete();
+        $this->imageService->deleteImages($imagePaths);
     }
 }

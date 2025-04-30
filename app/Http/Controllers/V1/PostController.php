@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\V1\PostDeletedByAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Post\StorePostRequest;
 use App\Http\Requests\V1\Post\UpdatePostRequest;
 use App\Http\Resources\V1\Post\PostResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Post;
+use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\Post\PostRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -18,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class PostController extends Controller
 {
-    public function __construct(private PostRepository $postRepository) {}
+    public function __construct(private PostRepository $postRepository, private AuthRepository $authRepository) {}
 
     public function index(Request $request)
     {
@@ -132,8 +134,40 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $id = Crypt::decrypt($id);
+            $post = Post::findOrFail($id);
+
+            $this->authorize('delete', $post);
+
+            /* $this->postRepository->deletePostWithRelations($post); */
+            $userLogged = $this->authRepository->userProfile();
+            if ($userLogged->hasRole('admin')) {
+                event(new PostDeletedByAdmin($post, $userLogged));
+            }
+            DB::commit();
+            return ApiResponse::success(
+                'Publicación eliminada exitosamente',
+                200
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes eliminar esta publicación",
+                statusCode: 403
+            );
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ApiResponse::error('Publicación no encontrada', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return ApiResponse::error(
+                'Error al eliminar la publicación: ' . $e->getMessage(),
+                500
+            );
+        }
     }
 }
