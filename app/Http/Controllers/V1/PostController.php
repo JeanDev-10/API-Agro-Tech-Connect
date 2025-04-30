@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Post\StorePostRequest;
+use App\Http\Requests\V1\Post\UpdatePostRequest;
 use App\Http\Resources\V1\Post\PostResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Post;
@@ -11,6 +12,9 @@ use App\Repository\V1\Post\PostRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class PostController extends Controller
 {
@@ -43,16 +47,19 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         try {
+            DB::beginTransaction();
             $post = $this->postRepository->createPostWithImages(
                 $request->validated(),
                 $request->file('images')
             );
+            DB::commit();
             return ApiResponse::success(
                 'Publicación creada exitosamente',
                 201,
                 new PostResource($post)
             );
         } catch (Exception $e) {
+            DB::rollBack();
             return ApiResponse::error(
                 'Error al crear la publicación: ' . $e->getMessage(),
                 500
@@ -76,7 +83,7 @@ class PostController extends Controller
                 200,
                 new PostResource($post)
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
         }
     }
@@ -84,9 +91,42 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $post = Post::find(Crypt::decrypt($id));
+            if (!$post) {
+                return ApiResponse::error("No se encontró el post", 404);
+            }
+            // Autorizar la acción
+            $this->authorize('update', $post);
+
+            $updatedPost = $this->postRepository->updatePostWithImages(
+                $post,
+                $request->validated(),
+                $request->file('images')
+            );
+            DB::commit();
+
+            return ApiResponse::success(
+                'Publicación actualizada exitosamente',
+                200,
+                new PostResource($updatedPost)
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes actualizar esta publicación",
+                statusCode: 403
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Error al actualizar la publicación: ' . $e->getMessage(),
+                500
+            );
+        }
     }
 
     /**

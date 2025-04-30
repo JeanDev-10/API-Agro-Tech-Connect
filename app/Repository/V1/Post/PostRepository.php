@@ -12,11 +12,12 @@ use Illuminate\Support\Facades\DB;
 class PostRepository implements PostRepositoryInterface
 {
     public function __construct(
-        protected ImageService $imageService, protected AuthRepository $authRepository
+        protected ImageService $imageService,
+        protected AuthRepository $authRepository
     ) {}
-	public function index($filters)
-	{
-		$query = Post::with(['images','user.image'])
+    public function index($filters)
+    {
+        $query = Post::with(['images', 'user.image'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes
@@ -32,23 +33,22 @@ class PostRepository implements PostRepositoryInterface
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {
                 $q->where('title', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
 
         return $query->paginate(10);
     }
-	public function show($id)
-	{
-		 return Post::with(['images','user.image'])
+    public function show($id)
+    {
+        return Post::with(['images', 'user.image'])
             ->withCount(['comments', 'reactions'])->find($id);
     }
 
     public function createPostWithImages(array $data, $images = null): Post
     {
-        return DB::transaction(function () use ($data, $images) {
             // Crear el post
-            $user_id=$this->authRepository->userLoggedIn()->id;
+            $user_id = $this->authRepository->userLoggedIn()->id;
             $post = Post::create([
                 'title' => $data['title'],
                 'description' => $data['description'],
@@ -64,10 +64,9 @@ class PostRepository implements PostRepositoryInterface
             $this->notifyFollowers($post);
 
             return $post->load('images', 'user.image');
-        });
     }
 
-    protected function attachImagesToPost(Post $post, array $images): void
+    public function attachImagesToPost(Post $post, array $images): void
     {
         $uploadedImages = $this->imageService->uploadImages(
             $images,
@@ -82,8 +81,43 @@ class PostRepository implements PostRepositoryInterface
         }
     }
 
-    protected function notifyFollowers(Post $post): void
+    public function notifyFollowers(Post $post): void
     {
         event(new NewPostEvent($post));
+    }
+
+    public function updatePostWithImages(Post $post, array $data, $images = null): Post
+    {
+            // Actualizar datos básicos
+            $post->update([
+                'title' => $data['title'] ?? $post->title,
+                'description' => $data['description'] ?? $post->description,
+            ]);
+
+            // Procesar imágenes si se enviaron
+            if ($images) {
+                // Eliminar imágenes antiguas
+                $this->deleteOldImages($post);
+
+                // Subir nuevas imágenes
+                $this->attachImagesToPost($post, $images);
+            }
+
+            return $post->fresh()->load('images', 'user.image');
+    }
+
+    public function deleteOldImages(Post $post): void
+    {
+        // Obtener paths de las imágenes antiguas
+        $oldImages = $post->images()->get();
+        $pathsToDelete = $oldImages->pluck('image_Uuid')->toArray();
+
+        // Eliminar de la base de datos
+        $post->images()->delete();
+
+        // Eliminar del almacenamiento
+        if (!empty($pathsToDelete)) {
+            $this->imageService->deleteImages($pathsToDelete);
+        }
     }
 }

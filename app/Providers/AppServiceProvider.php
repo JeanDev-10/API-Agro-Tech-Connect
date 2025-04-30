@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\V1\Post;
+use App\Policies\V1\PostPolicy;
 use App\Providers\V1\RepositoryServiceProvider;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
@@ -9,6 +11,7 @@ use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider

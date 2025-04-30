@@ -313,6 +313,13 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Error imágenes formato incorrecto
     - Error al intentar subir más de 10 imágenes
     - Errores de validación
+- **editar un post**: `PUT /posts/{id}`
+    - Caso exitoso editar publicación con titulo y descripción (sin imágenes originalmente)
+    - Caso exitoso editar publicación con titulo y descripción agregando imágenes (sin imágenes originalmente)
+    - Caso exitoso editar publicación con titulo, descripción e imágenes (reemplazando nuevas imágenes con las anteriores)
+    - Caso erróneo editar publicación que no pertenece
+    - Caso erróneo errores de validación
+    - Caso erróneo publicación no encontrada
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
