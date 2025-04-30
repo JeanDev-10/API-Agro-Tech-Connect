@@ -24,7 +24,7 @@ class ImageFactory extends Factory
 
         return [
             'url' => "https://avatars.dicebear.com/api/{$style}/{$seed}.svg",
-            'image_uuid' => $this->faker->uuid,
+            'image_Uuid' => $this->faker->uuid,
             'imageable_id' => User::factory(),
             'imageable_type' => User::class,
         ];
