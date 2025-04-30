@@ -3,10 +3,12 @@
 namespace App\Repository\V1\Post;
 
 use App\Events\V1\NewPostEvent;
+use App\Http\Responses\V1\ApiResponse;
 use App\Interfaces\V1\Post\PostRepositoryInterface;
 use App\Models\V1\Post;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Services\V1\ImageService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class PostRepository implements PostRepositoryInterface
@@ -194,6 +196,31 @@ class PostRepository implements PostRepositoryInterface
             $this->imageService->deleteImages($imagePaths);
         }
 
+        return true;
+    }
+    /**
+     * Elimina una imagen específica de un post
+     *
+     * @param Post $post
+     * @param string $imageId
+     * @return bool
+     * @throws \Exception
+     */
+    public function deleteSpecificPostImage(Post $post, string $imageId)
+    {
+
+        $image = $post->images()->find($imageId);
+        if ($image==null) {
+            Throw new ModelNotFoundException('Imagen no encontrada');
+        }
+
+        $imagePath = $image->image_Uuid;
+
+        // Eliminar de la base de datos
+        $image->delete();
+
+        // Eliminar del almacenamiento
+        $this->imageService->deleteImage($imagePath);
         return true;
     }
 }

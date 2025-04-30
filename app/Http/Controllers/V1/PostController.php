@@ -12,6 +12,7 @@ use App\Models\V1\Post;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\Post\PostRepository;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -197,6 +198,43 @@ class PostController extends Controller
 
             return ApiResponse::error(
                 'Error al eliminar imágenes de la publicación: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+    public function deleteImage(string $encryptedPostId, string $imageId)
+    {
+        try {
+            DB::beginTransaction();
+            $post = Post::find(Crypt::decrypt($encryptedPostId));
+            if (!$post) {
+                return ApiResponse::error("No se encontró el post", 404);
+            }
+            $image_id = Crypt::decrypt($imageId);
+            $this->authorize('update', $post);
+            $this->postRepository->deleteSpecificPostImage($post, $image_id);
+            DB::commit();
+            return ApiResponse::success(
+                'Imágen de la publicación eliminada exitosamente',
+                200
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes eliminar la imagen de esta publicación",
+                statusCode: 403
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Imágen no encontrada',
+                404
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return ApiResponse::error(
+                'Error al eliminar imágen de la publicación: ' . $e->getMessage(),
                 500
             );
         }

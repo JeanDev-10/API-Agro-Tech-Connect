@@ -333,6 +333,13 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     -Caso erróneo eliminar imágenes de post que no me pertenece
     -Caso erróneo post no encontrado
     -Caso erróneo id alterado
+- **Eliminar una imagen de un post**: `DELETE /posts/{post}/images/{imagen}`
+    -Caso exitoso eliminar una imagen
+    -Caso erróneo no autorizado
+    -Caso erróneo post no encontrado
+    -Caso erróneo imagen no encontrada
+    -Caso erróneo post id alterado
+Caso erróneo imagen id alterado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)

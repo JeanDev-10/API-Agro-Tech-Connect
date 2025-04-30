@@ -8,6 +8,7 @@ use App\Models\V1\Image;
 use App\Models\V1\Post;
 use App\Models\V1\ReplayComment;
 use App\Models\V1\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
@@ -17,6 +18,8 @@ use Tests\TestCase;
 
 class PostDeleteTest extends TestCase
 {
+    use RefreshDatabase;
+
     private $user;
     private $post;
     private $encryptedId;
@@ -26,6 +29,7 @@ class PostDeleteTest extends TestCase
         parent::setUp();
         Storage::fake('public');
         Event::fake();
+        Role::create(['name' => 'admin']);
         Notification::fake();
         $this->user = User::factory()->create();
         $this->post = Post::factory()->create(['user_id' => $this->user->id]);
@@ -42,7 +46,6 @@ class PostDeleteTest extends TestCase
         $response = $this->deleteJson("/api/v1/posts/{$this->encryptedId}");
 
         $response->assertStatus(200);
-
     }
 
     /**
@@ -101,8 +104,6 @@ class PostDeleteTest extends TestCase
         $response = $this->deleteJson("/api/v1/posts/{$this->encryptedId}");
 
         $response->assertStatus(200);
-
-
     }
 
     /**
@@ -160,7 +161,5 @@ class PostDeleteTest extends TestCase
         $response = $this->deleteJson("/api/v1/posts/{$this->encryptedId}");
 
         $response->assertStatus(200);
-
-
     }
 }

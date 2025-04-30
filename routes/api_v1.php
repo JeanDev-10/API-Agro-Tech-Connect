@@ -70,6 +70,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::put('/{id}', 'update');
                 Route::delete('/{id}', 'destroy');
                 Route::delete('/{id}/images', 'deleteImages');
+                Route::delete('/{id}/images/{image}', 'deleteImage');
                 Route::get('/{id}', 'show');
             });
             Route::post('/{id}/complaint', [ComplaintController::class, 'reportPost'])->middleware('permission:post.create-complaint');
