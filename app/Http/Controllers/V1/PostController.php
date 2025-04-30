@@ -170,4 +170,35 @@ class PostController extends Controller
             );
         }
     }
+
+    public function deleteImages(string $encryptedId)
+    {
+        try {
+            DB::beginTransaction();
+            $id = Crypt::decrypt($encryptedId);
+            $post = Post::findOrFail($id);
+            $this->authorize('update', $post);
+            $this->postRepository->deleteAllPostImages($post);
+            DB::commit();
+            return ApiResponse::success(
+                'Imágenes de la publicación eliminadas exitosamente',
+                200
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes eliminar las imágenes de esta publicación",
+                statusCode: 403
+            );
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ApiResponse::error('Publicación no encontrada', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return ApiResponse::error(
+                'Error al eliminar imágenes de la publicación: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
 }

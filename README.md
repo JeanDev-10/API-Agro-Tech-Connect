@@ -328,7 +328,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo eliminar publicación por el admin
     - Caso erróneo ID alterado
     - Caso erróneo publicación no encontrada
-
+- **Eliminar todas las imágenes de un post**: `DELETE /posts/{id}/images`
+    -Caso exitoso eliminar imágenes del post
+    -Caso erróneo eliminar imágenes de post que no me pertenece
+    -Caso erróneo post no encontrado
+    -Caso erróneo id alterado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)

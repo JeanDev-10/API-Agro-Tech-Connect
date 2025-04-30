@@ -122,17 +122,17 @@ class PostRepository implements PostRepositoryInterface
     }
     public function deletePostWithRelations(Post $post): void
     {
-            // Eliminar imágenes del storage y BD
-            $this->deletePostImages($post);
+        // Eliminar imágenes del storage y BD
+        $this->deletePostImages($post);
 
-            // Eliminar comentarios y sus relaciones
-            $this->deleteCommentsWithRelations($post);
+        // Eliminar comentarios y sus relaciones
+        $this->deleteCommentsWithRelations($post);
 
-            // Finalmente eliminar el post
-            $post->delete();
+        // Finalmente eliminar el post
+        $post->delete();
     }
 
-    protected function deletePostImages(Post $post): void
+    public function deletePostImages(Post $post): void
     {
         $imagePaths = $post->images->pluck('image_Uuid')->toArray();
 
@@ -145,7 +145,7 @@ class PostRepository implements PostRepositoryInterface
         }
     }
 
-    protected function deleteCommentsWithRelations(Post $post): void
+    public function deleteCommentsWithRelations(Post $post): void
     {
         $post->comments->each(function ($comment) {
             // Eliminar respuestas a comentarios y sus imágenes
@@ -161,7 +161,7 @@ class PostRepository implements PostRepositoryInterface
         });
     }
 
-    protected function deleteRepliesWithImages($comment): void
+    public function deleteRepliesWithImages($comment): void
     {
         $comment->replies->each(function ($reply) {
             // Eliminar imágenes de las respuestas
@@ -175,10 +175,25 @@ class PostRepository implements PostRepositoryInterface
         });
     }
 
-    protected function deleteCommentImages($comment): void
+    public function deleteCommentImages($comment): void
     {
         $imagePaths = $comment->images->pluck('image_Uuid')->toArray();
         $comment->images()->delete();
         $this->imageService->deleteImages($imagePaths);
+    }
+    public function deleteAllPostImages(Post $post): bool
+    {
+        // Obtener paths de las imágenes
+        $imagePaths = $post->images->pluck('image_Uuid')->toArray();
+
+        // Eliminar de la base de datos
+        $post->images()->delete();
+
+        // Eliminar del almacenamiento
+        if (!empty($imagePaths)) {
+            $this->imageService->deleteImages($imagePaths);
+        }
+
+        return true;
     }
 }
