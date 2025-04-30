@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class PostControllerTest extends TestCase
+class PostCreateTest extends TestCase
 {
     private $user;
     protected function setUp(): void
