@@ -54,8 +54,8 @@ class UserCreatePostComplaintNotification extends Notification implements Should
             'message' => 'La publicación "' . Str::limit($this->post->title, 30) . '" ha sido denunciada.',
             'link' => $url,
             'complaint_id' => $this->complaint->id,
-            'post_id' => Crypt::encrypt($this->post->id),
-            'user_id' => Crypt::encrypt($this->reporter->id),
+            'post_id' => $this->post->id,
+            'user_id' => $this->reporter->id,
             'type' => 'new_complaint_post'
         ];
     }

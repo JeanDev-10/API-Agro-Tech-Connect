@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class PostDelteAllImagesTest extends TestCase
+class PostDeleteAllImagesTest extends TestCase
 {
     private $user;
     private $post;

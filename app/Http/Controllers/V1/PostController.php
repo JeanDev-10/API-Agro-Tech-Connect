@@ -6,6 +6,7 @@ use App\Events\V1\PostDeletedByAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Post\StorePostRequest;
 use App\Http\Requests\V1\Post\UpdatePostRequest;
+use App\Http\Resources\V1\CommentAndRate\CommentResource;
 use App\Http\Resources\V1\Post\PostResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Post;
@@ -237,6 +238,28 @@ class PostController extends Controller
                 'Error al eliminar imágen de la publicación: ' . $e->getMessage(),
                 500
             );
+        }
+    }
+    public function getPostComments($id){
+        try {
+            $post=Post::find(Crypt::decrypt($id));
+            if (!$post) {
+                return ApiResponse::error("No se encontró el post", 404);
+            }
+            $comments = $this->postRepository->getPostComments($post);
+            if($comments->isEmpty()) {
+                return ApiResponse::error("No se encontraron comentarios", 404);
+            }
+            return ApiResponse::success(
+                'Listado de comentarios',
+                200,
+                $comments->through(function ($comment) {
+                    return new CommentResource($comment);
+                })
+            );
+        }
+        catch (Exception $e) {
+            return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
         }
     }
 }

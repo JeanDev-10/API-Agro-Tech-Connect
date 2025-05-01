@@ -223,4 +223,12 @@ class PostRepository implements PostRepositoryInterface
         $this->imageService->deleteImage($imagePath);
         return true;
     }
+    public function getPostComments(Post $post)
+    {
+        return $post->comments()
+            ->with(['images', 'user.image'])
+            ->withCount(['replies', 'reactions'])
+            ->latest()
+            ->paginate(10);
+    }
 }

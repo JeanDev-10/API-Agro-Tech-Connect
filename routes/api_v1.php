@@ -5,6 +5,7 @@ use App\Http\Controllers\V1\SocialAuthController;
 use App\Http\Controllers\V1\UserController;
 use App\Http\Controllers\V1\UserInformationController;
 use App\Http\Controllers\V1\AvatarController;
+use App\Http\Controllers\V1\CommentController;
 use App\Http\Controllers\V1\ComplaintController;
 use App\Http\Controllers\V1\FollowController;
 use App\Http\Controllers\V1\NotificationController;
@@ -72,8 +73,23 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::delete('/{id}/images', 'deleteImages');
                 Route::delete('/{id}/images/{image}', 'deleteImage');
                 Route::get('/{id}', 'show');
+                Route::get('/{id}/comments', 'getPostComments');
             });
             Route::post('/{id}/complaint', [ComplaintController::class, 'reportPost'])->middleware('permission:post.create-complaint');
+
+        });
+        Route::prefix('comments')->group(function () {
+            Route::controller(CommentController::class)->group(function () {
+                /* Route::post('/', 'store');
+                Route::put('/{id}', 'update'); */
+                /* Route::delete('/{id}', 'destroy'); */
+                /* Route::delete('/{id}/images', 'deleteImages');
+                Route::delete('/{id}/images/{image}', 'deleteImage');
+                Route::get('/{id}', 'show'); */
+                Route::get('/{id}/replaycomments', 'getReplayComments');
+            });
+            /* Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:post.create-complaint'); */
+
         });
     });
 });

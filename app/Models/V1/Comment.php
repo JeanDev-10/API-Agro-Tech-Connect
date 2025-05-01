@@ -23,7 +23,7 @@ class Comment extends Model
     {
         static::deleting(function ($comment) {
             // Eliminar todas las respuestas al comentario
-            $comment->replayComments()->delete();
+            $comment->replies()->delete();
 
             // Eliminar todas las imágenes asociadas al comentario
             if($comment->images()->exists()) {

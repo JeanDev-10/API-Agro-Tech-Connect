@@ -12,5 +12,6 @@ interface PostRepositoryInterface{
     public function updatePostWithImages(Post $post, array $data, $images = null);
     public function deleteOldImages(Post $post);
     public function deleteAllPostImages(Post $post);
+    public function getPostComments(Post $post);
 
 }

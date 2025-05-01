@@ -39,8 +39,8 @@ class NewPostNotification extends Notification implements ShouldQueue
         $url = config('app.frontend_url') . '/post/' . Crypt::encrypt($this->post->id);
         return [
             'message' => $this->post->user->name . ' ha publicado algo nuevo',
-            'post_id' => Crypt::encrypt($this->post->id),
-            'user_id' => Crypt::encrypt($this->post->user->id),
+            'post_id' => $this->post->id,
+            'user_id' => $this->post->user->id,
             'link'=>$url,
             'type' => 'new_post',
         ];

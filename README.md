@@ -329,17 +329,27 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo ID alterado
     - Caso erróneo publicación no encontrada
 - **Eliminar todas las imágenes de un post**: `DELETE /posts/{id}/images`
-    -Caso exitoso eliminar imágenes del post
-    -Caso erróneo eliminar imágenes de post que no me pertenece
-    -Caso erróneo post no encontrado
-    -Caso erróneo id alterado
+    - Caso exitoso eliminar imágenes del post
+    - Caso erróneo eliminar imágenes de post que no me pertenece
+    - Caso erróneo post no encontrado
+    - Caso erróneo id alterado
 - **Eliminar una imagen de un post**: `DELETE /posts/{post}/images/{imagen}`
-    -Caso exitoso eliminar una imagen
-    -Caso erróneo no autorizado
-    -Caso erróneo post no encontrado
-    -Caso erróneo imagen no encontrada
-    -Caso erróneo post id alterado
-Caso erróneo imagen id alterado
+    - Caso exitoso eliminar una imagen
+    - Caso erróneo no autorizado
+    - Caso erróneo post no encontrado
+    - Caso erróneo imagen no encontrada
+    - Caso erróneo post id alterado
+    - Caso erróneo imagen id alterado
+- **Ver comentarios de una publicación**: `GET /posts/{post}/comments`
+    - Caso exitoso
+    - Caso exitoso posts sin comentarios
+    - Caso erróneo post no encontrado
+    - Caso erróneo post id alterado
+- **Ver respuesta de comentarios de un comentario**: `GET /comments/{comment}/replaycomments`
+    - Caso exitoso
+    - Caso exitoso comentarios sin respuestas
+    - Caso erróneo comentario no encontrado
+    - Caso erróneo comentario id alterado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)
