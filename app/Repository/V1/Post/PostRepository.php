@@ -5,6 +5,7 @@ namespace App\Repository\V1\Post;
 use App\Events\V1\NewPostEvent;
 use App\Http\Responses\V1\ApiResponse;
 use App\Interfaces\V1\Post\PostRepositoryInterface;
+use App\Models\V1\Comment;
 use App\Models\V1\Post;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Services\V1\ImageService;
@@ -176,7 +177,6 @@ class PostRepository implements PostRepositoryInterface
             $reply->delete();
         });
     }
-
     public function deleteCommentImages($comment): void
     {
         $imagePaths = $comment->images->pluck('image_Uuid')->toArray();
@@ -259,4 +259,35 @@ class PostRepository implements PostRepositoryInterface
 
         return $comment->load('user.image', 'images');
     }
+
+    public function updateCommentWithImages(Comment $comment, array $data, $images = null): Comment
+    {
+        // Actualizar texto del comentario si se proporciona
+        if (isset($data['comment'])) {
+            $comment->update(['comment' => $data['comment']]);
+        }
+
+        // Procesar imágenes si se enviaron
+        if ($images) {
+            // Eliminar imágenes antiguas
+            $this->deleteCommentImages($comment);
+
+            // Subir nuevas imágenes
+            $uploadedImages = $this->imageService->uploadImages(
+                $images,
+                'comments/images'
+            );
+
+            foreach ($uploadedImages as $image) {
+                $comment->images()->create([
+                    'image_Uuid' => $image['path'],
+                    'url' => $image['url'],
+                ]);
+            }
+        }
+
+        return $comment->fresh()->load('user.image', 'images');
+    }
+
+    
 }

@@ -18,7 +18,7 @@ class CommentPolicy
     {
         return $user->id === $comment->user_id
             ? Response::allow()
-            : throw new UnauthorizedException();
+            : throw new UnauthorizedException("asdasds");
     }
 
     /**

@@ -6,11 +6,13 @@ use App\Events\V1\NewCommentEvent;
 use App\Events\V1\PostDeletedByAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Comment\StoreCommentRequest;
+use App\Http\Requests\V1\Comment\UpdateCommentRequest;
 use App\Http\Requests\V1\Post\StorePostRequest;
 use App\Http\Requests\V1\Post\UpdatePostRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
 use App\Http\Resources\V1\Post\PostResource;
 use App\Http\Responses\V1\ApiResponse;
+use App\Models\V1\Comment;
 use App\Models\V1\Post;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\Post\PostRepository;
@@ -171,6 +173,58 @@ class PostController extends Controller
             );
         }
     }
+
+
+/**
+ * Update the specified comment.
+ */
+public function updatePostComments(UpdateCommentRequest $request, $postId, $commentId)
+{
+    try {
+        DB::beginTransaction();
+        
+        // Decrypt IDs
+        $decryptedPostId = Crypt::decrypt($postId);
+        $decryptedCommentId = Crypt::decrypt($commentId);
+        // Obtener el comentario
+        $comment = Comment::where('post_id', $decryptedPostId)
+                         ->findOrFail($decryptedCommentId);
+        // Autorizar que solo el dueño puede editar
+        $this->authorize('update', $comment);
+        
+        // Actualizar el comentario
+        $updatedComment = $this->postRepository->updateCommentWithImages(
+            $comment,
+            $request->validated(),
+            $request->file('images')
+        );
+        
+        DB::commit();
+        
+        return ApiResponse::success(
+            'Comentario actualizado exitosamente',
+            200,
+            new CommentResource($updatedComment)
+        );
+    } catch (ModelNotFoundException $e) {
+        DB::rollBack();
+        return ApiResponse::error('Comentario no encontrado', 404);
+    } catch (UnauthorizedException $e) {
+        DB::rollBack();
+        return ApiResponse::error(
+            "No puedes actualizar este comentario",
+            statusCode: 403
+        );
+    } catch (Exception $e) {
+        DB::rollBack();
+        return ApiResponse::error(
+            'Error al actualizar el comentario: ' . $e->getMessage(),
+            500
+        );
+    }
+}
+
+
 
     /**
      * Remove the specified resource from storage.
