@@ -87,7 +87,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::get('/{id}', 'show');
                 Route::get('/{id}/replaycomments', 'getReplayComments');
             });
-            /* Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:post.create-complaint'); */
+             Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:comment.create-complaint');
         });
         Route::prefix('replaycomments')->group(function () {
             Route::controller(ReplayCommentController::class)->group(function () {

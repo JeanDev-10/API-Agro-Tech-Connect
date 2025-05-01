@@ -29,10 +29,11 @@ class UserSeeder extends Seeder
         Permission::firstOrCreate(["name" => "user.delete-account-social"]);
         Permission::firstOrCreate(["name" => "user.upload-avatar"]);
         Permission::firstOrCreate(["name" => "post.create-complaint"]);
+        Permission::firstOrCreate(["name" => "comment.create-complaint"]);
         $admin->assignRole("admin");
         $admin_role->syncPermissions(['user.change-password','user.upload-avatar']);
-        $client_role->syncPermissions(['user.change-password', 'user.upload-avatar','post.create-complaint']);
-        $client_role_social->syncPermissions(['user.delete-account-social','post.create-complaint']);
+        $client_role->syncPermissions(['user.change-password', 'user.upload-avatar','post.create-complaint','comment.create-complaint']);
+        $client_role_social->syncPermissions(['user.delete-account-social','post.create-complaint','comment.create-complaint']);
 
         User::factory()->count(10)->create()->each(function ($user) {
             if ($user->registration_method == 'local')

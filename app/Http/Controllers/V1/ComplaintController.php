@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\V1\UserCreateCommentComplaintEvent;
 use App\Events\V1\UserCreatePostComplaintEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Post\StoreComplaintRequest;
 use App\Http\Responses\V1\ApiResponse;
+use App\Models\V1\Comment;
 use App\Models\V1\Complaint;
 use App\Models\V1\Post;
 use App\Notifications\V1\UserCreatePostComplaintNotification;
@@ -19,17 +21,7 @@ class ComplaintController extends Controller
 {
 
     public function __construct(private ComplaintRepository $complaintRepository, private AuthRepository $authRepository) {}
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
 
 
 
@@ -70,28 +62,40 @@ class ComplaintController extends Controller
             return ApiResponse::error('Error al registrar la denuncia: ' . $e->getMessage(), 500);
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Complaint $complaint)
+    public function reportComment(StoreComplaintRequest $request,  $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $user = $this->authRepository->userLoggedIn();
+            $comment = Comment::find(Crypt::decrypt($id));
+            if(!$comment) {
+                return ApiResponse::error('El comentario no existe', 404);
+            }
+            // Verificar límite de denuncias
+            if ($this->complaintRepository->hasReachedComplaintLimitComment($user, $comment)) {
+                return ApiResponse::error('Has alcanzado el límite de denuncias para esta publicación', 422);
+            }
+
+            // Crear denuncia
+            $complaint = $this->complaintRepository->createComplaint([
+                'user_id' => $user->id,
+                'description' => $request->description,
+                'complaintable_id' => $comment->id,
+                'complaintable_type' => Comment::class
+            ]);
+
+            // Notificar a los administradores
+            event(new UserCreateCommentComplaintEvent($user,$complaint, $comment));
+            DB::commit();
+            return ApiResponse::success(
+                'La denuncia ha sido registrada correctamente',
+                201
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::error('Error al registrar la denuncia: ' . $e->getMessage(), 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Complaint $complaint)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Complaint $complaint)
-    {
-        //
-    }
+    
 }

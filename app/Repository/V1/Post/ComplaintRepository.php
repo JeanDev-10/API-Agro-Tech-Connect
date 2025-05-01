@@ -3,6 +3,7 @@
 namespace App\Repository\V1\Post;
 
 use App\Interfaces\V1\Post\ComplaintRepositoryInterface;
+use App\Models\V1\Comment;
 use App\Models\V1\Complaint;
 use App\Models\V1\Post;
 use App\Models\V1\User;
@@ -21,6 +22,15 @@ class ComplaintRepository implements ComplaintRepositoryInterface
         $complaintsCount = Complaint::where('user_id', $user->id)
             ->where('complaintable_id', $post->id)
             ->where('complaintable_type', Post::class)
+            ->count();
+
+        return $complaintsCount >= self::MAX_COMPLAINTS_PER_USER;
+    }
+    public function hasReachedComplaintLimitComment($user,$comment): bool
+    {
+        $complaintsCount = Complaint::where('user_id', $user->id)
+            ->where('complaintable_id', $comment->id)
+            ->where('complaintable_type', Comment::class)
             ->count();
 
         return $complaintsCount >= self::MAX_COMPLAINTS_PER_USER;
