@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\CommentAndRate\CommentResource;
 use App\Http\Resources\V1\CommentAndRate\ReplayCommentResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Comment;
@@ -35,9 +36,21 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show($comment_id)
     {
-        //
+        try {
+            $comment = $this->commentRepository->show(Crypt::decrypt($comment_id));
+            if (!$comment) {
+                return ApiResponse::error("No se encontró el comentario", 404);
+            }
+            return ApiResponse::success(
+                'Comentario encontrado',
+                200,
+                new CommentResource($comment)
+            );
+        } catch (Exception $e) {
+            return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
+        }
     }
 
     /**

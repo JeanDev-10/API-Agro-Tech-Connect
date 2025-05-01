@@ -209,7 +209,7 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Pedir enlace exitoso
     - Pedir enlace con correo inexistente 
     - Alterar token o email al reestablecer contraseña
-    - Errores de validación al reestablecer contrsaeña
+    - Errores de validación al reestablecer contraseña
     - Contraseña usada anteriormente
     - Error de haber usado más de 2 envios de correos en 1hr
 - **Login Facebook**: `POST /auth/login/facebook`
@@ -350,6 +350,10 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso exitoso comentarios sin respuestas
     - Caso erróneo comentario no encontrado
     - Caso erróneo comentario id alterado
+- **Ver un comentario**: `GET /comments/{comment}`
+    - Caso exitoso
+    - Caso erróneo no existe comentario
+    - Caso erróneo id alterado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)

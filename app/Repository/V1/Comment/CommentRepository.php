@@ -13,4 +13,11 @@ class CommentRepository implements CommentRepositoryInterface
         ->latest()
         ->paginate(10);
 	}
+	public function show($comment)
+	{
+        return Comment::with(['images', 'user.image'])
+        ->withCount(['reactions','replies'])
+        ->where('id', $comment)
+        ->first();
+	}
 }

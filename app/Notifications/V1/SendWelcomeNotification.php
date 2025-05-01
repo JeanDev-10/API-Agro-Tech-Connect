@@ -38,7 +38,7 @@ class SendWelcomeNotification extends Notification implements ShouldQueue
             ->subject('Bienvenido a nuestra plataforma Agro Tech Connect')
             ->greeting('¡Hola, ' . $notifiable->name . '!')
             ->line('Gracias por registrarte en nuestra plataforma.')
-            ->action('Ir a la plataforma', url(config('app.frontend_url').'/dashboard'))
+            ->action('Ir a la plataforma', url(config('app.frontend_url').'/menu/publicaciones'))
             ->line('¡Esperamos que disfrutes la experiencia!');
     }
 
