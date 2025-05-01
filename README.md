@@ -368,6 +368,14 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso limite de denuncias (5 max)
     - Caso Comment no existe
     - Caso Errores de validación
+- **Comentar una publicación**: `POST /posts/{post}/comments`
+    - Caso exitoso solo comentario
+    - Caso exitoso comentario e imágenes
+    - Caso erróneo imágenes formato incorrecto
+    - Caso erróneo imágenes muy pesadas (mayor a 3mb)
+    - Caso erróneo errores de validación 
+    - Caso erróneo subir más de 5 imágenes
+    - Caso erróneo post no encontrado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)

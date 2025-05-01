@@ -210,8 +210,8 @@ class PostRepository implements PostRepositoryInterface
     {
 
         $image = $post->images()->find($imageId);
-        if ($image==null) {
-            Throw new ModelNotFoundException('Imagen no encontrada');
+        if ($image == null) {
+            throw new ModelNotFoundException('Imagen no encontrada');
         }
 
         $imagePath = $image->image_Uuid;
@@ -230,5 +230,33 @@ class PostRepository implements PostRepositoryInterface
             ->withCount(['replies', 'reactions'])
             ->latest()
             ->paginate(10);
+    }
+
+
+    public function createComment(Post $post, array $data, ?array $images = null, $user)
+    {
+        $commentData = [
+            'comment' => $data['comment'],
+            'user_id' => $user->id,
+        ];
+
+        $comment = $post->comments()->create($commentData);
+
+        // Subir imágenes si existen
+        if ($images && count($images) > 0) {
+            $uploadedImages = $this->imageService->uploadImages(
+                $images,
+                'comments/images'
+            );
+
+            foreach ($uploadedImages as $image) {
+                $comment->images()->create([
+                    'image_Uuid' => $image['path'],
+                    'url' => $image['url'],
+                ]);
+            }
+        }
+
+        return $comment->load('user.image', 'images');
     }
 }

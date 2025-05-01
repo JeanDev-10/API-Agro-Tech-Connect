@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\V1\NewCommentEvent;
 use App\Events\V1\PostDeletedByAdmin;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\Comment\StoreCommentRequest;
 use App\Http\Requests\V1\Post\StorePostRequest;
 use App\Http\Requests\V1\Post\UpdatePostRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
@@ -66,6 +68,43 @@ class PostController extends Controller
             DB::rollBack();
             return ApiResponse::error(
                 'Error al crear la publicación: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+    public function createPostComments(StoreCommentRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $post = Post::findOrFail(Crypt::decrypt($id))->first();
+            $userLogged = $this->authRepository->userProfile();
+
+            // Crear el comentario
+            $comment = $this->postRepository->createComment(
+                $post,
+                $request->validated(),
+                $request->file('images'),
+                $userLogged
+            );
+
+            // Notificar al dueño del post
+            event(new NewCommentEvent($post, $comment, $userLogged));
+
+            DB::commit();
+
+            return ApiResponse::success(
+                'Comentario agregado exitosamente',
+                201,
+                new CommentResource($comment)
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return ApiResponse::error('Publicación no encontrada', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Error al agregar el comentario: ' . $e->getMessage(),
                 500
             );
         }
@@ -240,14 +279,15 @@ class PostController extends Controller
             );
         }
     }
-    public function getPostComments($id){
+    public function getPostComments($id)
+    {
         try {
-            $post=Post::find(Crypt::decrypt($id));
+            $post = Post::find(Crypt::decrypt($id));
             if (!$post) {
                 return ApiResponse::error("No se encontró el post", 404);
             }
             $comments = $this->postRepository->getPostComments($post);
-            if($comments->isEmpty()) {
+            if ($comments->isEmpty()) {
                 return ApiResponse::error("No se encontraron comentarios", 404);
             }
             return ApiResponse::success(
@@ -257,8 +297,7 @@ class PostController extends Controller
                     return new CommentResource($comment);
                 })
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
         }
     }
