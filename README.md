@@ -361,6 +361,13 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso limite de denuncias (5 max)
     - Caso Comment no existe
     - Caso Errores de validación
+- **Denunciar una respuesta a comentario**: `POST /replaycomments/{comment}/complaint`
+    - Caso exitoso
+    - Caso no tienes permiso para acceder a este recurso (admin al querer realizar una denuncia)
+    - Caso ID alterado cifrado
+    - Caso limite de denuncias (5 max)
+    - Caso Comment no existe
+    - Caso Errores de validación
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)

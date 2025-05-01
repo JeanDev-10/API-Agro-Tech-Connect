@@ -98,7 +98,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::delete('/{id}/images/{image}', 'deleteImage'); */
                 Route::get('/{id}', 'show');
             });
-            /* Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:post.create-complaint'); */
+             Route::post('/{id}/complaint', [ComplaintController::class, 'reportReplyComment'])->middleware('permission:replyComment.create-complaint'); 
         });
     });
 });
