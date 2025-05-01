@@ -7,6 +7,7 @@ use App\Http\Controllers\V1\UserInformationController;
 use App\Http\Controllers\V1\AvatarController;
 use App\Http\Controllers\V1\CommentController;
 use App\Http\Controllers\V1\ComplaintController;
+use App\Http\Controllers\V1\ReplayCommentController;
 use App\Http\Controllers\V1\FollowController;
 use App\Http\Controllers\V1\NotificationController;
 use App\Http\Controllers\V1\PostController;
@@ -14,8 +15,6 @@ use App\Http\Middleware\V1\EmailVerification;
 use App\Http\Middleware\V1\ThrottleRecoveryPasswords;
 use App\Http\Middleware\V1\ThrottleVerificationEmails;
 use Illuminate\Support\Facades\Route;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Illuminate\Http\Request;
 
 Route::group(['middleware' => ["auth:sanctum"]], function () {
 
@@ -89,7 +88,17 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::get('/{id}/replaycomments', 'getReplayComments');
             });
             /* Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:post.create-complaint'); */
-
+        });
+        Route::prefix('replaycomments')->group(function () {
+            Route::controller(ReplayCommentController::class)->group(function () {
+                /* Route::post('/', 'store');
+                Route::put('/{id}', 'update'); */
+                /* Route::delete('/{id}', 'destroy'); */
+                /* Route::delete('/{id}/images', 'deleteImages');
+                Route::delete('/{id}/images/{image}', 'deleteImage'); */
+                Route::get('/{id}', 'show');
+            });
+            /* Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:post.create-complaint'); */
         });
     });
 });

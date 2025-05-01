@@ -5,5 +5,6 @@ use App\Models\V1\Comment;
 
 interface CommentRepositoryInterface{
     public function getReplayComments(Comment $comment);
+    public function show($comment);
 
 }
