@@ -376,6 +376,7 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo errores de validación 
     - Caso erróneo subir más de 5 imágenes
     - Caso erróneo post no encontrado
+    - Caso erróneo id alterado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)
