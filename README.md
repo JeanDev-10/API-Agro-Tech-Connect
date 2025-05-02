@@ -415,6 +415,13 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo imagen no encontrada
     - Caso erróneo comentario id alterado
     - Caso erróneo imagen id alterado
+- **Eliminar una imagen de una respuesta a comentario**: `DELETE /replaycomments/{comment}/images/{imagen}`
+    - Caso exitoso eliminar una imagen
+    - Caso erróneo no autorizado
+    - Caso erróneo respuesta a comentario no encontrado
+    - Caso erróneo imagen no encontrada
+    - Caso erróneo respuesta a comentario id alterado
+    - Caso erróneo imagen id alterado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)
