@@ -6,6 +6,7 @@ use App\Interfaces\V1\Comment\CommentRepositoryInterface;
 use App\Models\V1\Comment;
 use App\Models\V1\ReplayComment;
 use App\Services\V1\ImageService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CommentRepository implements CommentRepositoryInterface
 {
@@ -88,5 +89,22 @@ class CommentRepository implements CommentRepositoryInterface
         $imagePaths = $reply->images->pluck('image_Uuid')->toArray();
         $reply->images()->delete();
         $this->imageService->deleteImages($imagePaths);
+    }
+    public function deleteSpecificCommentImage(Comment $comment, string $imageId)
+    {
+
+        $image = $comment->images()->find($imageId);
+        if ($image == null) {
+            throw new ModelNotFoundException('Imagen no encontrada');
+        }
+
+        $imagePath = $image->image_Uuid;
+
+        // Eliminar de la base de datos
+        $image->delete();
+
+        // Eliminar del almacenamiento
+        $this->imageService->deleteImage($imagePath);
+        return true;
     }
 }

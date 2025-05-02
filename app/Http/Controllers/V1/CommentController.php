@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
-use App\Events\V1\NewReplyEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\Comment\StoreCommentRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
 use App\Http\Resources\V1\CommentAndRate\ReplayCommentResource;
 use App\Http\Responses\V1\ApiResponse;
@@ -16,6 +14,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\UnauthorizedException;
 
 class CommentController extends Controller
 {
@@ -96,8 +95,43 @@ class CommentController extends Controller
             return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
         }
     }
-    /**
-     * Responder a un comentario
-     */
-    
+    public function deleteImage(string $id, string $imageId)
+    {
+        try {
+            DB::beginTransaction();
+            $comment = Comment::find(Crypt::decrypt($id));
+            if (!$comment) {
+                return ApiResponse::error("No se encontró el comentario", 404);
+            }
+            $image_id = Crypt::decrypt($imageId);
+            $this->authorize('update', $comment);
+            $this->commentRepository->deleteSpecificCommentImage($comment, $image_id);
+            DB::commit();
+            return ApiResponse::success(
+                'Imágen del comentario eliminada exitosamente',
+                200
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes eliminar la imagen de este comentario",
+                statusCode: 403
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Imágen no encontrada',
+                404
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return ApiResponse::error(
+                'Error al eliminar imágen de un comentario: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+
 }

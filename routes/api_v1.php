@@ -84,11 +84,8 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         });
         Route::prefix('comments')->group(function () {
             Route::controller(CommentController::class)->group(function () {
-                /* Route::post('/', 'store');
-                Route::put('/{id}', 'update'); */
-                /* Route::delete('/{id}', 'destroy'); */
-                /* Route::delete('/{id}/images', 'deleteImages');
-                Route::delete('/{id}/images/{image}', 'deleteImage'); */
+                /* Route::delete('/{id}/images', 'deleteImages'); */
+                Route::delete('/{id}/images/{image}', 'deleteImage');
                 Route::get('/{id}', 'show');
                 Route::get('/{id}/replaycomments', 'getReplayComments');
             });
@@ -103,7 +100,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::delete('/{id}/images/{image}', 'deleteImage'); */
                 Route::get('/{id}', 'show');
             });
-             Route::post('/{id}/complaint', [ComplaintController::class, 'reportReplyComment'])->middleware('permission:replyComment.create-complaint'); 
+             Route::post('/{id}/complaint', [ComplaintController::class, 'reportReplyComment'])->middleware('permission:replyComment.create-complaint');
         });
     });
 });
