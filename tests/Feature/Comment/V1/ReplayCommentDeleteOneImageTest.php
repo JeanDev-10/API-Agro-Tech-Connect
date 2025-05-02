@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class CommentDeleteAllImageTest extends TestCase
+class ReplayCommentDeleteOneImageTest extends TestCase
 {
     use RefreshDatabase;
 
