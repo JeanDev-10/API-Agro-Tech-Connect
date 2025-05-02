@@ -422,6 +422,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo imagen no encontrada
     - Caso erróneo respuesta a comentario id alterado
     - Caso erróneo imagen id alterado
+- **Eliminar todas las imágenes de un comentario**: `DELETE /comments/{comment}/images/`
+    - Caso exitoso eliminar imágenes
+    - Caso erróneo eliminar imágenes que no me pertenece
+    - Caso erróneo comentario no encontrado
+    - Caso erróneo id alterado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)

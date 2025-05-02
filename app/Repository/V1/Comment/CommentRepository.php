@@ -107,4 +107,19 @@ class CommentRepository implements CommentRepositoryInterface
         $this->imageService->deleteImage($imagePath);
         return true;
     }
+    public function deleteAllCommentImages(Comment $comment): bool
+    {
+        // Obtener paths de las imágenes
+        $imagePaths = $comment->images->pluck('image_Uuid')->toArray();
+
+        // Eliminar de la base de datos
+        $comment->images()->delete();
+
+        // Eliminar del almacenamiento
+        if (!empty($imagePaths)) {
+            $this->imageService->deleteImages($imagePaths);
+        }
+
+        return true;
+    }
 }

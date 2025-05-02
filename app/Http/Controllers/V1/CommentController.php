@@ -132,6 +132,36 @@ class CommentController extends Controller
             );
         }
     }
+    public function deleteImages(string $encryptedId)
+    {
+        try {
+            DB::beginTransaction();
+            $id = Crypt::decrypt($encryptedId);
+            $comment = Comment::findOrFail($id);
+            $this->authorize('update', $comment);
+            $this->commentRepository->deleteAllCommentImages($comment);
+            DB::commit();
+            return ApiResponse::success(
+                'Imágenes del comentario eliminadas exitosamente',
+                200
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes eliminar las imágenes de este comentario",
+                statusCode: 403
+            );
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ApiResponse::error('Comentario no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return ApiResponse::error(
+                'Error al eliminar imágenes del comentario: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
 
 
 }
