@@ -5,6 +5,7 @@ namespace Tests\Feature\Comment\V1;
 use App\Models\V1\Comment;
 use App\Models\V1\Post;
 use App\Models\V1\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
@@ -13,6 +14,7 @@ use Tests\TestCase;
 
 class EditCommentTest extends TestCase
 {
+    use RefreshDatabase;
     private $user;
     private $post;
     private $comment;

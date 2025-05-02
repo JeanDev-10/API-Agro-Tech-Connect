@@ -388,6 +388,15 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo formato incorrecto de imagen
     - Caso erróneo comentario no encontrado
     - Caso erróneo id alterado cifrado
+- **Responder un comentario**: `POST /posts/{post}/comments/{comment}/replaycomments`
+    - Caso exitoso solo comentario
+    - Caso exitoso comentario e imágenes
+    - Caso erróneo imágenes formato incorrecto
+    - Caso erróneo imágenes muy pesadas (mayor a 3mb)
+    - Caso erróneo errores de validación 
+    - Caso erróneo subir más de 5 imágenes
+    - Caso erróneo comentario no encontrado
+    - Caso erróneo id alterado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)

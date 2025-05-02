@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Events\V1\NewCommentEvent;
+use App\Events\V1\NewReplyEvent;
 use App\Events\V1\PostDeletedByAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Comment\StoreCommentRequest;
@@ -10,11 +11,13 @@ use App\Http\Requests\V1\Comment\UpdateCommentRequest;
 use App\Http\Requests\V1\Post\StorePostRequest;
 use App\Http\Requests\V1\Post\UpdatePostRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
+use App\Http\Resources\V1\CommentAndRate\ReplayCommentResource;
 use App\Http\Resources\V1\Post\PostResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Comment;
 use App\Models\V1\Post;
 use App\Repository\V1\Auth\AuthRepository;
+use App\Repository\V1\Comment\CommentRepository;
 use App\Repository\V1\Post\PostRepository;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -26,7 +29,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class PostController extends Controller
 {
-    public function __construct(private PostRepository $postRepository, private AuthRepository $authRepository) {}
+    public function __construct(private PostRepository $postRepository, private AuthRepository $authRepository, private CommentRepository $commentRepository) {}
 
     public function index(Request $request)
     {
@@ -353,6 +356,50 @@ public function updatePostComments(UpdateCommentRequest $request, $postId, $comm
             );
         } catch (Exception $e) {
             return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
+        }
+    }
+    public function createReplayComments(StoreCommentRequest $request, $postId, $commentId)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Decrypt IDs
+            $decryptedPostId = Crypt::decrypt($postId);
+            $decryptedCommentId = Crypt::decrypt($commentId);
+
+            // Obtener el comentario padre
+            $parentComment = Comment::where('post_id', $decryptedPostId)
+                ->findOrFail($decryptedCommentId);
+
+            $userLogged = $this->authRepository->userProfile();
+
+            // Crear la respuesta
+            $reply = $this->commentRepository->createCommentReply(
+                $parentComment,
+                $request->validated(),
+                $request->file('images'),
+                $userLogged
+            );
+
+            // Notificar al dueño del comentario
+            event(new NewReplyEvent($parentComment, $reply, $userLogged));
+
+            DB::commit();
+
+            return ApiResponse::success(
+                'Respuesta agregada exitosamente',
+                201,
+                new ReplayCommentResource($reply)
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return ApiResponse::error('Comentario no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Error al agregar la respuesta: ' . $e->getMessage(),
+                500
+            );
         }
     }
 }

@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\V1\NewReplyEvent;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\Comment\StoreCommentRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
 use App\Http\Resources\V1\CommentAndRate\ReplayCommentResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Comment;
+use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\Comment\CommentRepository;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
     public function __construct(
-        private CommentRepository $commentRepository
+        private CommentRepository $commentRepository,
+        private AuthRepository $authRepository,
     ) {}
     /**
      * Display a listing of the resource.
@@ -90,4 +96,8 @@ class CommentController extends Controller
             return ApiResponse::error("Ha ocurrido un error" . $e->getMessage(), 500);
         }
     }
+    /**
+     * Responder a un comentario
+     */
+    
 }
