@@ -75,6 +75,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::get('/{id}/comments', 'getPostComments');
                 Route::post('/{id}/comments', 'createPostComments');
                 Route::post('/{post}/comments/{id}/replaycomments', 'createReplayComments');
+                Route::post('/{post}/replaycomments/{replaycomment}', 'updateReplayComments');
 
                 Route::put('/{id}/comments/{comment}', 'updatePostComments');
             });

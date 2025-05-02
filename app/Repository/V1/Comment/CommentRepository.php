@@ -54,4 +54,39 @@ class CommentRepository implements CommentRepositoryInterface
 
         return $reply->load('user.image', 'images');
     }
+    public function updateReplyWithImages(ReplayComment $reply, array $data, ?array $images = null): ReplayComment
+    {
+        // Actualizar texto del comentario si se proporciona
+        if (isset($data['comment'])) {
+            $reply->update(['comment' => $data['comment']]);
+        }
+
+        // Procesar imágenes si se enviaron
+        if ($images) {
+            // Eliminar imágenes antiguas
+            $this->deleteReplyImages($reply);
+
+            // Subir nuevas imágenes
+            $uploadedImages = $this->imageService->uploadImages(
+                $images,
+                'comments/replies/images'
+            );
+
+            foreach ($uploadedImages as $image) {
+                $reply->images()->create([
+                    'image_Uuid' => $image['path'],
+                    'url' => $image['url'],
+                ]);
+            }
+        }
+
+        return $reply->fresh()->load('user.image', 'images');
+    }
+
+    public function deleteReplyImages(ReplayComment $reply): void
+    {
+        $imagePaths = $reply->images->pluck('image_Uuid')->toArray();
+        $reply->images()->delete();
+        $this->imageService->deleteImages($imagePaths);
+    }
 }

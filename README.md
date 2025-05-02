@@ -377,7 +377,7 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo subir más de 5 imágenes
     - Caso erróneo post no encontrado
     - Caso erróneo id alterado
-- **Editar comentario de una publicación**: `POST /posts/{post}/comments/{comment}`
+- **Editar comentario de una publicación**: `PUT /posts/{post}/comments/{comment}`
     - Caso exitoso editar publicación con comentario (sin imágenes)
     - Caso exitoso editar publicación con comentario y agregando imágenes (sin imágenes originalmente)
     - Caso exitoso editar publicación con titulo e imágenes (reemplazando nuevas imágenes con las anteriores)
@@ -397,6 +397,17 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo subir más de 5 imágenes
     - Caso erróneo comentario no encontrado
     - Caso erróneo id alterado
+- **Editar respuesta a un comentario**: `PUT /posts/{post}/replaycomments/{replaycomment}`
+    - Caso exitoso editar publicación con comentario (sin imágenes)
+    - Caso exitoso editar publicación con comentario y agregando imágenes (sin imágenes originalmente)
+    - Caso exitoso editar publicación con titulo e imágenes (reemplazando nuevas imágenes con las anteriores)
+    - Caso erróneo editar publicación que no pertenece
+    - Caso erróneo errores de validación
+    - Caso erróneo imagen pesada
+    - Caso erróneo más de 5 imágenes
+    - Caso erróneo formato incorrecto de imagen
+    - Caso erróneo respuesta a comentario no encontrado
+    - Caso erróneo id alterado cifrado
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)

@@ -16,6 +16,7 @@ use App\Http\Resources\V1\Post\PostResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Comment;
 use App\Models\V1\Post;
+use App\Models\V1\ReplayComment;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\Comment\CommentRepository;
 use App\Repository\V1\Post\PostRepository;
@@ -226,7 +227,58 @@ public function updatePostComments(UpdateCommentRequest $request, $postId, $comm
         );
     }
 }
-
+/**
+ * Actualizar una respuesta a comentario
+ */
+public function updateReplayComments(UpdateCommentRequest $request, $postId, $replyId)
+{
+    try {
+        DB::beginTransaction();
+        
+        // Decrypt IDs
+        $decryptedPostId = Crypt::decrypt($postId);
+        $decryptedReplyId = Crypt::decrypt($replyId);
+        
+        // Obtener la respuesta
+        $reply = ReplayComment::whereHas('comment', function($query) use ($decryptedPostId) {
+                    $query->where('post_id', $decryptedPostId);
+                })
+                ->findOrFail($decryptedReplyId);
+        
+        // Autorizar que solo el dueño puede editar
+        $this->authorize('update', $reply);
+        
+        // Actualizar la respuesta
+        $updatedReply = $this->commentRepository->updateReplyWithImages(
+            $reply,
+            $request->validated(),
+            $request->file('images')
+        );
+        
+        DB::commit();
+        
+        return ApiResponse::success(
+            'Respuesta actualizada exitosamente',
+            200,
+            new ReplayCommentResource($updatedReply)
+        );
+    } catch (ModelNotFoundException $e) {
+        DB::rollBack();
+        return ApiResponse::error('Respuesta no encontrada', 404);
+    } catch (UnauthorizedException $e) {
+        DB::rollBack();
+        return ApiResponse::error(
+            "No puedes actualizar esta respuesta",
+            statusCode: 403
+        );
+    } catch (Exception $e) {
+        DB::rollBack();
+        return ApiResponse::error(
+            'Error al actualizar la respuesta: ' . $e->getMessage(),
+            500
+        );
+    }
+}
 
 
     /**

@@ -3,18 +3,19 @@
 namespace App\Policies\V1;
 
 use App\Models\V1\Comment;
+use App\Models\V1\ReplayComment;
 use App\Models\V1\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Validation\UnauthorizedException;
 
-class CommentPolicy
+class ReplayCommentPolicy
 {
 
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Comment $comment)
+    public function update(User $user, ReplayComment $comment)
     {
         return $user->id === $comment->user_id
             ? Response::allow()
