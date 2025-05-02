@@ -93,6 +93,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         });
         Route::prefix('replaycomments')->group(function () {
             Route::controller(ReplayCommentController::class)->group(function () {
+                Route::delete('/{id}/images/', 'deleteImages');
                 Route::delete('/{id}/images/{image}', 'deleteImage');
                 Route::get('/{id}', 'show');
             });

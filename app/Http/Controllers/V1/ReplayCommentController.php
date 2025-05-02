@@ -108,4 +108,34 @@ class ReplayCommentController extends Controller
             );
         }
     }
+    public function deleteImages(string $encryptedId)
+    {
+        try {
+            DB::beginTransaction();
+            $id = Crypt::decrypt($encryptedId);
+            $comment = ReplayComment::findOrFail($id);
+            $this->authorize('update', $comment);
+            $this->replayCommentRepository->deleteAllCommentImages($comment);
+            DB::commit();
+            return ApiResponse::success(
+                'Imágenes de la respuesta eliminadas exitosamente',
+                200
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes eliminar las imágenes de esta respuesta",
+                statusCode: 403
+            );
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ApiResponse::error('Respuesta no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return ApiResponse::error(
+                'Error al eliminar imágenes de la respuesta: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
 }

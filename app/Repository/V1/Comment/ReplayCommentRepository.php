@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Repository\V1\Comment;
+
 use App\Interfaces\V1\Comment\ReplayCommentRepositoryInterface;
 use App\Models\V1\ReplayComment;
 use App\Services\V1\ImageService;
@@ -10,13 +12,13 @@ class ReplayCommentRepository implements ReplayCommentRepositoryInterface
     public function __construct(
         protected ImageService $imageService,
     ) {}
-	public function show($comment)
-	{
+    public function show($comment)
+    {
         return ReplayComment::with(['images', 'user.image'])
-        ->withCount(['reactions'])
-        ->where('id', $comment)
-        ->first();
-	}
+            ->withCount(['reactions'])
+            ->where('id', $comment)
+            ->first();
+    }
     public function deleteSpecificCommentImage(ReplayComment $comment, string $imageId)
     {
 
@@ -34,5 +36,19 @@ class ReplayCommentRepository implements ReplayCommentRepositoryInterface
         $this->imageService->deleteImage($imagePath);
         return true;
     }
+    public function deleteAllCommentImages(ReplayComment $comment): bool
+    {
+        // Obtener paths de las imágenes
+        $imagePaths = $comment->images->pluck('image_Uuid')->toArray();
 
+        // Eliminar de la base de datos
+        $comment->images()->delete();
+
+        // Eliminar del almacenamiento
+        if (!empty($imagePaths)) {
+            $this->imageService->deleteImages($imagePaths);
+        }
+
+        return true;
+    }
 }
