@@ -18,8 +18,7 @@ class ReactionResource extends JsonResource
      */
     public function toArray($request): array
     {
-        // Determina el resource adecuado para el modelo reactionable
-        $reactionableResource = $this->determineReactionableResource();
+
 
         return [
             'id' => Crypt::encrypt($this->id),
@@ -31,32 +30,8 @@ class ReactionResource extends JsonResource
             'user' => new UserResource($this->whenLoaded('user')),
 
             // Relación polimórfica
-            'reactionable_type' => $this->reactionable_type,
-            'reactionable' => $reactionableResource,
+            'reactionable_type' => class_basename($this->reactionable_type), // Solo el nombre de la clase
 
         ];
-    }
-
-    /**
-     * Determina el resource apropiado para el modelo reactionable
-     */
-    protected function determineReactionableResource(): ?JsonResource
-    {
-        if (!$this->relationLoaded('reactionable')) {
-            return null;
-        }
-
-        // Mapeo de tipos de modelos a sus respectivos resources
-        $resourceMap = [
-            'App\Models\V1\Post' => PostResource::class,
-            'App\Models\V1\Comment' => CommentResource::class,
-            'App\Models\V1\ReplayComment' => ReplayCommentResource::class,
-            // Agrega más modelos según sea necesario
-        ];
-
-        $type = $this->reactionable_type;
-        $resourceClass = $resourceMap[$type] ?? null;
-
-        return $resourceClass ? new $resourceClass($this->reactionable) : null;
     }
 }

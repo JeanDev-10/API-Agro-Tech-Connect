@@ -81,13 +81,18 @@ class Post extends Model
     {
         return $this->morphMany(Complaint::class, 'complaintable');
     }
-    public function positiveReactions()
+
+    public function positiveReactions(): MorphMany
     {
-        return $this->reactions()->where('type', 'positivo');
+        return $this->morphMany(Reaction::class, 'reactionable')
+            ->where('type', 'positivo')
+            ->with('user.image'); // Cargar siempre el usuario
     }
 
-    public function negativeReactions()
+    public function negativeReactions(): MorphMany
     {
-        return $this->reactions()->where('type', 'negativo');
+        return $this->morphMany(Reaction::class, 'reactionable')
+            ->where('type', 'negativo')
+            ->with('user.image'); // Cargar siempre el usuario
     }
 }

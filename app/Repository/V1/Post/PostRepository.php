@@ -288,6 +288,12 @@ class PostRepository implements PostRepositoryInterface
 
         return $comment->fresh()->load('user.image', 'images');
     }
+    public function getReactions($decryptedId){
+        return Post::with([
+            'reactions.user.image',
+            'positiveReactions.user.image',
+            'negativeReactions.user.image'
+        ])->findOrFail($decryptedId);
+    }
 
-    
 }

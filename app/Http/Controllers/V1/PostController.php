@@ -11,6 +11,7 @@ use App\Http\Requests\V1\Comment\UpdateCommentRequest;
 use App\Http\Requests\V1\Post\StorePostRequest;
 use App\Http\Requests\V1\Post\UpdatePostRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
+use App\Http\Resources\V1\CommentAndRate\ReactionResource;
 use App\Http\Resources\V1\CommentAndRate\ReplayCommentResource;
 use App\Http\Resources\V1\Post\PostResource;
 use App\Http\Responses\V1\ApiResponse;
@@ -26,7 +27,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class PostController extends Controller
 {
@@ -44,7 +44,7 @@ class PostController extends Controller
                 'Listado de Posts',
                 200,
                 $posts->through(function ($post) {
-                    return new PostResource($post);
+                    return new ReactionResource($post);
                 })
             );
         } catch (Exception $e) {
@@ -179,106 +179,106 @@ class PostController extends Controller
     }
 
 
-/**
- * Update the specified comment.
- */
-public function updatePostComments(UpdateCommentRequest $request, $postId, $commentId)
-{
-    try {
-        DB::beginTransaction();
-        
-        // Decrypt IDs
-        $decryptedPostId = Crypt::decrypt($postId);
-        $decryptedCommentId = Crypt::decrypt($commentId);
-        // Obtener el comentario
-        $comment = Comment::where('post_id', $decryptedPostId)
-                         ->findOrFail($decryptedCommentId);
-        // Autorizar que solo el dueño puede editar
-        $this->authorize('update', $comment);
-        
-        // Actualizar el comentario
-        $updatedComment = $this->postRepository->updateCommentWithImages(
-            $comment,
-            $request->validated(),
-            $request->file('images')
-        );
-        
-        DB::commit();
-        
-        return ApiResponse::success(
-            'Comentario actualizado exitosamente',
-            200,
-            new CommentResource($updatedComment)
-        );
-    } catch (ModelNotFoundException $e) {
-        DB::rollBack();
-        return ApiResponse::error('Comentario no encontrado', 404);
-    } catch (UnauthorizedException $e) {
-        DB::rollBack();
-        return ApiResponse::error(
-            "No puedes actualizar este comentario",
-            statusCode: 403
-        );
-    } catch (Exception $e) {
-        DB::rollBack();
-        return ApiResponse::error(
-            'Error al actualizar el comentario: ' . $e->getMessage(),
-            500
-        );
+    /**
+     * Update the specified comment.
+     */
+    public function updatePostComments(UpdateCommentRequest $request, $postId, $commentId)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Decrypt IDs
+            $decryptedPostId = Crypt::decrypt($postId);
+            $decryptedCommentId = Crypt::decrypt($commentId);
+            // Obtener el comentario
+            $comment = Comment::where('post_id', $decryptedPostId)
+                ->findOrFail($decryptedCommentId);
+            // Autorizar que solo el dueño puede editar
+            $this->authorize('update', $comment);
+
+            // Actualizar el comentario
+            $updatedComment = $this->postRepository->updateCommentWithImages(
+                $comment,
+                $request->validated(),
+                $request->file('images')
+            );
+
+            DB::commit();
+
+            return ApiResponse::success(
+                'Comentario actualizado exitosamente',
+                200,
+                new CommentResource($updatedComment)
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return ApiResponse::error('Comentario no encontrado', 404);
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes actualizar este comentario",
+                statusCode: 403
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Error al actualizar el comentario: ' . $e->getMessage(),
+                500
+            );
+        }
     }
-}
-/**
- * Actualizar una respuesta a comentario
- */
-public function updateReplayComments(UpdateCommentRequest $request, $postId, $replyId)
-{
-    try {
-        DB::beginTransaction();
-        
-        // Decrypt IDs
-        $decryptedPostId = Crypt::decrypt($postId);
-        $decryptedReplyId = Crypt::decrypt($replyId);
-        
-        // Obtener la respuesta
-        $reply = ReplayComment::whereHas('comment', function($query) use ($decryptedPostId) {
-                    $query->where('post_id', $decryptedPostId);
-                })
+    /**
+     * Actualizar una respuesta a comentario
+     */
+    public function updateReplayComments(UpdateCommentRequest $request, $postId, $replyId)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Decrypt IDs
+            $decryptedPostId = Crypt::decrypt($postId);
+            $decryptedReplyId = Crypt::decrypt($replyId);
+
+            // Obtener la respuesta
+            $reply = ReplayComment::whereHas('comment', function ($query) use ($decryptedPostId) {
+                $query->where('post_id', $decryptedPostId);
+            })
                 ->findOrFail($decryptedReplyId);
-        
-        // Autorizar que solo el dueño puede editar
-        $this->authorize('update', $reply);
-        
-        // Actualizar la respuesta
-        $updatedReply = $this->commentRepository->updateReplyWithImages(
-            $reply,
-            $request->validated(),
-            $request->file('images')
-        );
-        
-        DB::commit();
-        
-        return ApiResponse::success(
-            'Respuesta actualizada exitosamente',
-            200,
-            new ReplayCommentResource($updatedReply)
-        );
-    } catch (ModelNotFoundException $e) {
-        DB::rollBack();
-        return ApiResponse::error('Respuesta no encontrada', 404);
-    } catch (UnauthorizedException $e) {
-        DB::rollBack();
-        return ApiResponse::error(
-            "No puedes actualizar esta respuesta",
-            statusCode: 403
-        );
-    } catch (Exception $e) {
-        DB::rollBack();
-        return ApiResponse::error(
-            'Error al actualizar la respuesta: ' . $e->getMessage(),
-            500
-        );
+
+            // Autorizar que solo el dueño puede editar
+            $this->authorize('update', $reply);
+
+            // Actualizar la respuesta
+            $updatedReply = $this->commentRepository->updateReplyWithImages(
+                $reply,
+                $request->validated(),
+                $request->file('images')
+            );
+
+            DB::commit();
+
+            return ApiResponse::success(
+                'Respuesta actualizada exitosamente',
+                200,
+                new ReplayCommentResource($updatedReply)
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return ApiResponse::error('Respuesta no encontrada', 404);
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes actualizar esta respuesta",
+                statusCode: 403
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Error al actualizar la respuesta: ' . $e->getMessage(),
+                500
+            );
+        }
     }
-}
 
 
     /**
@@ -450,6 +450,37 @@ public function updateReplayComments(UpdateCommentRequest $request, $postId, $re
             DB::rollBack();
             return ApiResponse::error(
                 'Error al agregar la respuesta: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+    public function getReactions($postId)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($postId);
+            $post = $this->postRepository->getReactions($decryptedId);
+            return ApiResponse::success(
+                'Listado de reacciones',
+                200,
+                [
+                    'all_reactions' => ReactionResource::collection($post->reactions),
+                    'positive_reactions' => ReactionResource::collection($post->positiveReactions),
+                    'negative_reactions' => ReactionResource::collection($post->negativeReactions),
+                    'counts' => [
+                        'total' => $post->reactions->count(),
+                        'positive' => $post->positiveReactions->count(),
+                        'negative' => $post->negativeReactions->count()
+                    ]
+                ]
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return ApiResponse::error('Publicación no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Error al ver reacciones de la publicación: ' . $e->getMessage(),
                 500
             );
         }

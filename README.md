@@ -432,6 +432,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo eliminar imágenes que no me pertenece
     - Caso erróneo respuesta a comentario no encontrado
     - Caso erróneo id alterado
+- **Obtener todas las reacciones incluyendo el usuario que la dió a una publicación**: `GET /posts/{post}/reactions/`
+    - Caso exitoso 
+    - Caso erróneo no encontrado
+    - Caso erróneo id alterado
+
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
 - [Jahir Alexander Celorio Malavé](https://github.com/JCelorioDev)
