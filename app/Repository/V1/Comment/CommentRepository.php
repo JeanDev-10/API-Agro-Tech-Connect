@@ -122,4 +122,12 @@ class CommentRepository implements CommentRepositoryInterface
 
         return true;
     }
+
+    public function getReactions($decryptedId){
+        return Comment::with([
+            'reactions.user.image',
+            'positiveReactions.user.image',
+            'negativeReactions.user.image'
+        ])->findOrFail($decryptedId);
+    }
 }

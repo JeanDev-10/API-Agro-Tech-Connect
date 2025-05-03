@@ -35,6 +35,8 @@ class ReplayCommentResource extends JsonResource
 
             'reactions_count' => $this->whenCounted('reactions'),
             'complaints_count' => $this->whenCounted('complaints'),
+            'positive_reactions_count' => $this->positiveReactions()->count(),
+            'negative_reactions_count' => $this->negativeReactions()->count(),
 
         ];
     }

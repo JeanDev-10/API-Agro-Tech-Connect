@@ -436,6 +436,10 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso exitoso 
     - Caso erróneo no encontrado
     - Caso erróneo id alterado
+- **Obtener todas las reacciones incluyendo el usuario que la dió a un comentario**: `GET /comments/{comment}/reactions/`
+    - Caso exitoso 
+    - Caso erróneo no encontrado
+    - Caso erróneo id alterado
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

@@ -31,12 +31,8 @@ class CommentResource extends JsonResource
             // Contadores
             'replies_count' => $this->whenCounted('replies'),
             'reactions_count' => $this->whenCounted('reactions'),
-            'positive_reactions' => $this->when($this->reactions_count, function() {
-                return $this->reactions()->where('type', 'positivo')->count();
-            }),
-            'negative_reactions' => $this->when($this->reactions_count, function() {
-                return $this->reactions()->where('type', 'negativo')->count();
-            }),
+            'positive_reactions_count' => $this->positiveReactions()->count(),
+            'negative_reactions_count' => $this->negativeReactions()->count(),
 
             // Imágenes asociadas
             'images' => ImageResource::collection($this->whenLoaded('images')),

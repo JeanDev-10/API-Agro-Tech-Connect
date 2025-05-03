@@ -76,4 +76,17 @@ class Comment extends Model
     {
         return $this->morphMany(Complaint::class, 'complaintable');
     }
+    public function positiveReactions(): MorphMany
+    {
+        return $this->morphMany(Reaction::class, 'reactionable')
+            ->where('type', 'positivo')
+            ->with('user.image'); // Cargar siempre el usuario
+    }
+
+    public function negativeReactions(): MorphMany
+    {
+        return $this->morphMany(Reaction::class, 'reactionable')
+            ->where('type', 'negativo')
+            ->with('user.image'); // Cargar siempre el usuario
+    }
 }

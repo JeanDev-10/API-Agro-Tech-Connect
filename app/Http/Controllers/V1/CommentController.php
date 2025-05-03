@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
+use App\Http\Resources\V1\CommentAndRate\ReactionResource;
 use App\Http\Resources\V1\CommentAndRate\ReplayCommentResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\Comment;
@@ -162,6 +163,35 @@ class CommentController extends Controller
             );
         }
     }
-
+    public function getReactions($id)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($id);
+            $comment = $this->commentRepository->getReactions($decryptedId);
+            return ApiResponse::success(
+                'Listado de reacciones',
+                200,
+                [
+                    'all_reactions' => ReactionResource::collection($comment->reactions),
+                    'positive_reactions' => ReactionResource::collection($comment->positiveReactions),
+                    'negative_reactions' => ReactionResource::collection($comment->negativeReactions),
+                    'counts' => [
+                        'total' => $comment->reactions->count(),
+                        'positive' => $comment->positiveReactions->count(),
+                        'negative' => $comment->negativeReactions->count()
+                    ]
+                ]
+            );
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return ApiResponse::error('Comentario no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                'Error al ver reacciones del comentario: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
 
 }
