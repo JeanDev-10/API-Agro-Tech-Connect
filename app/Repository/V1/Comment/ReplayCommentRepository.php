@@ -51,4 +51,11 @@ class ReplayCommentRepository implements ReplayCommentRepositoryInterface
 
         return true;
     }
+    public function getReactions($decryptedId){
+        return ReplayComment::with([
+            'reactions.user.image',
+            'positiveReactions.user.image',
+            'negativeReactions.user.image'
+        ])->findOrFail($decryptedId);
+    }
 }
