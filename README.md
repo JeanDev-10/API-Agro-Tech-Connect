@@ -440,7 +440,7 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso exitoso 
     - Caso erróneo no encontrado
     - Caso erróneo id alterado
-- **Crear reacción a un comentario(Postivo/Negativo)**: `POST /comments/{comment}/reactions/`
+- **Crear reacción a un comentario (Postivo/Negativo)**: `POST /comments/{comment}/reactions/`
     - Caso Exitoso (comentario sin reacción)
     - Caso Exitoso (comentario con reacción negativa anteriormente)
     - Caso Exitoso (comentario con reacción positiva anteriormente)

@@ -19,8 +19,10 @@ class CommentReactionListener
             new NewReactionNotification($event->comment, $event->reaction)
         );
 
-        // Verificar y actualizar rango del usuario
-        $this->checkAndUpdateUserRange($event->comment->user);
+        if ($event->reaction->type === 'positivo') {
+            // Verificar y actualizar rango del usuario
+            $this->checkAndUpdateUserRange($event->comment->user);
+        }
     }
 
     /**
@@ -29,27 +31,26 @@ class CommentReactionListener
     protected function checkAndUpdateUserRange($user): void
     {
         $positiveReactionsCount = $user->comments()
-            ->withCount('positiveReactions')
+            ->withCount(['positiveReactions' => function ($query) {
+                $query->where('type', 'positivo');
+            }])
             ->get()
             ->sum('positive_reactions_count');
+        $ranges = Range::orderBy('min_range')->get();
+        foreach ($ranges as $range) {
+            if (
+                $positiveReactionsCount >= $range->min_range &&
+                ($range->max_range === null || $positiveReactionsCount <= $range->max_range)
+            ) {
 
-        $newRange = Range::where('min_range', '<=', $positiveReactionsCount)
-            ->where(function ($query) use ($positiveReactionsCount) {
-                $query->where('max_range', '>=', $positiveReactionsCount)
-                    ->orWhereNull('max_range');
-            })
-            ->orderByDesc('min_range')
-            ->first();
-
-        // Verificar si el usuario ya tiene este rango
-        if ($newRange && !$user->hasRange($newRange)) {
-            // Asignar el nuevo rango
-            $user->ranges()->attach($newRange, ['achieved_at' => now()]);
-
-            // Notificar al usuario sobre el nuevo rango
-            $user->notify(
-                new NewRangeAchievedNotification($newRange)
-            );
+                // Asignar rango si no lo tiene ya
+                if (!$user->ranges()->where('range_id', $range->id)->exists()) {
+                    $user->ranges()->attach($range, ['achieved_at' => now()]);
+                    $user->notify(
+                        new NewRangeAchievedNotification($range)
+                    );
+                }
+            }
         }
     }
 }

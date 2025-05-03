@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\V1\Valorations;
+namespace Tests\Feature\Valorations\V1;
 
 use App\Models\V1\Comment;
 use App\Models\V1\Reaction;
