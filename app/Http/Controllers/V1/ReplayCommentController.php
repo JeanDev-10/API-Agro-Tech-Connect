@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\Valorations\StoreReactionRequest;
 use App\Http\Resources\V1\CommentAndRate\ReactionResource;
 use App\Http\Resources\V1\CommentAndRate\ReplayCommentResource;
 use App\Http\Responses\V1\ApiResponse;
 use App\Models\V1\ReplayComment;
+use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\Comment\ReplayCommentRepository;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,7 +20,8 @@ use Illuminate\Validation\UnauthorizedException;
 class ReplayCommentController extends Controller
 {
     public function __construct(
-        private ReplayCommentRepository $replayCommentRepository
+        private ReplayCommentRepository $replayCommentRepository,
+        private AuthRepository $authRepository,
     ) {}
     /**
      * Display a listing of the resource.
@@ -167,6 +170,31 @@ class ReplayCommentController extends Controller
                 'Error al ver reacciones del Respuesta: ' . $e->getMessage(),
                 500
             );
+        }
+    }
+    public function createReaction(StoreReactionRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $decryptedId = Crypt::decrypt($id);
+            $replay = ReplayComment::findOrFail($decryptedId);
+            $user = $this->authRepository->userLoggedIn();
+            $reaction = $this->replayCommentRepository->storeReaction($replay, $request, $user);
+            DB::commit();
+            return ApiResponse::success(
+                'Reacción registrada correctamente',
+                201,
+                New ReactionResource($reaction)
+            );
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Respuesta no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            // Manejar específicamente el error de reacción duplicada
+            if ($e->getCode() === 400) {
+                return ApiResponse::error($e->getMessage(), 400);
+            }
+            return ApiResponse::error('Error al registrar reacción: ' . $e->getMessage(), 500);
         }
     }
 }

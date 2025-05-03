@@ -500,7 +500,7 @@ class PostController extends Controller
             return ApiResponse::success(
                 'Reacción registrada correctamente',
                 201,
-                ['reaction' => $reaction]
+                New ReactionResource($reaction)
             );
         } catch (ModelNotFoundException $e) {
             return ApiResponse::error('Post no encontrado', 404);

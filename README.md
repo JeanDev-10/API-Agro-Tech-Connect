@@ -450,13 +450,22 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso ya has reaccionado negativo al comentario
     - Caso error de validación
 - **Crear reacción a un publicación (Postivo/Negativo)**: `POST /posts/{post}/reactions/`
-    - Caso Exitoso (comentario sin reacción)
-    - Caso Exitoso (comentario con reacción negativa anteriormente)
-    - Caso Exitoso (comentario con reacción positiva anteriormente)
-    - Caso Comentario no encontrado
+    - Caso Exitoso (post sin reacción)
+    - Caso Exitoso (post con reacción negativa anteriormente)
+    - Caso Exitoso (post con reacción positiva anteriormente)
+    - Caso post no encontrado
     - Caso Id cifrado alterado
-    - Caso ya has reaccionado positivo al comentario
-    - Caso ya has reaccionado negativo al comentario
+    - Caso ya has reaccionado positivo al post
+    - Caso ya has reaccionado negativo al post
+    - Caso error de validación
+- **Crear reacción a una respuesta a comentario (Postivo/Negativo)**: `POST /replaycomments/{replayComment}/reactions/`
+    - Caso Exitoso (respuesta a comentario sin reacción)
+    - Caso Exitoso (respuesta a comentario con reacción negativa anteriormente)
+    - Caso Exitoso (respuesta a comentario con reacción positiva anteriormente)
+    - Caso respuesta a comentario no encontrado
+    - Caso Id cifrado alterado
+    - Caso ya has reaccionado positivo al respuesta a comentario
+    - Caso ya has reaccionado negativo al respuesta a comentario
     - Caso error de validación
 
 ## Autores

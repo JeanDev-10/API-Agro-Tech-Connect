@@ -206,7 +206,7 @@ class CommentController extends Controller
             return ApiResponse::success(
                 'Reacción registrada correctamente',
                 201,
-                ['reaction' => $reaction]
+                New ReactionResource($reaction)
             );
         } catch (ModelNotFoundException $e) {
             return ApiResponse::error('Comentario no encontrado', 404);

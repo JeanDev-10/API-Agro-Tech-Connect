@@ -22,7 +22,7 @@ class PostRepository implements PostRepositoryInterface
     ) {}
     public function index($filters)
     {
-        $query = Post::with(['images', 'user.image','user.ranges'])
+        $query = Post::with(['images', 'user.image', 'user.ranges'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes
@@ -46,7 +46,7 @@ class PostRepository implements PostRepositoryInterface
     }
     public function show($id)
     {
-        return Post::with(['images', 'user.image','user.ranges'])
+        return Post::with(['images', 'user.image', 'user.ranges'])
             ->withCount(['comments', 'reactions'])->find($id);
     }
 
@@ -228,7 +228,7 @@ class PostRepository implements PostRepositoryInterface
     public function getPostComments(Post $post)
     {
         return $post->comments()
-            ->with(['images', 'user.image','user.ranges'])
+            ->with(['images', 'user.image', 'user.ranges'])
             ->withCount(['replies', 'reactions'])
             ->latest()
             ->paginate(10);
@@ -290,14 +290,16 @@ class PostRepository implements PostRepositoryInterface
 
         return $comment->fresh()->load('user.image', 'images');
     }
-    public function getReactions($decryptedId){
+    public function getReactions($decryptedId)
+    {
         return Post::with([
             'reactions.user.image',
             'positiveReactions.user.image',
             'negativeReactions.user.image'
         ])->findOrFail($decryptedId);
     }
-    public function storeReaction($post,$request,$user){
+    public function storeReaction($post, $request, $user)
+    {
 
         // Verificar si el usuario ya tiene una reacción en este comentario
         $existingReaction = $post->reactions()
@@ -314,8 +316,7 @@ class PostRepository implements PostRepositoryInterface
             // Actualizar reacción existente si es diferente
             $existingReaction->update(['type' => $request->type]);
             $reaction = $existingReaction;
-        }
-         else {
+        } else {
             // Crear nueva reacción
             $reaction = $post->reactions()->create([
                 'type' => $request->type,
@@ -325,6 +326,6 @@ class PostRepository implements PostRepositoryInterface
 
         // Disparar evento para notificaciones
         event(new PostReactionEvent($post, $reaction));
-        return $reaction->load('user.image','user.ranges');
-}
+        return $reaction->load('user.image', 'user.ranges');
+    }
 }
