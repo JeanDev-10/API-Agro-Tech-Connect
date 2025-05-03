@@ -78,7 +78,7 @@ class RangeSeeder extends Seeder
         ];
 
         foreach ($ranges as $range) {
-            Range::create($range);
+            Range::firstOrCreate($range);
         }
     }
 

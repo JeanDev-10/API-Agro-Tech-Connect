@@ -175,12 +175,23 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->followers()->where('follower_id', $user->id)->exists();
     }
 
-
     public function ranges()
     {
-        return $this->belongsToMany(Range::class)->withTimestamps();
+        return $this->belongsToMany(Range::class)
+            ->withTimestamps()
+            ->withPivot('achieved_at')
+            ->orderByDesc('ranges.min_range'); // Ordenar por rango más alto
     }
 
+    public function getCurrentRangeAttribute()
+    {
+        return $this->ranges()->orderByDesc('ranges.min_range')->first();
+    }
+
+    public function hasRange(Range $range): bool
+    {
+        return $this->ranges()->where('range_id', $range->id)->exists();
+    }
     public function posts()
     {
         return $this->hasMany(Post::class);

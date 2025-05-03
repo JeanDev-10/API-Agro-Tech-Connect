@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('range_id')->constrained()->onDelete('cascade')->onUpdate('cascade');;
+            $table->timestamp('achieved_at')->useCurrent(); // Fecha cuando se alcanzó el rango
             $table->timestamps();
 
             // Evita rangos duplicados para un usuario
             $table->unique(['user_id', 'range_id']);
+            // Índice para mejorar búsquedas por usuario
+            $table->index('user_id');
         });
     }
 

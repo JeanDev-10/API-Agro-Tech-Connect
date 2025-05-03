@@ -14,7 +14,7 @@ class ReplayCommentRepository implements ReplayCommentRepositoryInterface
     ) {}
     public function show($comment)
     {
-        return ReplayComment::with(['images', 'user.image'])
+        return ReplayComment::with(['images', 'user.image','user.ranges'])
             ->withCount(['reactions'])
             ->where('id', $comment)
             ->first();
@@ -54,8 +54,11 @@ class ReplayCommentRepository implements ReplayCommentRepositoryInterface
     public function getReactions($decryptedId){
         return ReplayComment::with([
             'reactions.user.image',
+            'reactions.user.ranges',
             'positiveReactions.user.image',
-            'negativeReactions.user.image'
+            'positiveReactions.user.ranges',
+            'negativeReactions.user.image',
+            'negativeReactions.user.ranges'
         ])->findOrFail($decryptedId);
     }
 }

@@ -440,6 +440,15 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso exitoso 
     - Caso erróneo no encontrado
     - Caso erróneo id alterado
+- **Crear reacción a un comentario(Postivo/Negativo)**: `POST /comments/{comment}/reactions/`
+    - Caso Exitoso (comentario sin reacción)
+    - Caso Exitoso (comentario con reacción negativa anteriormente)
+    - Caso Exitoso (comentario con reacción positiva anteriormente)
+    - Caso Comentario no encontrado
+    - Caso Id cifrado alterado
+    - Caso ya has reaccionado positivo al comentario
+    - Caso ya has reaccionado negativo al comentario
+    - Caso error de validación
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

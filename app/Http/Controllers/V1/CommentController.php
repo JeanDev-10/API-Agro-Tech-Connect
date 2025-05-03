@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\V1\CommentReactionEvent;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\Valorations\StoreReactionRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
 use App\Http\Resources\V1\CommentAndRate\ReactionResource;
 use App\Http\Resources\V1\CommentAndRate\ReplayCommentResource;
@@ -193,5 +195,29 @@ class CommentController extends Controller
             );
         }
     }
-
+    public function createReaction(StoreReactionRequest $request, $commentId)
+    {
+        try {
+            DB::beginTransaction();
+            $decryptedId = Crypt::decrypt($commentId);
+            $comment = Comment::findOrFail($decryptedId);
+            $user = $this->authRepository->userLoggedIn();
+            $reaction = $this->commentRepository->storeReaction($comment, $request, $user);
+            DB::commit();
+            return ApiResponse::success(
+                'Reacción registrada correctamente',
+                201,
+                ['reaction' => $reaction]
+            );
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Comentario no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            // Manejar específicamente el error de reacción duplicada
+            if ($e->getCode() === 400) {
+                return ApiResponse::error($e->getMessage(), 400);
+            }
+            return ApiResponse::error('Error al registrar reacción: ' . $e->getMessage(), 500);
+        }
+    }
 }

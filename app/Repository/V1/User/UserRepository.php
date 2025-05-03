@@ -33,7 +33,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function mePosts($filters, $user_id)
     {
-        $query = Post::where('user_id', $user_id)->with(['images', 'user.image'])
+        $query = Post::where('user_id', $user_id)->with(['images', 'user.image','user.ranges'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes
@@ -63,7 +63,7 @@ class UserRepository implements UserRepositoryInterface
             $query->whereHas('followers', function ($q) use ($user_id) {
                 $q->where('follower_id', $user_id);
             });
-        })->with(['images', 'user.image'])
+        })->with(['images', 'user.image','user.ranges'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes
@@ -87,7 +87,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function userPosts($filters, $user_id)
     {
-        $query =  Post::where('user_id',$user_id)->with(['images', 'user.image'])
+        $query =  Post::where('user_id',$user_id)->with(['images', 'user.image','user.ranges'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes

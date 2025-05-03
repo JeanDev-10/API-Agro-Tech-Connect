@@ -20,7 +20,7 @@ class PostRepository implements PostRepositoryInterface
     ) {}
     public function index($filters)
     {
-        $query = Post::with(['images', 'user.image'])
+        $query = Post::with(['images', 'user.image','user.ranges'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes
@@ -44,7 +44,7 @@ class PostRepository implements PostRepositoryInterface
     }
     public function show($id)
     {
-        return Post::with(['images', 'user.image'])
+        return Post::with(['images', 'user.image','user.ranges'])
             ->withCount(['comments', 'reactions'])->find($id);
     }
 
@@ -226,7 +226,7 @@ class PostRepository implements PostRepositoryInterface
     public function getPostComments(Post $post)
     {
         return $post->comments()
-            ->with(['images', 'user.image'])
+            ->with(['images', 'user.image','user.ranges'])
             ->withCount(['replies', 'reactions'])
             ->latest()
             ->paginate(10);
