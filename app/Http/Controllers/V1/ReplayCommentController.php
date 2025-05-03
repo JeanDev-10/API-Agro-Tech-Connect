@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\V1\ReplayCommentDeletedByAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Valorations\StoreReactionRequest;
 use App\Http\Resources\V1\CommentAndRate\ReactionResource;
@@ -70,9 +71,39 @@ class ReplayCommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ReplayComment $replayComment)
+    public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $id = Crypt::decrypt($id);
+            $replay = ReplayComment::findOrFail($id);
+
+            $this->authorize('delete', $replay);
+
+             $this->replayCommentRepository->deleteReplayComment($replay);
+            $userLogged = $this->authRepository->userProfile();
+            event(new ReplayCommentDeletedByAdmin($replay, $userLogged));
+            DB::commit();
+            return ApiResponse::success(
+                'Respuesta eliminada exitosamente',
+                200
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes eliminar esta respuesta",
+                statusCode: 403
+            );
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Respuesta no encontrada', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return ApiResponse::error(
+                'Error al eliminar la respuesta: ' . $e->getMessage(),
+                500
+            );
+        }
     }
 
     public function deleteImage(string $id, string $imageId)
@@ -184,7 +215,7 @@ class ReplayCommentController extends Controller
             return ApiResponse::success(
                 'Reacción registrada correctamente',
                 201,
-                New ReactionResource($reaction)
+                new ReactionResource($reaction)
             );
         } catch (ModelNotFoundException $e) {
             return ApiResponse::error('Respuesta no encontrado', 404);

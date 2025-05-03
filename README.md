@@ -467,6 +467,12 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso ya has reaccionado positivo al respuesta a comentario
     - Caso ya has reaccionado negativo al respuesta a comentario
     - Caso error de validación
+- **Eliminar una respuesta a comentario**: `DELETE /replaycomments/{replayComment}/`
+    - Caso exitoso sin imágenes
+    - Caso exitoso con imágenes
+    - Caso erróneo no autorizado
+    - Caso erróneo respuesta no encontrada
+    - Caso erróneo respuesta id alterado cifrado
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

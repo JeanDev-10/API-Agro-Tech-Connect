@@ -94,4 +94,14 @@ class ReplayCommentRepository implements ReplayCommentRepositoryInterface
         event(new ReplayCommentReactionEvent($replay, $reaction));
         return $reaction->load('user.image', 'user.ranges');
     }
+    public function deleteReplayComment(ReplayComment $replayComment): bool
+    {
+        // Eliminar todas las imágenes asociadas a la respuesta
+        if ($replayComment->images()->exists()) {
+            $this->deleteAllCommentImages($replayComment);
+        }
+
+        // Eliminar la respuesta
+        return $replayComment->delete();
+    }
 }
