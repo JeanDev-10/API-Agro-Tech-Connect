@@ -473,6 +473,12 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo no autorizado
     - Caso erróneo respuesta no encontrada
     - Caso erróneo respuesta id alterado cifrado
+- **Eliminar un comentario**: `DELETE /comments/{comment}/`
+    - Caso exitoso sin imágenes
+    - Caso exitoso con imágenes
+    - Caso erróneo no autorizado
+    - Caso erróneo comentario no encontrada
+    - Caso erróneo comentario id alterado cifrado
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

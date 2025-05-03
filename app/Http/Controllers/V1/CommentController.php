@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\V1\CommentDeletedByAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Valorations\StoreReactionRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
@@ -68,12 +69,39 @@ class CommentController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Comment $comment)
+    public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $id = Crypt::decrypt($id);
+            $comment = Comment::findOrFail($id);
+
+            $this->authorize('delete', $comment);
+
+             $this->commentRepository->deleteComment($comment);
+            $userLogged = $this->authRepository->userProfile();
+            event(new CommentDeletedByAdmin($comment, $userLogged));
+            DB::commit();
+            return ApiResponse::success(
+                'Respuesta eliminada exitosamente',
+                200
+            );
+        } catch (UnauthorizedException $e) {
+            DB::rollBack();
+            return ApiResponse::error(
+                "No puedes eliminar este comentario",
+                statusCode: 403
+            );
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Comentario no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return ApiResponse::error(
+                'Error al eliminar la comentario: ' . $e->getMessage(),
+                500
+            );
+        }
     }
     public function getReplayComments($id)
     {

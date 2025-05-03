@@ -91,6 +91,8 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::get('/{id}/reactions', 'getReactions');
                 Route::post('/{id}/reactions', 'createReaction');
                 Route::get('/{id}/replaycomments', 'getReplayComments');
+                Route::delete('/{id}', 'destroy');
+
             });
              Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:comment.create-complaint');
         });

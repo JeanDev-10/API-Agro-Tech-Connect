@@ -124,6 +124,16 @@ class CommentRepository implements CommentRepositoryInterface
 
         return true;
     }
+    public function deleteComment(Comment $comment): bool
+    {
+        // Eliminar todas las imágenes asociadas a la respuesta
+        if ($comment->images()->exists()) {
+            $this->deleteAllCommentImages($comment);
+        }
+
+        // Eliminar la respuesta
+        return $comment->delete();
+    }
 
     public function getReactions($decryptedId){
         return Comment::with([
