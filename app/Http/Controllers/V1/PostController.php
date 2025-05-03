@@ -27,6 +27,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
+use App\Http\Requests\V1\Valorations\StoreReactionRequest;
+
 
 class PostController extends Controller
 {
@@ -483,6 +485,32 @@ class PostController extends Controller
                 'Error al ver reacciones de la publicación: ' . $e->getMessage(),
                 500
             );
+        }
+    }
+
+    public function createReaction(StoreReactionRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $decryptedId = Crypt::decrypt($id);
+            $post = Post::findOrFail($decryptedId);
+            $user = $this->authRepository->userLoggedIn();
+            $reaction = $this->postRepository->storeReaction($post, $request, $user);
+            DB::commit();
+            return ApiResponse::success(
+                'Reacción registrada correctamente',
+                201,
+                ['reaction' => $reaction]
+            );
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Post no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            // Manejar específicamente el error de reacción duplicada
+            if ($e->getCode() === 400) {
+                return ApiResponse::error($e->getMessage(), 400);
+            }
+            return ApiResponse::error('Error al registrar reacción: ' . $e->getMessage(), 500);
         }
     }
 }

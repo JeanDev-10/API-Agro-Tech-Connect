@@ -3,12 +3,14 @@
 namespace App\Repository\V1\Post;
 
 use App\Events\V1\NewPostEvent;
+use App\Events\V1\PostReactionEvent;
 use App\Http\Responses\V1\ApiResponse;
 use App\Interfaces\V1\Post\PostRepositoryInterface;
 use App\Models\V1\Comment;
 use App\Models\V1\Post;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Services\V1\ImageService;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
@@ -295,5 +297,34 @@ class PostRepository implements PostRepositoryInterface
             'negativeReactions.user.image'
         ])->findOrFail($decryptedId);
     }
+    public function storeReaction($post,$request,$user){
 
+        // Verificar si el usuario ya tiene una reacción en este comentario
+        $existingReaction = $post->reactions()
+            ->where('user_id', $user->id)
+            ->first();
+
+
+        if ($existingReaction) {
+            // Si la reacción existente es del mismo tipo, lanzar excepción
+            if ($existingReaction->type === $request->type) {
+                throw new Exception('Ya has reaccionado con este tipo anteriormente', 400);
+            }
+
+            // Actualizar reacción existente si es diferente
+            $existingReaction->update(['type' => $request->type]);
+            $reaction = $existingReaction;
+        }
+         else {
+            // Crear nueva reacción
+            $reaction = $post->reactions()->create([
+                'type' => $request->type,
+                'user_id' => $user->id
+            ]);
+        }
+
+        // Disparar evento para notificaciones
+        event(new PostReactionEvent($post, $reaction));
+        return $reaction->load('user.image','user.ranges');
+}
 }

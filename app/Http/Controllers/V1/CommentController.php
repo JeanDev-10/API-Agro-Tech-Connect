@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\V1;
 
-use App\Events\V1\CommentReactionEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Valorations\StoreReactionRequest;
 use App\Http\Resources\V1\CommentAndRate\CommentResource;
