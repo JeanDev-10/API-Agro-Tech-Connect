@@ -104,4 +104,15 @@ class ReplayCommentRepository implements ReplayCommentRepositoryInterface
         // Eliminar la respuesta
         return $replayComment->delete();
     }
+    public function deleteReaction($comment, $user)
+    {
+        $existingReaction = $comment->reactions()
+            ->where('user_id', $user->id)
+            ->first();
+        if ($existingReaction!=null) {
+            $existingReaction->delete();
+        } else {
+            throw new Exception('Aún no has reaccionado a esta respuesta', 400);
+        }
+    }
 }
