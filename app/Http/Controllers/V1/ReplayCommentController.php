@@ -242,7 +242,7 @@ class ReplayCommentController extends Controller
                 204,
             );
         } catch (ModelNotFoundException $e) {
-            return ApiResponse::error('Respuesta no encontrado', 404);
+            return ApiResponse::error('Respuesta no encontrada', 404);
         } catch (Exception $e) {
             DB::rollBack();
             // Manejar específicamente el error de reacción duplicada
