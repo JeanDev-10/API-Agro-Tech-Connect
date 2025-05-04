@@ -479,6 +479,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo no autorizado
     - Caso erróneo comentario no encontrada
     - Caso erróneo comentario id alterado cifrado
+- **Eliminar una cuenta**: `DELETE /users/{user}/`
+    - Caso exitoso
+    - Caso erróneo no autorizado
+    - Caso erróneo cuenta no encontrada
+    - Caso erróneo id alterado cifrado
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)

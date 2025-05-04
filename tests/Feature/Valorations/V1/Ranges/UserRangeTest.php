@@ -184,7 +184,7 @@ class UserRangeTest extends TestCase
             'user_id' => User::factory()->create()->id
         ]);
 
-        event(new CommentReactionEvent($comment, $reaction));
+        /* event(new CommentReactionEvent($comment, $reaction)); */
 
         $this->user->refresh();
         $highestRange = $this->user->ranges()->orderByDesc('min_range')->first();

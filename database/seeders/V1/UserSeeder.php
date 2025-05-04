@@ -31,8 +31,9 @@ class UserSeeder extends Seeder
         Permission::firstOrCreate(["name" => "post.create-complaint"]);
         Permission::firstOrCreate(["name" => "comment.create-complaint"]);
         Permission::firstOrCreate(["name" => "replyComment.create-complaint"]);
+        Permission::firstOrCreate(["name" => "admin.delete-account"]);
         $admin->assignRole("admin");
-        $admin_role->syncPermissions(['user.change-password','user.upload-avatar']);
+        $admin_role->syncPermissions(['user.change-password','user.upload-avatar','admin.delete-account']);
         $client_role->syncPermissions(['user.change-password', 'user.upload-avatar','post.create-complaint','comment.create-complaint','replyComment.create-complaint']);
         $client_role_social->syncPermissions(['user.delete-account-social','post.create-complaint','comment.create-complaint','replyComment.create-complaint']);
 

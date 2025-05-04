@@ -31,6 +31,17 @@ class UserRepository implements UserRepositoryInterface
         DB::commit();
         event(new UserDeletedAccountEvent($userData));
     }
+    public function deleteUserAdmin($user)
+    {
+        // Eliminar tokens
+        $userData = $user->replicate();
+        $userData->setHidden([]);
+        $user->tokens()->delete();
+
+        // Eliminar usuario
+        $user->delete();
+        event(new UserDeletedAccountEvent($userData));
+    }
     public function mePosts($filters, $user_id)
     {
         $query = Post::where('user_id', $user_id)->with(['images', 'user.image','user.ranges'])

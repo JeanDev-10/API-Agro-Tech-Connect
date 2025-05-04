@@ -51,6 +51,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
             Route::get('/{id}/posts', [UserController::class, 'userPosts']);
             // Seguir/Dejar de seguir
             Route::post('/follow', [FollowController::class, 'follow']);
+            Route::delete('/{id}', [UserController::class, 'deleteUserAdmin'])->middleware("permission:admin.delete-account");
             Route::delete('/unfollow', [FollowController::class, 'unfollow']);
             // seguidores y seguidos del usuario
             Route::get('{id}/followers', [FollowController::class, 'followers']);
