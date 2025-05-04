@@ -172,7 +172,6 @@ class FollowControllerTest extends TestCase
         ])->deleteJson('/api/v1/users/unfollow', [
             'user_id' => $encryptedId,
         ]);
-
         $response->assertStatus(200)
             ->assertJson([
                 'message' => 'Has dejado de seguir a este usuario',

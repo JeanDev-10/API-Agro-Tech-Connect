@@ -26,21 +26,21 @@ class EditCommentTest extends TestCase
         parent::setUp();
         Storage::fake('public');
         Event::fake();
-        
+
         $this->user = User::factory()->create();
         $this->actingAs($this->user);
-        
+
         $this->post = Post::factory()->create();
         $this->comment = Comment::factory()->create([
             'post_id' => $this->post->id,
             'user_id' => $this->user->id
         ]);
-        
+
         $this->encryptedPostId = Crypt::encrypt($this->post->id);
         $this->encryptedCommentId = Crypt::encrypt($this->comment->id);
     }
 
-   
+
     public function test_update_comment_with_text_only_successfully()
     {
         $response = $this->putJson("/api/v1/posts/{$this->encryptedPostId}/comments/{$this->encryptedCommentId}", [
@@ -55,7 +55,7 @@ class EditCommentTest extends TestCase
         ]);
     }
 
-   
+
     public function test_update_comment_adding_images_to_comment_without_images()
     {
         $images = [
@@ -72,7 +72,7 @@ class EditCommentTest extends TestCase
         $this->assertCount(2, $response->json('data.images'));
     }
 
-   
+
     public function test_update_comment_replacing_existing_images()
     {
         // Crear imágenes existentes
@@ -107,11 +107,11 @@ class EditCommentTest extends TestCase
         $this->assertCount(2, $response->json('data.images'));
     }
 
-   
+
     public function test_cannot_update_another_users_comment()
     {
         $otherUser = User::factory()->create();
-        $otherComment = Comment::factory()->create(['user_id' => $otherUser->id]);
+        $otherComment = Comment::factory()->create(['user_id' => $otherUser->id,"post_id"=>$this->post->id]);
         $encryptedOtherCommentId = Crypt::encrypt($otherComment->id);
 
         $response = $this->putJson("/api/v1/posts/{$this->encryptedPostId}/comments/{$encryptedOtherCommentId}", [
@@ -121,7 +121,7 @@ class EditCommentTest extends TestCase
         $response->assertStatus(403);
     }
 
-   
+
     public function test_validation_errors_on_comment_update()
     {
         // Comentario muy largo
@@ -145,7 +145,7 @@ class EditCommentTest extends TestCase
         $response3->assertStatus(422);
     }
 
-   
+
     public function test_fails_with_invalid_image_format()
     {
         $invalidFile = UploadedFile::fake()->create('document.pdf', 1000);
@@ -157,11 +157,11 @@ class EditCommentTest extends TestCase
         $response->assertStatus(422);
     }
 
-   
+
     public function test_comment_not_found()
     {
         $nonExistentCommentId = Crypt::encrypt(9999);
-        
+
         $response = $this->putJson("/api/v1/posts/{$this->encryptedPostId}/comments/{$nonExistentCommentId}", [
             'comment' => 'Comentario para comentario inexistente'
         ]);
@@ -169,11 +169,11 @@ class EditCommentTest extends TestCase
         $response->assertStatus(404);
     }
 
-   
+
     public function test_invalid_encrypted_comment_id()
     {
         $invalidId = 'invalid-encrypted-string';
-        
+
         $response = $this->putJson("/api/v1/posts/{$this->encryptedPostId}/comments/{$invalidId}", [
             'comment' => 'Comentario con ID inválido'
         ]);
