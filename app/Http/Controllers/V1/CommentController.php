@@ -247,4 +247,28 @@ class CommentController extends Controller
             return ApiResponse::error('Error al registrar reacción: ' . $e->getMessage(), 500);
         }
     }
+    public function deleteReaction($id)
+    {
+        try {
+            DB::beginTransaction();
+            $decryptedId = Crypt::decrypt($id);
+            $comment = Comment::findOrFail($decryptedId);
+            $user = $this->authRepository->userLoggedIn();
+             $this->commentRepository->deleteReaction($comment, $user);
+            DB::commit();
+            return ApiResponse::success(
+                'Reacción eliminada correctamente',
+                204,
+            );
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Comentario no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            // Manejar específicamente el error de reacción duplicada
+            if ($e->getCode() === 400) {
+                return ApiResponse::error($e->getMessage(), 400);
+            }
+            return ApiResponse::error('Error al eliminar reacción: ' . $e->getMessage(), 500);
+        }
+    }
 }

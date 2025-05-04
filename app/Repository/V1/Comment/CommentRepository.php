@@ -180,4 +180,15 @@ class CommentRepository implements CommentRepositoryInterface
             event(new CommentReactionEvent($comment, $reaction));
             return $reaction->load('user.image','user.ranges');
     }
+    public function deleteReaction($comment, $user)
+    {
+        $existingReaction = $comment->reactions()
+            ->where('user_id', $user->id)
+            ->first();
+        if ($existingReaction!=null) {
+            $existingReaction->delete();
+        } else {
+            throw new Exception('Aún no has reaccionado a este comentario', 400);
+        }
+    }
 }
