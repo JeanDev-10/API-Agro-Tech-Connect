@@ -458,6 +458,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso ya has reaccionado positivo al comentario
     - Caso ya has reaccionado negativo al comentario
     - Caso error de validación
+- **eLIMINAR reacción a un comentario**: `DELETE /comments/{comment}/reactions/`
+    - Caso Exitoso 
+    - Caso No encontrado
+    - Caso Id cifrado alterado
+    - Caso aún no has reaccionado
 - **Crear reacción a un publicación (Postivo/Negativo)**: `POST /posts/{post}/reactions/`
     - Caso Exitoso (post sin reacción)
     - Caso Exitoso (post con reacción negativa anteriormente)
@@ -467,6 +472,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso ya has reaccionado positivo al post
     - Caso ya has reaccionado negativo al post
     - Caso error de validación
+- **Eliminar reacción a un publicación**: `DELETE /posts/{post}/reactions/`
+    - Caso Exitoso 
+    - Caso No encontrado
+    - Caso Id cifrado alterado
+    - Caso aún no has reaccionado
 - **Crear reacción a una respuesta a comentario (Postivo/Negativo)**: `POST /replaycomments/{replayComment}/reactions/`
     - Caso Exitoso (respuesta a comentario sin reacción)
     - Caso Exitoso (respuesta a comentario con reacción negativa anteriormente)
@@ -476,6 +486,11 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso ya has reaccionado positivo al respuesta a comentario
     - Caso ya has reaccionado negativo al respuesta a comentario
     - Caso error de validación
+- **Eliminar reacción a una respuesta a comentario**: `DELETE /replaycomments/{replayComment}/reactions/`
+    - Caso Exitoso 
+    - Caso No encontrado
+    - Caso Id cifrado alterado
+    - Caso aún no has reaccionado
 - **Eliminar una respuesta a comentario**: `DELETE /replaycomments/{replayComment}/`
     - Caso exitoso sin imágenes
     - Caso exitoso con imágenes

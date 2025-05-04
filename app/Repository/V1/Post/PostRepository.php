@@ -328,4 +328,15 @@ class PostRepository implements PostRepositoryInterface
         event(new PostReactionEvent($post, $reaction));
         return $reaction->load('user.image', 'user.ranges');
     }
+    public function deleteReaction($post, $user)
+    {
+        $existingReaction = $post->reactions()
+            ->where('user_id', $user->id)
+            ->first();
+        if ($existingReaction!=null) {
+            $existingReaction->delete();
+        } else {
+            throw new Exception('Aún no has reaccionado a esta publicación', 400);
+        }
+    }
 }

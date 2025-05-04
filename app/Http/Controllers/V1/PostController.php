@@ -513,4 +513,28 @@ class PostController extends Controller
             return ApiResponse::error('Error al registrar reacción: ' . $e->getMessage(), 500);
         }
     }
+    public function deleteReaction($id)
+    {
+        try {
+            DB::beginTransaction();
+            $decryptedId = Crypt::decrypt($id);
+            $post = Post::findOrFail($decryptedId);
+            $user = $this->authRepository->userLoggedIn();
+             $this->postRepository->deleteReaction($post, $user);
+            DB::commit();
+            return ApiResponse::success(
+                'Reacción eliminada correctamente',
+                204,
+            );
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error('Post no encontrado', 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            // Manejar específicamente el error de reacción duplicada
+            if ($e->getCode() === 400) {
+                return ApiResponse::error($e->getMessage(), 400);
+            }
+            return ApiResponse::error('Error al eliminar reacción: ' . $e->getMessage(), 500);
+        }
+    }
 }
