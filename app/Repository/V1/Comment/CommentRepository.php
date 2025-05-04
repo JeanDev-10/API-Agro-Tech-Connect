@@ -129,6 +129,11 @@ class CommentRepository implements CommentRepositoryInterface
         if ($comment->images()->exists()) {
             $this->deleteAllCommentImages($comment);
         }
+        if ($comment->replies()->whereHas('images')->exists()) {
+            $comment->replies->each(function ($reply) {
+                $this->deleteReplyImages($reply);
+            });
+        }
 
         // Eliminar la respuesta
         return $comment->delete();

@@ -41,7 +41,7 @@ class ImageService
 
             // Organización por fecha si está activado
             if ($organizeByDate) {
-                $path .= '/' . date('Y/m');
+                $path .= '/' . date('Y/m/d');
             }
 
             // Crear directorio si no existe

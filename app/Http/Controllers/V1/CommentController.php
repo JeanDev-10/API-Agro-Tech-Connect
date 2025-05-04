@@ -98,7 +98,7 @@ class CommentController extends Controller
             DB::rollBack();
 
             return ApiResponse::error(
-                'Error al eliminar la comentario: ' . $e->getMessage(),
+                'Error al eliminar el comentario: ' . $e->getMessage(),
                 500
             );
         }

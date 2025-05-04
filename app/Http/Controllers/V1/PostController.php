@@ -85,7 +85,7 @@ class PostController extends Controller
     {
         try {
             DB::beginTransaction();
-            $post = Post::findOrFail(Crypt::decrypt($id))->first();
+            $post = Post::findOrFail(Crypt::decrypt($id));
             $userLogged = $this->authRepository->userProfile();
 
             // Crear el comentario
@@ -295,7 +295,7 @@ class PostController extends Controller
 
             $this->authorize('delete', $post);
 
-            /* $this->postRepository->deletePostWithRelations($post); */
+            $this->postRepository->deletePostWithRelations($post);
             $userLogged = $this->authRepository->userProfile();
             if ($userLogged->hasRole('admin')) {
                 event(new PostDeletedByAdmin($post, $userLogged));
