@@ -126,7 +126,6 @@ class CommentRepository implements CommentRepositoryInterface
     }
     public function deleteComment(Comment $comment): bool
     {
-        // Eliminar todas las imágenes asociadas a la respuesta
         if ($comment->images()->exists()) {
             $this->deleteAllCommentImages($comment);
         }
