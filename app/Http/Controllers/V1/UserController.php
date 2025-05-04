@@ -55,6 +55,9 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
             $user = User::findOrFail(Crypt::decrypt($id));
+            if ($user->id == $this->authRepository->userLoggedIn()->id) {
+                return ApiResponse::error("No puedes eliminar tu propia cuenta", 400);
+            }
             $this->userRepository->deleteUserAdmin($user);
             DB::commit();
             return ApiResponse::success(

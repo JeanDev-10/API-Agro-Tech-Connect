@@ -98,4 +98,14 @@ class DeleteAccountAdminTest extends TestCase
         $response->assertStatus(401);
         $this->assertDatabaseHas('users', ['id' => $userToDelete->id]);
     }
+    public function test_admin_cannot_delete_own_account()
+    {
+        $encryptedId = Crypt::encrypt($this->admin->id);
+
+        $response = $this->actingAs($this->admin)
+            ->deleteJson("/api/v1/users/{$encryptedId}");
+
+        $response->assertStatus(400);
+        $this->assertDatabaseHas('users', ['id' => $this->admin->id]);
+    }
 }

@@ -129,7 +129,7 @@ El backend cuenta con los siguientes módulos:
 - **Denunciar publicación**
   - Un usuario solo puede denunciar una publicación hasta 5 veces
 
-### Módulo de Comentar 
+### Módulo de Comentarios 
 
 - **Comentar la publicación**
   - Máximo 100 caracteres
@@ -146,6 +146,15 @@ El backend cuenta con los siguientes módulos:
   - Un usuario solo puede denunciar un comentario hasta 5 veces
 - **Denunciar una respuesta de comentario**
   - Un usuario solo puede denunciar una respuesta comentario hasta 5 veces
+
+### Módulo de Valoraciones 
+
+- **Reaccionar a comentario (positivo/negativo)**
+  - Poder reaccionar solo una vez ya sea positivo o negativo
+- **Reaccionar respuesta a comentario (positivo/negativo)**
+  - Poder reaccionar solo una vez ya sea positivo o negativo
+- **Reaccionar a publicación (positivo/negativo)**
+  - Poder reaccionar solo una vez ya sea positivo o negativo
 
 ### Módulo de Administrador
 - **Eliminar cuenta**
@@ -484,6 +493,7 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso erróneo no autorizado
     - Caso erróneo cuenta no encontrada
     - Caso erróneo id alterado cifrado
+    - Caso erróneo eliminar mi propia cuenta como admin
 
 ## Autores
 - [Jean Pierre Rodríguez Zambrano](https://github.com/JeanDev-10)
