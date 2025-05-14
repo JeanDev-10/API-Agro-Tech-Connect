@@ -3,7 +3,9 @@
 namespace App\Http\Middleware\V1;
 
 use App\Http\Responses\V1\ApiResponse;
+use App\Models\V1\User;
 use Closure;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
@@ -12,6 +14,12 @@ class ThrottleRecoveryPasswords
 {
     public function handle($request, Closure $next)
     {
+        $user = User::where('email', $request->email)
+            ->where('registration_method', 'local')
+            ->first();
+        if (!$user) {
+            throw new ModelNotFoundException("Usuario no registrado");
+        }
         // Obtener la IP del cliente
         $clientIp = $request->ip();
 

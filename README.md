@@ -458,7 +458,7 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso ya has reaccionado positivo al comentario
     - Caso ya has reaccionado negativo al comentario
     - Caso error de validación
-- **eLIMINAR reacción a un comentario**: `DELETE /comments/{comment}/reactions/`
+- **Eliminar reacción a un comentario**: `DELETE /comments/{comment}/reactions/`
     - Caso Exitoso 
     - Caso No encontrado
     - Caso Id cifrado alterado
