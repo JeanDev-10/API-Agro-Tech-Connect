@@ -26,7 +26,7 @@ class LoginResource extends JsonResource
             'lastname' => $this->lastname,
             'username' => $this->username,
             'email' => $this->email,
-            'email_verified_at' => $this->email_verified_at->format('d/m/Y H:i'),
+            'email_verified_at' => $this->email_verified_at ? $this->email_verified_at->format('d/m/Y H:i') : null,
             'registration_method' => $this->registration_method,
             'created_at' => $this->created_at->format('d/m/Y H:i'),
             'updated_at' => $this->updated_at->format('d/m/Y H:i'),
