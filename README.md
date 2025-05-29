@@ -1,5 +1,5 @@
 # Proyecto Backend Agro Tech Connect
-![Logo](/public/assets/logo_agrotechconnectsinlienzosobrante.png)
+![Logo](/public/assets/logonuevoagrotechconnect28_05_2025.png)
 
 ## Descripción
 Este es un backend desarrollado en Laravel para la plataforma **Agro Tech Connect**, utilizando diversas tecnologías y herramientas modernas como Docker, Firebase para autenticación, y Redis para optimización del sistema.
@@ -183,7 +183,7 @@ El sistema de rangos se basa en la cantidad de "Positivos" obtenidos en comentar
 A continuación, se agregarán los diagramas correspondientes al sistema:
 
 ### Diagrama de Casos de Uso
-![Diagrama de casos de uso](/public/assets/Agro%20Tech%20Connect%20-%20Casos%20de%20uso-Módulos.png)
+![Diagrama de casos de uso](/public/assets/Agro%20Tech%20Connect%20-%20Casos%20de%20uso-Módulos.jpeg)
 
 ### Diagrama de la Base de Datos
 ![Diagrama de la Base de Datos](/public/assets/Agro%20Tech%20Connect%20-%20Base%20de%20datos%20con%20notas.png)
