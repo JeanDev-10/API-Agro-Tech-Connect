@@ -206,6 +206,10 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     {
         return $this->hasMany(ReplayComment::class);
     }
+    public function userInformation()
+    {
+        return $this->hasOne(UserInformation::class);
+    }
 
     public function reactions()
     {

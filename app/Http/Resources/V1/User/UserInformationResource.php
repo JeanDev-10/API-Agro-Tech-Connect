@@ -18,7 +18,7 @@ class UserInformationResource extends JsonResource
     {
         return [
             'id' => Crypt::encrypt($this->id),
-            'name' => $this->name,
+            'user'=>new UserResource($this->whenLoaded('user')),
             "description"=> $this->description,
 		    "link1"=> $this->link1,
             "link2"=> $this->link2,

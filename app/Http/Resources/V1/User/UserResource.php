@@ -43,7 +43,6 @@ class UserResource extends JsonResource
             'image' => new ImageResource($this->whenLoaded('image')),
             'user_information' => new UserInformationResource($this->whenLoaded('userInformation')),
             'ranges' => RangeResource::collection($this->whenLoaded('ranges')),
-
             // Counts para relaciones importantes
             'followers_count' => $this->whenCounted('followers'),
             'following_count' => $this->whenCounted('followings'),
