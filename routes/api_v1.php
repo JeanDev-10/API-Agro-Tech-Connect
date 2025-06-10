@@ -33,7 +33,6 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         //mis seguidores y seguidos
         Route::get('me/followers',  [FollowController::class, 'meFollowers']);
         Route::get('me/following',  [FollowController::class, 'meFollowing']);
-        Route::get('user/profile/{id}',  [AuthController::class, 'userProfileUserId']);
         Route::get('me/posts',  [UserController::class, 'mePosts']);
         Route::get('me/following/posts',  [UserController::class, 'meFollowingPosts']);
         Route::put('me/password',  [UserController::class, 'changePassword'])->middleware('permission:user.change-password');;
@@ -51,9 +50,6 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
             Route::get('/{id}/posts', [UserController::class, 'userPosts']);
             // Seguir/Dejar de seguir
             Route::post('/follow', [FollowController::class, 'follow']);
-            // seguidores y seguidos del usuario
-            Route::get('{id}/followers', [FollowController::class, 'followers']);
-            Route::get('{id}/following', [FollowController::class, 'following']);
             Route::delete('/unfollow', [FollowController::class, 'unfollow']);
             Route::delete('{id}', [UserController::class, 'deleteUserAdmin'])->middleware("permission:admin.delete-account");
         });
@@ -95,8 +91,6 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::get('/{id}/replaycomments', 'getReplayComments');
                 Route::delete('/{id}', 'destroy');
                 Route::delete('/{id}/reactions', 'deleteReaction');
-
-
             });
              Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:comment.create-complaint');
         });
@@ -109,20 +103,33 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::get('/{id}/reactions', 'getReactions');
                 Route::delete('/{id}', 'destroy');
                 Route::delete('/{id}/reactions', 'deleteReaction');
-
-
             });
              Route::post('/{id}/complaint', [ComplaintController::class, 'reportReplyComment'])->middleware('permission:replyComment.create-complaint');
         });
     });
 });
 
+
+//ver otros perfiles
+Route::get('user/profile/{id}',  [AuthController::class, 'userProfileUserId']);
+
+Route::prefix('users')->group(function () {
+    //ver seguidores de un usuario
+    Route::get('{id}/followers', [FollowController::class, 'followers']);
+    //ver seguidos de un usuario
+    Route::get('{id}/following', [FollowController::class, 'following']);
+});
+
+
+// auth register,login, forgot password and reset password
 Route::controller(AuthController::class)->group(function () {
     Route::post('/auth/register', 'register');
     Route::post('/auth/login', 'login');
     Route::post('password/forgot', 'forgot_password')->middleware(ThrottleRecoveryPasswords::class);
     Route::post('password/reset',  'reset_password');
 });
+
+// auth with social
 Route::controller(SocialAuthController::class)->group(function () {
     Route::post('/auth/login/google', 'loginWithGoogle');
     Route::post('/auth/login/facebook', 'loginWithFacebook');

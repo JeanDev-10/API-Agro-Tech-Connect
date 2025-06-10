@@ -21,8 +21,5 @@ class UserInformationSeeder extends Seeder
                 'user_id' => $user->id,
             ]);
         }
-
-        // Crear 10 registros adicionales
-        UserInformation::factory()->count(10)->create();
     }
 }

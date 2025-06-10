@@ -23,7 +23,7 @@ class ImageSeeder extends Seeder
 
         foreach ($users as $user) {
             $user->image()->create([
-                'url' => $this->generateRandomAvatar($user->email),
+                'url' => "https://i.ibb.co/rKCScRx8/perfil1.png",
                 'image_uuid' => \Illuminate\Support\Str::uuid(),
             ]);
         }
