@@ -23,7 +23,7 @@ class UserInformationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => 'required|string|max:100',
+            'description' => 'required|string|max:500',
             'link1' => 'nullable|url|max:255',
             'link2' => 'nullable|url|max:255',
             'link3' => 'nullable|url|max:255',
