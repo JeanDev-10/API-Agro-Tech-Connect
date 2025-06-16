@@ -19,6 +19,8 @@ class FollowResource extends JsonResource
     {
         return [
             'id' => Crypt::encrypt($this->id),
+            'follower_id' => Crypt::encrypt($this->follower_id),
+            'followed_id' => Crypt::encrypt($this->followed_id),
             'follower' => new UserResource($this->whenLoaded('follower')),
             'followed' => new UserResource($this->whenLoaded('followed')),
             'created_at' => $this->created_at->format('d/m/Y H:i'),

@@ -58,12 +58,22 @@ class AuthRepository implements AuthRepositoryInterface
     public function userProfile()
     {
         $id = Auth::guard('sanctum')->user()->id;
-        $user = User::where('id', $id)->with('roles', 'ranges', 'image', 'followings', 'followers', 'posts', 'comments', 'replayComments', 'reactions', 'complaints','userInformation')->first();
+        $user = User::where('id', $id)->with('roles', 'ranges', 'image', 'followings.followed', 'followers.follower', 'posts', 'comments', 'replayComments', 'reactions', 'complaints', 'userInformation')->withCount([
+            'followers',
+            'followings',
+            'posts',
+            'comments'
+        ])->first();
         return $user;
     }
     public function userProfileUserId($id)
     {
-        $user = User::where('id', $id)->with('roles', 'ranges', 'image', 'followings', 'followers', 'posts', 'comments', 'replayComments', 'reactions', 'complaints','userInformation')->first();
+        $user = User::where('id', $id)->with('roles', 'ranges', 'image', 'followings.followed', 'followers.follower', 'posts', 'comments', 'replayComments', 'reactions', 'complaints', 'userInformation')->withCount([
+            'followers',
+            'followings',
+            'posts',
+            'comments'
+        ])->first();
         if (!$user) {
             throw new ModelNotFoundException("Usuario no encontrado");
         }

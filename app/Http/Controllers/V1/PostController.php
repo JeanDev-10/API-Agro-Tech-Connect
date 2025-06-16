@@ -46,7 +46,7 @@ class PostController extends Controller
                 'Listado de Posts',
                 200,
                 $posts->through(function ($post) {
-                    return new ReactionResource($post);
+                    return new PostResource($post);
                 })
             );
         } catch (Exception $e) {

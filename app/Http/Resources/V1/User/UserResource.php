@@ -50,9 +50,9 @@ class UserResource extends JsonResource
             'comments_count' => $this->whenCounted('comments'),
 
             // Relaciones completas (cargar solo cuando se solicitan)
-            'followers' => UserResource::collection($this->whenLoaded('followers')),
+            'followers' => FollowResource::collection($this->whenLoaded('followers')),
 
-            'followings' => UserResource::collection($this->whenLoaded('followings')),
+            'followings' => FollowResource::collection($this->whenLoaded('followings')),
 
             'reactions' => ReactionResource::collection($this->whenLoaded('reactions', function () {
                 return $this->reactions()->with(['user.image', 'reactionable'])->get();
