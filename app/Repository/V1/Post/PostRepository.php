@@ -172,8 +172,8 @@ class PostRepository implements PostRepositoryInterface
             // Eliminar imágenes de las respuestas
             if ($reply->images->isNotEmpty()) {
                 $imagePaths = $reply->images->pluck('image_Uuid')->toArray();
-                $reply->images()->delete();
                 $this->imageService->deleteImages($imagePaths);
+                $reply->images()->delete();
             }
 
             $reply->delete();
@@ -271,15 +271,15 @@ class PostRepository implements PostRepositoryInterface
 
         // Procesar imágenes si se enviaron
         if ($images) {
-            // Eliminar imágenes antiguas
-            $this->deleteCommentImages($comment);
-
+            if($comment->images->isNotEmpty()) {
+                // Eliminar imágenes antiguas en el caso que existan
+                $this->deleteCommentImages($comment);
+            }
             // Subir nuevas imágenes
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
                 'comments/images'
             );
-
             foreach ($uploadedImages as $image) {
                 $comment->images()->create([
                     'image_Uuid' => $image['path'],

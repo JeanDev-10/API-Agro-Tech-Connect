@@ -6,11 +6,15 @@ use App\Events\V1\UserChangePasswordEvent;
 use App\Events\V1\UserDeletedAccountEvent;
 use App\Interfaces\V1\User\UserRepositoryInterface;
 use App\Models\V1\Post;
+use App\Services\V1\ImageService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserRepositoryInterface
 {
+
+    public function __construct(private readonly ImageService $imageService) {}
     public function changePassword($user, Request $request)
     {
         $user->password = bcrypt($request->new_password);
@@ -24,8 +28,15 @@ class UserRepository implements UserRepositoryInterface
         // Eliminar tokens
         $userData = $user->replicate();
         $userData->setHidden([]);
+        // Eliminar imagen de perfil si existe
+        if ($user->image()->exists()) {
+            $fileDeleted = $this->imageService->deleteImage($user->image->image_Uuid);
+            if (!$fileDeleted) {
+                throw new Exception("No se pudo eliminar el archivo físico del avatar");
+            }
+            $user->image()->delete();
+        }
         $user->tokens()->delete();
-
         // Eliminar usuario
         $user->delete();
         DB::commit();
@@ -36,15 +47,21 @@ class UserRepository implements UserRepositoryInterface
         // Eliminar tokens
         $userData = $user->replicate();
         $userData->setHidden([]);
+        if ($user->image()->exists()) {
+            $fileDeleted = $this->imageService->deleteImage($user->image->image_Uuid);
+            if (!$fileDeleted) {
+                throw new Exception("No se pudo eliminar el archivo físico del avatar");
+            }
+            $user->image()->delete();
+        }
         $user->tokens()->delete();
-
         // Eliminar usuario
         $user->delete();
         event(new UserDeletedAccountEvent($userData));
     }
     public function mePosts($filters, $user_id)
     {
-        $query = Post::where('user_id', $user_id)->with(['images', 'user.image','user.ranges'])
+        $query = Post::where('user_id', $user_id)->with(['images', 'user.image', 'user.ranges'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes
@@ -74,7 +91,7 @@ class UserRepository implements UserRepositoryInterface
             $query->whereHas('followers', function ($q) use ($user_id) {
                 $q->where('follower_id', $user_id);
             });
-        })->with(['images', 'user.image','user.ranges'])
+        })->with(['images', 'user.image', 'user.ranges'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes
@@ -98,7 +115,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function userPosts($filters, $user_id)
     {
-        $query =  Post::where('user_id',$user_id)->with(['images', 'user.image','user.ranges'])
+        $query =  Post::where('user_id', $user_id)->with(['images', 'user.image', 'user.ranges'])
             ->withCount(['comments', 'reactions'])->latest();;
 
         // Filtro por año y mes

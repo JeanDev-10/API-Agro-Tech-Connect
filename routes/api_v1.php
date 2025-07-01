@@ -33,15 +33,19 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         //mis seguidores y seguidos
         Route::get('me/followers',  [FollowController::class, 'meFollowers']);
         Route::get('me/following',  [FollowController::class, 'meFollowing']);
+        //mis posts, posts que sigo
         Route::get('me/posts',  [UserController::class, 'mePosts']);
         Route::get('me/following/posts',  [UserController::class, 'meFollowingPosts']);
+        //cambiar mi contraseña
         Route::put('me/password',  [UserController::class, 'changePassword'])->middleware('permission:user.change-password');;
         Route::put('me',  [UserController::class, 'deleteMe'])->middleware('permission:user.delete-account');;
         Route::put('me/social',  [UserController::class, 'deleteMeSocial'])->middleware('permission:user.delete-account-social');;
+        //mostrar, crear y actualizar información del usuario logeado
         Route::prefix('me/user-information')->group(function () {
             Route::post('/', [UserInformationController::class, 'storeOrUpdate']);
             Route::get('/', [UserInformationController::class, 'show']);
         });
+        //subir actualziar, eliminar avatar
         Route::prefix('me/avatar')->middleware('permission:user.upload-avatar')->group(function () {
             Route::post('/', [AvatarController::class, 'update']);
             Route::delete('/', [AvatarController::class, 'destroy']);
@@ -62,15 +66,11 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         });
         Route::prefix('posts')->group(function () {
             Route::controller(PostController::class)->group(function () {
-                Route::get('/', 'index');
-                Route::get('/{id}/reactions', 'getReactions');
                 Route::post('/', 'store');
                 Route::put('/{id}', 'update');
                 Route::delete('/{id}', 'destroy');
                 Route::delete('/{id}/images', 'deleteImages');
                 Route::delete('/{id}/images/{image}', 'deleteImage');
-                Route::get('/{id}', 'show');
-                Route::get('/{id}/comments', 'getPostComments');
                 Route::post('/{id}/comments', 'createPostComments');
                 Route::post('/{post}/comments/{id}/replaycomments', 'createReplayComments');
                 Route::put('/{post}/replaycomments/{replaycomment}', 'updateReplayComments');
@@ -79,7 +79,6 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::put('/{id}/comments/{comment}', 'updatePostComments');
             });
             Route::post('/{id}/complaint', [ComplaintController::class, 'reportPost'])->middleware('permission:post.create-complaint');
-
         });
         Route::prefix('comments')->group(function () {
             Route::controller(CommentController::class)->group(function () {
@@ -92,7 +91,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::delete('/{id}', 'destroy');
                 Route::delete('/{id}/reactions', 'deleteReaction');
             });
-             Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:comment.create-complaint');
+            Route::post('/{id}/complaint', [ComplaintController::class, 'reportComment'])->middleware('permission:comment.create-complaint');
         });
         Route::prefix('replaycomments')->group(function () {
             Route::controller(ReplayCommentController::class)->group(function () {
@@ -104,7 +103,7 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
                 Route::delete('/{id}', 'destroy');
                 Route::delete('/{id}/reactions', 'deleteReaction');
             });
-             Route::post('/{id}/complaint', [ComplaintController::class, 'reportReplyComment'])->middleware('permission:replyComment.create-complaint');
+            Route::post('/{id}/complaint', [ComplaintController::class, 'reportReplyComment'])->middleware('permission:replyComment.create-complaint');
         });
     });
 });
@@ -118,6 +117,8 @@ Route::prefix('users')->group(function () {
     Route::get('{id}/followers', [FollowController::class, 'followers']);
     //ver seguidos de un usuario
     Route::get('{id}/following', [FollowController::class, 'following']);
+    // ver posts de un usuario
+    Route::get('/{id}/posts', [UserController::class, 'userPosts']);
 });
 
 
@@ -133,4 +134,18 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(SocialAuthController::class)->group(function () {
     Route::post('/auth/login/google', 'loginWithGoogle');
     Route::post('/auth/login/facebook', 'loginWithFacebook');
+});
+
+//posts
+Route::prefix('posts')->group(function () {
+    Route::controller(PostController::class)->group(function () {
+        //obtener todos los posts
+        Route::get('/', 'index');
+        //obtener un post
+        Route::get('/{id}', 'show');
+        //obtener reacciones de un post
+        Route::get('/{id}/reactions', 'getReactions');
+        //obtener comentarios de un post
+        Route::get('/{id}/comments', 'getPostComments');
+    });
 });

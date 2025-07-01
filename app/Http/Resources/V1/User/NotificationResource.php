@@ -14,7 +14,7 @@ class NotificationResource extends JsonResource
             'type' => $this->data['type'] ?? 'unknown',
             'message' => $this->data['message'] ?? '',
             'sender' => [
-                'id' => Crypt::encrypt($this->id) ?? null,
+                'id' => Crypt::encrypt($this->data['follower_id']) ?? null,
                 'name' => $this->data['follower_name'] ?? '',
                 'avatar' => $this->data['url_avatar'] ?? null,
             ],
