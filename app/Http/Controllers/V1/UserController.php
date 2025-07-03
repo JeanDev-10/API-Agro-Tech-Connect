@@ -75,7 +75,7 @@ class UserController extends Controller
     {
         try {
             $user = $this->authRepository->userLoggedIn();
-            $this->userRepository->deleteMe($user);
+            $this->userRepository->deleteMe($user,true);
             return ApiResponse::success(
                 'Cuenta eliminada correctamente',
                 204

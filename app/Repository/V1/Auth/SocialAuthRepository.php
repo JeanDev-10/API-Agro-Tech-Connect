@@ -83,7 +83,8 @@ class SocialAuthRepository implements SocialAuthRepositoryInterface
 
         // Crear imagen de perfil
         $user->image()->create([
-            'url' => $firebaseUser->photoUrl ?? 'https://images.vexels.com/content/145908/preview/male-avatar-maker-2a7919.png',
+            dd($firebaseUser->photoUrl),
+            'url' => $firebaseUser->photoUrl ?? null,
             'image_uuid' => null,
         ]);
         event(new UserRegisteredEvent($user));

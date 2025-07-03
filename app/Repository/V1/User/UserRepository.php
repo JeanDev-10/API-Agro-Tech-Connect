@@ -22,19 +22,21 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
         event(new UserChangePasswordEvent($user));
     }
-    public function deleteMe($user)
+    public function deleteMe($user,$social=false)
     {
         DB::beginTransaction();
         // Eliminar tokens
         $userData = $user->replicate();
         $userData->setHidden([]);
-        // Eliminar imagen de perfil si existe
-        if ($user->image()->exists()) {
-            $fileDeleted = $this->imageService->deleteImage($user->image->image_Uuid);
-            if (!$fileDeleted) {
-                throw new Exception("No se pudo eliminar el archivo físico del avatar");
+        // Eliminar imagen de perfil si existe y si es local
+        if(!$social){
+            if ($user->image()->exists()) {
+                $fileDeleted = $this->imageService->deleteImage($user->image->image_Uuid);
+                if (!$fileDeleted) {
+                    throw new Exception("No se pudo eliminar el archivo físico del avatar");
+                }
+                $user->image()->delete();
             }
-            $user->image()->delete();
         }
         $user->tokens()->delete();
         // Eliminar usuario
