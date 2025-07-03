@@ -83,7 +83,6 @@ class SocialAuthRepository implements SocialAuthRepositoryInterface
 
         // Crear imagen de perfil
         $user->image()->create([
-            dd($firebaseUser->photoUrl),
             'url' => $firebaseUser->photoUrl ?? null,
             'image_uuid' => null,
         ]);
