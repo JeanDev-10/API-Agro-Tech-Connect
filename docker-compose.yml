@@ -25,6 +25,7 @@ services:
             - mysql
             - redis
             - mailpit
+
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -79,3 +80,4 @@ volumes:
         driver: local
     sail-redis:
         driver: local
+
