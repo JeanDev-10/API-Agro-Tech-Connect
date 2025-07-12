@@ -339,7 +339,7 @@ A continuación, se agregarán los diagramas correspondientes al sistema:
     - Caso exitoso eliminar publicación con titulo y descripción (sin imágenes originalmente)
     - Caso exitoso eliminar publicación con titulo y descripción e imágenes
     - Caso erróneo eliminar publicación que no pertenece
-    - Caso erróneo eliminar publicación por el admin
+    - Caso exitoso eliminar publicación por el admin
     - Caso erróneo ID alterado
     - Caso erróneo publicación no encontrada
 - **Eliminar todas las imágenes de un post**: `DELETE /posts/{id}/images`

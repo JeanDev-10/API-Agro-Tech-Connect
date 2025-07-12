@@ -34,4 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) {
             return ApiResponse::error("No tienes permiso para acceder a este recurso", 403);
         });
+        $exceptions->render(function (ThrottleRequestsException $e, $request) {
+            return ApiResponse::error("Has excedido el numero máximo permitido de peticiones, intenta después",429);
+        });
     })->create();
