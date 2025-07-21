@@ -152,7 +152,6 @@ class PostController extends Controller
             }
             // Autorizar la acción
             $this->authorize('update', $post);
-
             $updatedPost = $this->postRepository->updatePostWithImages(
                 $post,
                 $request->validated(),

@@ -15,7 +15,7 @@ use Tests\TestCase;
 class UpdateReplayCommentTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     private $user;
     private $post;
     private $comment;
@@ -27,7 +27,7 @@ class UpdateReplayCommentTest extends TestCase
     {
         parent::setUp();
         Storage::fake('public');
-        
+
         $this->user = User::factory()->create();
         $this->post = Post::factory()->create();
         $this->comment = Comment::factory()->create(['post_id' => $this->post->id]);
@@ -35,16 +35,16 @@ class UpdateReplayCommentTest extends TestCase
             'comment_id' => $this->comment->id,
             'user_id' => $this->user->id
         ]);
-        
+
         $this->encryptedPostId = Crypt::encrypt($this->post->id);
         $this->encryptedReplyId = Crypt::encrypt($this->reply->id);
         $this->actingAs($this->user);
     }
 
-    
+
     public function test_update_reply_with_text_only_successfully()
     {
-        $response = $this->putJson(
+        $response = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$this->encryptedReplyId}",
             ['comment' => 'Respuesta actualizada']
         );
@@ -55,7 +55,7 @@ class UpdateReplayCommentTest extends TestCase
         ]);
     }
 
-    
+
     public function test_update_reply_adding_images_to_reply_without_images()
     {
         $images = [
@@ -63,7 +63,7 @@ class UpdateReplayCommentTest extends TestCase
             UploadedFile::fake()->image('reply2.png')
         ];
 
-        $response = $this->putJson(
+        $response = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$this->encryptedReplyId}",
             [
                 'comment' => 'Respuesta con imágenes nuevas',
@@ -75,8 +75,8 @@ class UpdateReplayCommentTest extends TestCase
         $this->assertCount(2, $response->json('data.images'));
     }
 
-    
-    public function test_update_reply_replacing_existing_images()
+
+    public function test_update_reply_add_existing_images()
     {
         // Crear imágenes existentes
         $oldImages = [
@@ -95,7 +95,7 @@ class UpdateReplayCommentTest extends TestCase
             UploadedFile::fake()->image('new2.png')
         ];
 
-        $response = $this->putJson(
+        $response = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$this->encryptedReplyId}",
             ['images' => $newImages]
         );
@@ -108,10 +108,10 @@ class UpdateReplayCommentTest extends TestCase
         }
 
         // Verificar que solo existen las nuevas imágenes
-        $this->assertCount(2, $response->json('data.images'));
+        $this->assertCount(4, $response->json('data.images'));
     }
 
-    
+
     public function test_cannot_update_another_users_reply()
     {
         $otherUser = User::factory()->create();
@@ -119,10 +119,10 @@ class UpdateReplayCommentTest extends TestCase
             'comment_id' => $this->comment->id,
             'user_id' => $otherUser->id
         ]);
-        
+
         $encryptedOtherReplyId = Crypt::encrypt($otherReply->id);
 
-        $response = $this->putJson(
+        $response = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$encryptedOtherReplyId}",
             ['comment' => 'Intento de edición no autorizado']
         );
@@ -130,11 +130,11 @@ class UpdateReplayCommentTest extends TestCase
         $response->assertStatus(403);
     }
 
-    
+
     public function test_reply_validation_errors_on_update()
     {
         // Respuesta muy larga
-        $response1 = $this->putJson(
+        $response1 = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$this->encryptedReplyId}",
             ['comment' => str_repeat('a', 101)]
         );
@@ -142,7 +142,7 @@ class UpdateReplayCommentTest extends TestCase
 
         // Imagen muy grande
         $largeImage = UploadedFile::fake()->image('large.jpg')->size(4000);
-        $response2 = $this->putJson(
+        $response2 = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$this->encryptedReplyId}",
             ['images' => [$largeImage]]
         );
@@ -150,18 +150,18 @@ class UpdateReplayCommentTest extends TestCase
 
         // Demasiadas imágenes
         $manyImages = array_fill(0, 6, UploadedFile::fake()->image('photo.jpg'));
-        $response3 = $this->putJson(
+        $response3 = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$this->encryptedReplyId}",
             ['images' => $manyImages]
         );
         $response3->assertStatus(422);
     }
 
-    
+
     public function test_reply_not_found()
     {
         $nonExistentId = Crypt::encrypt(9999);
-        $response = $this->putJson(
+        $response = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$nonExistentId}",
             ['comment' => 'Respuesta para reply inexistente']
         );
@@ -169,11 +169,11 @@ class UpdateReplayCommentTest extends TestCase
         $response->assertStatus(404);
     }
 
-    
+
     public function test_invalid_encrypted_reply_id()
     {
         $invalidId = 'invalid-encrypted-string';
-        $response = $this->putJson(
+        $response = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$invalidId}",
             ['comment' => 'Respuesta con ID inválido']
         );

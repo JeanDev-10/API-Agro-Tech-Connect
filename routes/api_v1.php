@@ -69,16 +69,16 @@ use Illuminate\Support\Facades\Route;
             Route::prefix('posts')->group(function () {
                 Route::controller(PostController::class)->group(function () {
                     Route::post('/', 'store');
-                    Route::put('/{id}', 'update');
+                    Route::post('/{id}', 'update');
                     Route::delete('/{id}', 'destroy');
                     Route::delete('/{id}/images', 'deleteImages');
                     Route::delete('/{id}/images/{image}', 'deleteImage');
                     Route::post('/{id}/comments', 'createPostComments');
                     Route::post('/{post}/comments/{id}/replaycomments', 'createReplayComments');
-                    Route::put('/{post}/replaycomments/{replaycomment}', 'updateReplayComments');
+                    Route::post('/{post}/replaycomments/{replaycomment}', 'updateReplayComments');
                     Route::post('/{id}/reactions', 'createReaction');
                     Route::delete('/{id}/reactions', 'deleteReaction');
-                    Route::put('/{id}/comments/{comment}', 'updatePostComments');
+                    Route::post('/{id}/comments/{comment}', 'updatePostComments');
                 });
                 Route::post('/{id}/complaint', [ComplaintController::class, 'reportPost'])->middleware('permission:post.create-complaint');
             });
@@ -86,10 +86,7 @@ use Illuminate\Support\Facades\Route;
                 Route::controller(CommentController::class)->group(function () {
                     Route::delete('/{id}/images', 'deleteImages');
                     Route::delete('/{id}/images/{image}', 'deleteImage');
-                    Route::get('/{id}', 'show');
-                    Route::get('/{id}/reactions', 'getReactions');
                     Route::post('/{id}/reactions', 'createReaction');
-                    Route::get('/{id}/replaycomments', 'getReplayComments');
                     Route::delete('/{id}', 'destroy');
                     Route::delete('/{id}/reactions', 'deleteReaction');
                 });
@@ -99,9 +96,7 @@ use Illuminate\Support\Facades\Route;
                 Route::controller(ReplayCommentController::class)->group(function () {
                     Route::delete('/{id}/images/', 'deleteImages');
                     Route::delete('/{id}/images/{image}', 'deleteImage');
-                    Route::get('/{id}', 'show');
                     Route::post('/{id}/reactions', 'createReaction');
-                    Route::get('/{id}/reactions', 'getReactions');
                     Route::delete('/{id}', 'destroy');
                     Route::delete('/{id}/reactions', 'deleteReaction');
                 });
@@ -149,6 +144,21 @@ use Illuminate\Support\Facades\Route;
             Route::get('/{id}/reactions', 'getReactions');
             //obtener comentarios de un post
             Route::get('/{id}/comments', 'getPostComments');
+        });
+    });
+    //comments
+    Route::prefix('comments')->group(function () {
+        Route::controller(CommentController::class)->group(function () {
+            Route::get('/{id}', 'show');
+            Route::get('/{id}/reactions', 'getReactions');
+            Route::get('/{id}/replaycomments', 'getReplayComments');
+        });
+    });
+    //replay comments
+    Route::prefix('replaycomments')->group(function () {
+        Route::controller(ReplayCommentController::class)->group(function () {
+            Route::get('/{id}', 'show');
+            Route::get('/{id}/reactions', 'getReactions');
         });
     });
 

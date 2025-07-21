@@ -67,7 +67,7 @@ class CommentRepository implements CommentRepositoryInterface
         // Procesar imágenes si se enviaron
         if ($images) {
             // Eliminar imágenes antiguas
-            $this->deleteReplyImages($reply);
+            //$this->deleteReplyImages($reply);
 
             // Subir nuevas imágenes
             $uploadedImages = $this->imageService->uploadImages(

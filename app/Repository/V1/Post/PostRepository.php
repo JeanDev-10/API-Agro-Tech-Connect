@@ -102,7 +102,7 @@ class PostRepository implements PostRepositoryInterface
         // Procesar imágenes si se enviaron
         if ($images) {
             // Eliminar imágenes antiguas
-            $this->deleteOldImages($post);
+            //$this->deleteOldImages($post);
 
             // Subir nuevas imágenes
             $this->attachImagesToPost($post, $images);
@@ -273,7 +273,7 @@ class PostRepository implements PostRepositoryInterface
         if ($images) {
             if($comment->images->isNotEmpty()) {
                 // Eliminar imágenes antiguas en el caso que existan
-                $this->deleteCommentImages($comment);
+                //$this->deleteCommentImages($comment);
             }
             // Subir nuevas imágenes
             $uploadedImages = $this->imageService->uploadImages(

@@ -30,7 +30,7 @@ class PostUpdateTest extends TestCase
 
     public function test_update_post_with_title_and_description_successfully()
     {
-        $response = $this->putJson("/api/v1/posts/{$this->encryptedId}", [
+        $response = $this->postJson("/api/v1/posts/{$this->encryptedId}", [
             'title' => 'Título actualizado',
             'description' => 'Descripción actualizada'
         ]);
@@ -53,7 +53,7 @@ class PostUpdateTest extends TestCase
             UploadedFile::fake()->image('new2.png')
         ];
 
-        $response = $this->putJson("/api/v1/posts/{$this->encryptedId}", [
+        $response = $this->postJson("/api/v1/posts/{$this->encryptedId}", [
             'title' => 'Título con nuevas imágenes',
             'images' => $images
         ]);
@@ -63,7 +63,7 @@ class PostUpdateTest extends TestCase
     }
 
 
-    public function test_update_post_replacing_existing_images()
+    public function test_update_post_add_existing_images()
     {
         // Crear imágenes existentes
         $oldImages = [
@@ -82,7 +82,7 @@ class PostUpdateTest extends TestCase
             UploadedFile::fake()->image('new2.png')
         ];
 
-        $response = $this->putJson("/api/v1/posts/{$this->encryptedId}", [
+        $response = $this->postJson("/api/v1/posts/{$this->encryptedId}", [
             'images' => $newImages
         ]);
 
@@ -94,7 +94,7 @@ class PostUpdateTest extends TestCase
         }
 
         // Verificar que solo existen las nuevas imágenes
-        $this->assertCount(2, $response->json('data.images'));
+        $this->assertCount(4, $response->json('data.images'));
     }
 
 
@@ -104,7 +104,7 @@ class PostUpdateTest extends TestCase
         $otherPost = Post::factory()->create(['user_id' => $otherUser->id]);
         $encryptedOtherId = Crypt::encrypt($otherPost->id);
 
-        $response = $this->putJson("/api/v1/posts/{$encryptedOtherId}", [
+        $response = $this->postJson("/api/v1/posts/{$encryptedOtherId}", [
             'title' => 'Intento de edición no autorizado'
         ]);
 
@@ -115,21 +115,21 @@ class PostUpdateTest extends TestCase
     public function test_validation_errors_on_update()
     {
         // Descripción muy larga
-        $response1 = $this->putJson("/api/v1/posts/{$this->encryptedId}", [
+        $response1 = $this->postJson("/api/v1/posts/{$this->encryptedId}", [
             'description' => str_repeat('a', 251)
         ]);
         $response1->assertStatus(422);
 
         // Imagen muy grande
         $largeImage = UploadedFile::fake()->image('large.jpg')->size(4000);
-        $response2 = $this->putJson("/api/v1/posts/{$this->encryptedId}", [
+        $response2 = $this->postJson("/api/v1/posts/{$this->encryptedId}", [
             'images' => [$largeImage]
         ]);
         $response2->assertStatus(422);
 
         // Demasiadas imágenes
         $manyImages = array_fill(0, 11, UploadedFile::fake()->image('photo.jpg'));
-        $response3 = $this->putJson("/api/v1/posts/{$this->encryptedId}", [
+        $response3 = $this->postJson("/api/v1/posts/{$this->encryptedId}", [
             'images' => $manyImages
         ]);
         $response3->assertStatus(422);
@@ -139,7 +139,7 @@ class PostUpdateTest extends TestCase
     public function test_post_not_found()
     {
         $nonExistentId = Crypt::encrypt(9999);
-        $response = $this->putJson("/api/v1/posts/{$nonExistentId}", [
+        $response = $this->postJson("/api/v1/posts/{$nonExistentId}", [
             'title' => 'Título para post inexistente'
         ]);
 
@@ -150,7 +150,7 @@ class PostUpdateTest extends TestCase
     public function test_invalid_encrypted_id()
     {
         $invalidId = 'invalid-encrypted-string';
-        $response = $this->putJson("/api/v1/posts/{$invalidId}", [
+        $response = $this->postJson("/api/v1/posts/{$invalidId}", [
             'title' => 'Título con ID inválido'
         ]);
 
