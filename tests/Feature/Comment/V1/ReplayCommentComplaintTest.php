@@ -41,7 +41,7 @@ class ReplayCommentComplaintTest extends TestCase
         $this->token = $this->user->createToken('test-token')->plainTextToken;
 
         // crear permiso
-        Permission::create(['name' => 'replyComment.create-complaint']);
+        Permission::firstOrCreate(['name' => 'replyComment.create-complaint']);
         // Asignar permisos al usuario
         $this->user->givePermissionTo('replyComment.create-complaint');
 

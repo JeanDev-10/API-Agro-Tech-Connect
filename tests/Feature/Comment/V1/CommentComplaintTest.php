@@ -43,7 +43,7 @@ class CommentComplaintTest extends TestCase
         $this->token = $this->user->createToken('test-token')->plainTextToken;
 
         // crear permiso
-        Permission::create(['name' => 'comment.create-complaint']);
+        Permission::firstOrCreate(['name' => 'comment.create-complaint']);
         // Asignar permisos al usuario
         $this->user->givePermissionTo('comment.create-complaint');
 

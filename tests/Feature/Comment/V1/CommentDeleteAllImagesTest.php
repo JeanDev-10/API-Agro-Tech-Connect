@@ -7,10 +7,13 @@ use App\Models\V1\Image;
 use App\Models\V1\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CommentDeleteAllImagesTest extends TestCase
 {
+    use RefreshDatabase;
+
     private $user;
     private $comment;
     private $encryptedId;

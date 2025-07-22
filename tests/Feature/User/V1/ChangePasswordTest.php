@@ -13,6 +13,13 @@ use Tests\TestCase;
 class ChangePasswordTest extends TestCase
 {
     use RefreshDatabase;
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Crear todos los permisos necesarios una sola vez
+        Permission::firstOrCreate(['name' => 'user.change-password', 'guard_name' => 'web']);
+    }
 
     protected function createLocalUser($password = 'OldPassword123!')
     {
@@ -24,7 +31,6 @@ class ChangePasswordTest extends TestCase
         ]);
 
         // Crear permiso y asignarlo
-        Permission::create(['name' => 'user.change-password']);
         $user->givePermissionTo('user.change-password');
 
         return $user;
@@ -33,7 +39,7 @@ class ChangePasswordTest extends TestCase
     protected function createSocialUser($provider = 'google')
     {
         return User::factory()->create([
-            'email' => $provider.'@example.com',
+            'email' => $provider . '@example.com',
             'password' => null,
             'registration_method' => $provider,
             'email_verified_at' => now()
@@ -64,9 +70,9 @@ class ChangePasswordTest extends TestCase
         $token = $user->createToken('test-token')->plainTextToken;
 
         $response = $this->withHeaders([
-                'Authorization' => 'Bearer '.$token,
-                'Accept' => 'application/json'
-            ])
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])
             ->putJson('/api/v1/me/password', $this->getValidPayload());
 
         $response->assertStatus(200)
@@ -88,9 +94,9 @@ class ChangePasswordTest extends TestCase
         $payload['password'] = 'WrongPasswo3!';
 
         $response = $this->withHeaders([
-                'Authorization' => 'Bearer '.$token,
-                'Accept' => 'application/json'
-            ])
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])
             ->putJson('/api/v1/me/password', $payload);
 
         $response->assertStatus(422)
@@ -146,9 +152,9 @@ class ChangePasswordTest extends TestCase
 
         foreach ($testCases as $case) {
             $response = $this->withHeaders([
-                    'Authorization' => 'Bearer '.$token,
-                    'Accept' => 'application/json'
-                ])
+                'Authorization' => 'Bearer ' . $token,
+                'Accept' => 'application/json'
+            ])
                 ->putJson('/api/v1/me/password', $case['data']);
 
             $response->assertStatus(422);
@@ -171,9 +177,9 @@ class ChangePasswordTest extends TestCase
         $payload['new_password_confirmation'] = 'OldPassword123!';
 
         $response = $this->withHeaders([
-                'Authorization' => 'Bearer '.$token,
-                'Accept' => 'application/json'
-            ])
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])
             ->putJson('/api/v1/me/password', $payload);
 
         $response->assertStatus(422)
@@ -193,9 +199,9 @@ class ChangePasswordTest extends TestCase
         $token = $socialUser->createToken('social-token')->plainTextToken;
 
         $response = $this->withHeaders([
-                'Authorization' => 'Bearer '.$token,
-                'Accept' => 'application/json'
-            ])
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])
             ->putJson('/api/v1/me/password', $this->getValidPayload());
 
         $response->assertStatus(403); // Forbidden
@@ -216,9 +222,9 @@ class ChangePasswordTest extends TestCase
         $this->app->instance(\App\Repository\V1\User\UserRepository::class, $mock);
 
         $response = $this->withHeaders([
-                'Authorization' => 'Bearer '.$token,
-                'Accept' => 'application/json'
-            ])
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json'
+        ])
             ->putJson('/api/v1/me/password', $this->getValidPayload());
 
         $response->assertStatus(500);

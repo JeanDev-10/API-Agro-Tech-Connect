@@ -9,9 +9,13 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class PostUpdateTest extends TestCase
 {
+    use RefreshDatabase;
+
     private $user;
     private $post;
     private $encryptedId;

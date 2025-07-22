@@ -7,10 +7,13 @@ use App\Models\V1\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PostCreateTest extends TestCase
 {
+    use RefreshDatabase;
+
     private $user;
     protected function setUp(): void
     {
