@@ -24,7 +24,7 @@ class NewPostNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable): MailMessage
     {
-        $url = config('app.frontend_url') . '/post/' . Crypt::encrypt($this->post->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
         return (new MailMessage)
             ->subject('Nueva publicación de ' . $this->post->user->name)
             ->line($this->post->user->name . ' ha publicado algo nuevo:')
@@ -36,7 +36,7 @@ class NewPostNotification extends Notification implements ShouldQueue
 
     public function toArray($notifiable): array
     {
-        $url = config('app.frontend_url') . '/post/' . Crypt::encrypt($this->post->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
         return [
             'message' => $this->post->user->name . ' ha publicado algo nuevo',
             'post_id' => $this->post->id,

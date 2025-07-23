@@ -44,8 +44,9 @@ class NewReactionPostNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $reactionType = $this->reaction->type === 'positivo' ? 'positivo' : 'negativo';
-        $url = config('app.frontend_url') . '/post/' . Crypt::encrypt($this->post->id);
 
+
+        $url = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
         return (new MailMessage)
             ->subject("Tu publicación recibió un $reactionType")
             ->line("Tu publicación " . Str::limit($this->post->title, 30) . " ha recibido un $reactionType.")
@@ -58,7 +59,7 @@ class NewReactionPostNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        $url = config('app.frontend_url') . '/post/' . Crypt::encrypt($this->post->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
         return [
             'type' => 'new_reaction',
             'post_id' => $this->post->id,

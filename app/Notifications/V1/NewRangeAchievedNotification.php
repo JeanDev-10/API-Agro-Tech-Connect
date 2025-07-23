@@ -37,7 +37,7 @@ class NewRangeAchievedNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = config('app.frontend_url') . '/profile/';
+        $url = config('app.frontend_url') . '/menu/perfil';
         return (new MailMessage)
             ->subject("¡Felicidades! Has alcanzado el rango {$this->range->name}")
             ->line("Has alcanzado el rango {$this->range->name} en nuestra comunidad.")
@@ -51,7 +51,7 @@ class NewRangeAchievedNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        $url = config('app.frontend_url') . '/profile/';
+        $url = config('app.frontend_url') . '/menu/perfil';
 
         return [
             'type' => 'new_range',
