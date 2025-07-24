@@ -43,7 +43,7 @@ class NewReactionReplayCommentNotification extends Notification implements Shoul
     public function toMail(object $notifiable): MailMessage
     {
         $reactionType = $this->reaction->type === 'positivo' ? 'positivo' : 'negativo';
-        $url = config('app.frontend_url') . '/replaycomment/' . Crypt::encrypt($this->replayComment->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-respuesta-comentario/' . Crypt::encrypt($this->replayComment->id);
 
         return (new MailMessage)
             ->subject("Tu respuesta recibió un $reactionType")
@@ -57,14 +57,19 @@ class NewReactionReplayCommentNotification extends Notification implements Shoul
      */
     public function toArray(object $notifiable): array
     {
-        $url = config('app.frontend_url') . '/replaycomment/' . Crypt::encrypt($this->replayComment->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-respuesta-comentario/' . Crypt::encrypt($this->replayComment->id);
+        $url_sender_profile = config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reaction->user->id);
         return [
             'type' => 'new_reaction',
             'replaycomment_id' => $this->replayComment->id,
             'reaction_id' => $this->reaction->id,
             'reaction_type' => $this->reaction->type,
-            'replaycomment_title' => Str::limit($this->replayComment->title, 30),
-            'link' => $url,
+            'replaycomment_content' => Str::limit($this->replayComment->comment, 30),
+            'link_replaycomment' => $url,
+            'link_sender_profile' => $url_sender_profile,
+            'sender_name'=>$this->reaction->user->name,
+            'sender_avatar'=>$this->reaction->user->image->url ?? null,
+            'sender_id' => Crypt::encrypt($this->reaction->user->id),
             'message' => "Tu respuesta recibió un {$this->reaction->type}"
         ];
     }

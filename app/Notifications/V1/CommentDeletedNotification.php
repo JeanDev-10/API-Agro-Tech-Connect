@@ -37,7 +37,7 @@ class CommentDeletedNotification extends Notification implements ShouldQueue
     {
         return [
             'message' => "Tu comentario '{$this->comment}' fue eliminado por infringir las normas",
-            'type' => 'post_deleted',
+            'type' => 'deleted_comment',
         ];
     }
 }

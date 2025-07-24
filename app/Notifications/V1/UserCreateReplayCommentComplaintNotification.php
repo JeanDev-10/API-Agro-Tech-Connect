@@ -16,7 +16,9 @@ class UserCreateReplayCommentComplaintNotification extends Notification implemen
     /**
      * Create a new notification instance.
      */
-    public function __construct(public  $complaint, public  $comment, public  $reporter) {}
+    public function __construct(public $complaint, public $comment, public $reporter)
+    {
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -33,7 +35,7 @@ class UserCreateReplayCommentComplaintNotification extends Notification implemen
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = config('app.frontend_url') . '/replaycomment/' . Crypt::encrypt($this->comment->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-respuesta-comentario/' . Crypt::encrypt($this->comment->id);
 
 
         return (new MailMessage)
@@ -47,15 +49,19 @@ class UserCreateReplayCommentComplaintNotification extends Notification implemen
     }
     public function toArray($notifiable): array
     {
-        $url = config('app.frontend_url') . '/replaycomment/' . Crypt::encrypt($this->comment->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-respuesta-comentario/' . Crypt::encrypt($this->comment->id);
+        $url_sender_profile = config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reporter->id);
 
         return [
             'title' => 'Nueva denuncia de respuesta a comentario',
             'message' => 'La respuesta a comentario: "' . Str::limit($this->comment->comment, 30) . '" ha sido denunciada.',
-            'link' => $url,
+            'link_replaycomment' => $url,
             'complaint_id' => $this->complaint->id,
             'replaycomment_id' => $this->comment->id,
-            'user_id' => $this->reporter->id,
+            'link_sender_profile' => $url_sender_profile,
+            'sender_name' => $this->reporter->name,
+            'sender_avatar' => $this->reporter->image->url ?? null,
+            'sender_id' => Crypt::encrypt($this->reporter->id),
             'type' => 'new_complaint_replay_comment'
         ];
     }

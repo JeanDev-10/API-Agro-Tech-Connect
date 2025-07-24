@@ -33,7 +33,7 @@ class UserCreateCommentComplaintNotification extends Notification implements Sho
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = config('app.frontend_url') . '/comment/' . Crypt::encrypt($this->comment->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-comentario/' . Crypt::encrypt($this->comment->id);
 
 
         return (new MailMessage)
@@ -47,15 +47,18 @@ class UserCreateCommentComplaintNotification extends Notification implements Sho
     }
     public function toArray($notifiable): array
     {
-        $url = config('app.frontend_url') . '/comment/' . Crypt::encrypt($this->comment->id);
-
+        $url = config('app.frontend_url') . '/menu/mostrar-comentario/' . Crypt::encrypt($this->comment->id);
+        $url_sender_profile = config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reporter->id);
         return [
             'title' => 'Nueva denuncia de comentario',
             'message' => 'El comentario: "' . Str::limit($this->comment->comment, 30) . '" ha sido denunciada.',
-            'link' => $url,
+            'link_comment' => $url,
             'complaint_id' => $this->complaint->id,
             'comment_id' => $this->comment->id,
-            'user_id' => $this->reporter->id,
+            'link_sender_profile'=>$url_sender_profile,
+            'sender_name'=>$this->reporter->name,
+            'sender_avatar'=>$this->reporter->image->url ?? null,
+            'sender_id' => Crypt::encrypt($this->reporter->id),
             'type' => 'new_complaint_comment'
         ];
     }

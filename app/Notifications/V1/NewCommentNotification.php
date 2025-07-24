@@ -28,25 +28,32 @@ class NewCommentNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        $url = config('app.frontend_url') . '/comment/' . Crypt::encrypt($this->comment->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-comentario/' . Crypt::encrypt($this->comment->id);
         return (new MailMessage)
             ->subject('Nuevo comentario en tu publicación')
             ->line('Tu publicación "' . substr($this->post->title, 0, 100) . '...'  . '" tiene un nuevo comentario de ' . $this->user->name . '.')
-            ->line('Comentario: "' . substr($this->comment->comment, 0, 50) . '...')  
+            ->line('Comentario: "' . substr($this->comment->comment, 0, 50) . '...')
             ->action('Ver comentario', $url)
             ->line('Gracias por usar nuestra aplicación!');
     }
 
     public function toArray($notifiable)
     {
-        $url = config('app.frontend_url') . '/comment/' . Crypt::encrypt($this->comment->id);
+        $url_comment = config('app.frontend_url') . '/menu/mostrar-comentario/' . Crypt::encrypt($this->comment->id);
+        $url_post = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
+        $url_profile_sender=config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->user->id);
         return [
             'post_id' => $this->post->id,
             'post_title' => $this->post->title,
             'comment_id' => $this->comment->id,
             'comment_content' => substr($this->comment->comment, 0, 50) . '...',
             'message' => 'Nuevo comentario en tu publicación: "' . substr($this->post->title, 0, 100) . '...' . ' por ' . $this->user->name,
-            'link'=>$url,
+            'link_comment'=>$url_comment,
+            'link_post'=>$url_post,
+            'link_sender_profile'=>$url_profile_sender,
+            'sender_name'=>$this->user->name,
+            'sender_avatar'=>$this->user->image->url ?? null,
+            'sender_id' => Crypt::encrypt($this->user->id),
             'type' => 'new_comment',
         ];
     }

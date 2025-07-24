@@ -41,7 +41,7 @@ class NewReactionNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $reactionType = $this->reaction->type === 'positivo' ? 'positivo' : 'negativo';
-        $url = config('app.frontend_url') . '/comment/' . Crypt::encrypt($this->comment->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-comentario/' . Crypt::encrypt($this->comment->id);
 
         return (new MailMessage)
             ->subject("Tu comentario recibió un $reactionType")
@@ -55,7 +55,8 @@ class NewReactionNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        $url = config('app.frontend_url') . '/comment/' . Crypt::encrypt($this->comment->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-comentario/' . Crypt::encrypt($this->comment->id);
+        $url_sender_profile= config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reaction->user->id);
 
         return [
             'type' => 'new_reaction',
@@ -64,7 +65,11 @@ class NewReactionNotification extends Notification implements ShouldQueue
             'reaction_type' => $this->reaction->type,
             'post_title' => $this->comment->post->title,
             'comment_content' => $this->comment->comment,
-            'link' => $url,
+            'link_comment' => $url,
+            'link_sender_profile'=>$url_sender_profile,
+            'sender_name'=>$this->reaction->user->name,
+            'sender_avatar'=>$this->reaction->user->image->url ?? null,
+            'sender_id' => Crypt::encrypt($this->reaction->user->id),
             'message' => "Tu comentario recibió un {$this->reaction->type}"
         ];
     }

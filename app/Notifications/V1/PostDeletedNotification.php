@@ -37,7 +37,7 @@ class PostDeletedNotification extends Notification implements ShouldQueue
     {
         return [
             'message' => "Tu publicación '{$this->postTitle}' fue eliminada por infringir las normas",
-            'type' => 'post_deleted',
+            'type' => 'deleted_post',
         ];
     }
 }

@@ -39,15 +39,17 @@ class UserFollowNotification extends Notification implements ShouldQueue
         return [
             'title' => 'Nuevo seguidor',
             'message' => $this->follower->name . ' te ha comenzado a seguir',
-            'follower_id' => Crypt::encrypt($this->follower->id),
-            'url_avatar' => $this->follower->image->url ?? null,
-            'follower_name' => $this->follower->name,
+            'link_sender_profile' => $this->getProfileUrl(),
+            'sender_name' => $this->follower->name,
+            'sender_avatar' => $this->follower->image->url ?? null,
+            'sender_id' => Crypt::encrypt($this->follower->id),
             'type' => 'new_follower'
         ];
     }
 
     protected function getProfileUrl(): string
     {
-        return config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->follower->id); ;
+        return config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->follower->id);
+        ;
     }
 }

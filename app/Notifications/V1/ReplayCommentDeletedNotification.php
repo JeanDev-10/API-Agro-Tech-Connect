@@ -37,7 +37,7 @@ class ReplayCommentDeletedNotification extends Notification implements ShouldQue
     {
         return [
             'message' => "Tu respuesta '{$this->comment}' fue eliminada por infringir las normas",
-            'type' => 'post_deleted',
+            'type' => 'deleted_replay_comment',
         ];
     }
 }

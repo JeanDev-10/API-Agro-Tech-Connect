@@ -16,7 +16,9 @@ class UserCreatePostComplaintNotification extends Notification implements Should
     /**
      * Create a new notification instance.
      */
-    public function __construct(public  $complaint, public  $post, public  $reporter) {}
+    public function __construct(public $complaint, public $post, public $reporter)
+    {
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -33,7 +35,7 @@ class UserCreatePostComplaintNotification extends Notification implements Should
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = config('app.frontend_url') . '/post/' . Crypt::encrypt($this->post->id);
+        $url = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
 
 
         return (new MailMessage)
@@ -47,15 +49,18 @@ class UserCreatePostComplaintNotification extends Notification implements Should
     }
     public function toArray($notifiable): array
     {
-        $url = config('app.frontend_url') . '/post/' . Crypt::encrypt($this->post->id);
-
+        $url = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
+        $url_sender_profile = config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reporter->id);
         return [
             'title' => 'Nueva denuncia de publicación',
             'message' => 'La publicación "' . Str::limit($this->post->title, 30) . '" ha sido denunciada.',
-            'link' => $url,
+            'link_post' => $url,
             'complaint_id' => $this->complaint->id,
             'post_id' => $this->post->id,
-            'user_id' => $this->reporter->id,
+            'link_sender_profile' => $url_sender_profile,
+            'sender_name' => $this->reporter->name,
+            'sender_avatar' => $this->reporter->image->url ?? null,
+            'sender_id' => Crypt::encrypt($this->reporter->id),
             'type' => 'new_complaint_post'
         ];
     }

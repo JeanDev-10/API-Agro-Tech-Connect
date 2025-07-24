@@ -60,13 +60,18 @@ class NewReactionPostNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         $url = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
+        $url_sender_profile = config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reaction->user->id);
         return [
             'type' => 'new_reaction',
             'post_id' => $this->post->id,
             'reaction_id' => $this->reaction->id,
             'reaction_type' => $this->reaction->type,
             'post_title' => Str::limit($this->post->title, 30),
-            'link' => $url,
+            'link_post' => $url,
+            'link_sender_profile' => $url_sender_profile,
+            'sender_name'=>$this->reaction->user->name,
+            'sender_avatar'=>$this->reaction->user->image->url ?? null,
+            'sender_id' => Crypt::encrypt($this->reaction->user->id),
             'message' => "Tu publicación recibió un {$this->reaction->type}"
         ];
     }
