@@ -62,7 +62,7 @@ class UserCreateReplayCommentComplaintNotification extends Notification implemen
             'link_sender_profile' => $url_sender_profile,
             'sender_name' => $this->reporter->name,
             'sender_avatar' => $this->reporter->image->url ?? null,
-            'sender_id' => Crypt::encrypt($this->reporter->id),
+            'sender_id' => $this->reporter->id,
             'type' => 'new_complaint_replay_comment'
         ];
     }

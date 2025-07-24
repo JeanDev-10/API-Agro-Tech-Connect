@@ -60,6 +60,7 @@ class NewReactionReplayCommentNotification extends Notification implements Shoul
         $url = config('app.frontend_url') . '/menu/mostrar-respuesta-comentario/' . Crypt::encrypt($this->replayComment->id);
         $url_sender_profile = config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reaction->user->id);
         return [
+            'title' => 'Alguien reaccionó a tu respuesta',
             'type' => 'new_reaction',
             'replaycomment_id' => $this->replayComment->id,
             'reaction_id' => $this->reaction->id,
@@ -69,7 +70,7 @@ class NewReactionReplayCommentNotification extends Notification implements Shoul
             'link_sender_profile' => $url_sender_profile,
             'sender_name'=>$this->reaction->user->name,
             'sender_avatar'=>$this->reaction->user->image->url ?? null,
-            'sender_id' => Crypt::encrypt($this->reaction->user->id),
+            'sender_id' => $this->reaction->user->id,
             'message' => "Tu respuesta recibió un {$this->reaction->type}"
         ];
     }

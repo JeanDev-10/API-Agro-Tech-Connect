@@ -43,6 +43,7 @@ class NewReplayCommentNotification extends Notification implements ShouldQueue
         $url = config('app.frontend_url') . '/menu/mostrar-respuesta-comentario/' . Crypt::encrypt($this->replayComment->id);
         $url_sender_profile = config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->user->id);
         return [
+            'title' => 'Alguien ha respondido a tu comentario',
             'replaycomment_id' => $this->replayComment->id,
             'comment_content' => $this->comment->comment,
             'comment_id' => $this->comment->id,
@@ -52,7 +53,7 @@ class NewReplayCommentNotification extends Notification implements ShouldQueue
             'link_sender_profile' => $url_sender_profile,
             'sender_name'=>$this->user->name,
             'sender_avatar'=>$this->user->image->url ?? null,
-            'sender_id' => Crypt::encrypt($this->user->id),
+            'sender_id' => $this->user->id,
             'type' => 'new_replay_comment',
         ];
     }

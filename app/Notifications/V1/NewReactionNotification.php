@@ -56,9 +56,10 @@ class NewReactionNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         $url = config('app.frontend_url') . '/menu/mostrar-comentario/' . Crypt::encrypt($this->comment->id);
-        $url_sender_profile= config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reaction->user->id);
+        $url_sender_profile = config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->reaction->user->id);
 
         return [
+            'title' => 'Alguien reaccionó a tu comentario',
             'type' => 'new_reaction',
             'comment_id' => $this->comment->id,
             'reaction_id' => $this->reaction->id,
@@ -66,10 +67,10 @@ class NewReactionNotification extends Notification implements ShouldQueue
             'post_title' => $this->comment->post->title,
             'comment_content' => $this->comment->comment,
             'link_comment' => $url,
-            'link_sender_profile'=>$url_sender_profile,
-            'sender_name'=>$this->reaction->user->name,
-            'sender_avatar'=>$this->reaction->user->image->url ?? null,
-            'sender_id' => Crypt::encrypt($this->reaction->user->id),
+            'link_sender_profile' => $url_sender_profile,
+            'sender_name' => $this->reaction->user->name,
+            'sender_avatar' => $this->reaction->user->image->url ?? null,
+            'sender_id' => $this->reaction->user->id,
             'message' => "Tu comentario recibió un {$this->reaction->type}"
         ];
     }

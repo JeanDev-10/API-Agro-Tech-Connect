@@ -36,6 +36,7 @@ class CommentDeletedNotification extends Notification implements ShouldQueue
     public function toArray($notifiable): array
     {
         return [
+            'title' => 'Comentario eliminado',
             'message' => "Tu comentario '{$this->comment}' fue eliminado por infringir las normas",
             'type' => 'deleted_comment',
         ];

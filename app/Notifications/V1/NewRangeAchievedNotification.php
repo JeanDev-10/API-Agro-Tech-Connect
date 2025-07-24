@@ -54,6 +54,7 @@ class NewRangeAchievedNotification extends Notification implements ShouldQueue
         $url = config('app.frontend_url') . '/menu/perfil';
 
         return [
+            'title' => 'Haz alcanzado un nuevo rango',
             'type' => 'new_range',
             'range_id' => $this->range->id,
             'range_name' => $this->range->name,

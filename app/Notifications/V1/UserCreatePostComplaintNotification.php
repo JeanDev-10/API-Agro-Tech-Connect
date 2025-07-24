@@ -61,7 +61,7 @@ class UserCreatePostComplaintNotification extends Notification implements Should
             'link_sender_profile' => $url_sender_profile,
             'sender_name' => $this->reporter->name,
             'sender_avatar' => $this->reporter->image->url ?? null,
-            'sender_id' => Crypt::encrypt($this->reporter->id),
+            'sender_id' => $this->reporter->id,
             'type' => 'new_complaint_post'
         ];
     }

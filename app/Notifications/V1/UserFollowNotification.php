@@ -42,7 +42,7 @@ class UserFollowNotification extends Notification implements ShouldQueue
             'link_sender_profile' => $this->getProfileUrl(),
             'sender_name' => $this->follower->name,
             'sender_avatar' => $this->follower->image->url ?? null,
-            'sender_id' => Crypt::encrypt($this->follower->id),
+            'sender_id' => $this->follower->id,
             'type' => 'new_follower'
         ];
     }

@@ -43,6 +43,7 @@ class NewCommentNotification extends Notification implements ShouldQueue
         $url_post = config('app.frontend_url') . '/menu/mostrar-publicacion/' . Crypt::encrypt($this->post->id);
         $url_profile_sender=config('app.frontend_url') . '/menu/perfil/' . Crypt::encrypt($this->user->id);
         return [
+            'title' => 'Nuevo comentario en tu publicación',
             'post_id' => $this->post->id,
             'post_title' => $this->post->title,
             'comment_id' => $this->comment->id,
@@ -53,7 +54,7 @@ class NewCommentNotification extends Notification implements ShouldQueue
             'link_sender_profile'=>$url_profile_sender,
             'sender_name'=>$this->user->name,
             'sender_avatar'=>$this->user->image->url ?? null,
-            'sender_id' => Crypt::encrypt($this->user->id),
+            'sender_id' => $this->user->id,
             'type' => 'new_comment',
         ];
     }

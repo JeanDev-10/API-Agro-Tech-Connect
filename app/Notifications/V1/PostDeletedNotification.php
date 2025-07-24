@@ -36,6 +36,7 @@ class PostDeletedNotification extends Notification implements ShouldQueue
     public function toArray($notifiable): array
     {
         return [
+            'title' => 'Publicación eliminada',
             'message' => "Tu publicación '{$this->postTitle}' fue eliminada por infringir las normas",
             'type' => 'deleted_post',
         ];

@@ -36,6 +36,7 @@ class ReplayCommentDeletedNotification extends Notification implements ShouldQue
     public function toArray($notifiable): array
     {
         return [
+            'title' => 'Respuesta a comentario eliminada',
             'message' => "Tu respuesta '{$this->comment}' fue eliminada por infringir las normas",
             'type' => 'deleted_replay_comment',
         ];
