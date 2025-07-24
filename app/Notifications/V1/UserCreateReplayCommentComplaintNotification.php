@@ -57,6 +57,7 @@ class UserCreateReplayCommentComplaintNotification extends Notification implemen
             'message' => 'La respuesta a comentario: "' . Str::limit($this->comment->comment, 30) . '" ha sido denunciada.',
             'link_replaycomment' => $url,
             'complaint_id' => $this->complaint->id,
+            'complaint_description' => $this->complaint->description,
             'replaycomment_id' => $this->comment->id,
             'link_sender_profile' => $url_sender_profile,
             'sender_name' => $this->reporter->name,

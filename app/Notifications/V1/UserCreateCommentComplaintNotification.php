@@ -54,6 +54,7 @@ class UserCreateCommentComplaintNotification extends Notification implements Sho
             'message' => 'El comentario: "' . Str::limit($this->comment->comment, 30) . '" ha sido denunciada.',
             'link_comment' => $url,
             'complaint_id' => $this->complaint->id,
+            'complaint_description' => $this->complaint->description,
             'comment_id' => $this->comment->id,
             'link_sender_profile'=>$url_sender_profile,
             'sender_name'=>$this->reporter->name,
