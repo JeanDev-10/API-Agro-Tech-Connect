@@ -23,8 +23,8 @@ class ReactionResource extends JsonResource
         return [
             'id' => Crypt::encrypt($this->id),
             'type' => $this->type,
-            'created_at' => $this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at??$this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at??$this->updated_at->format('d/m/Y H:i'),
 
             // Relación con usuario
             'user' => new UserResource($this->whenLoaded('user')),

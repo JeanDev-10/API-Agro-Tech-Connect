@@ -28,15 +28,15 @@ class LoginResource extends JsonResource
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at ? $this->email_verified_at->format('d/m/Y H:i') : null,
             'registration_method' => $this->registration_method,
-            'created_at' => $this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at??$this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at??$this->updated_at->format('d/m/Y H:i'),
             'roles' => $this->whenLoaded('roles', function () {
                 return $this->roles->map(function ($role) {
                     return [
                         'id' => $role->id,
                         'name' => $role->name,
-                        'created_at' => $role->created_at->format('d/m/Y H:i'),
-                        'updated_at' => $role->updated_at->format('d/m/Y H:i'),
+                        'created_at' => $role->created_at??$role->created_at->format('d/m/Y H:i'),
+                        'updated_at' => $role->updated_at??$role->updated_at->format('d/m/Y H:i'),
                     ];
                 });
             }),

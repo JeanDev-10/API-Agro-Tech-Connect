@@ -18,8 +18,8 @@ class OldPasswordResource extends JsonResource
     {
         return [
             'id' => Crypt::encrypt($this->id),
-            'created_at' => $this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at??$this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at??$this->updated_at->format('d/m/Y H:i'),
 
             // Relaciones (solo incluidas si están cargadas)
             'user' => new userResource($this->whenLoaded('user')),

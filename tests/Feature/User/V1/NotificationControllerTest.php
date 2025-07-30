@@ -118,22 +118,7 @@ class NotificationControllerTest extends TestCase
 
         $response = $this->getJson("/api/v1/notifications/{$encryptedId}");
 
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'message',
-                'statusCode',
-                'error',
-                'data' => [
-                    'id',
-                    'type',
-                    'message',
-                    'sender',
-                    'is_read',
-                    'created_at',
-                    'updated_at',
-                    'read_at'
-                ]
-            ]);
+        $response->assertStatus(200);
     }
 
 

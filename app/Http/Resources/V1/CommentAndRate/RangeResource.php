@@ -24,8 +24,8 @@ class RangeResource extends JsonResource
             'max_range' => $this->max_range,
             'description' => $this->description,
             'image_url' => $this->image_url,
-            'created_at' => $this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at??$this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at??$this->updated_at->format('d/m/Y H:i'),
 
             // Relaciones
             'users' => UserResource::collection($this->whenLoaded('users')),

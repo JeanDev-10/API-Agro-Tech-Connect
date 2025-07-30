@@ -23,8 +23,8 @@ class FollowResource extends JsonResource
             'followed_id' => Crypt::encrypt($this->followed_id),
             'follower' => new UserResource($this->whenLoaded('follower')),
             'followed' => new UserResource($this->whenLoaded('followed')),
-            'created_at' => $this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at??$this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at??$this->updated_at->format('d/m/Y H:i'),
         ];
     }
 }

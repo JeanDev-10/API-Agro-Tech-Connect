@@ -21,8 +21,8 @@ class CommentResource extends JsonResource
         $baseData = [
             'id' => Crypt::encrypt($this->id),
             'comment' => $this->comment,
-            'created_at' => $this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at ?? $this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at ?? $this->updated_at->format('d/m/Y H:i'),
 
             // Relaciones principales
             'user' => new UserResource($this->whenLoaded('user')),

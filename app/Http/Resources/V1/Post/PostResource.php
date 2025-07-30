@@ -25,8 +25,8 @@ class PostResource extends JsonResource
             'id' => Crypt::encrypt($this->id),
             'title' => $this->title, // Ya aplica Str::ucfirst via accessor
             'description' => $this->description, // Ya aplica Str::ucfirst via accessor
-            'created_at' => $this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at ?? $this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at ?? $this->updated_at->format('d/m/Y H:i'),
 
             // Relaciones principales
             'positive_reactions_count' => $this->positiveReactions()->count(),
