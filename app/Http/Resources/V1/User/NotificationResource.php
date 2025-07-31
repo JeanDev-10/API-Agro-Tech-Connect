@@ -15,8 +15,8 @@ class NotificationResource extends JsonResource
             'message' => $this->data['message'] ?? '',
             'data'=>$this->data,
             'is_read' => $this->read_at !== null,
-            'created_at' => $this->created_at??$this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at??$this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
             'read_at' => $this->read_at?->format('d/m/Y H:i'),
         ];
     }

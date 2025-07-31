@@ -28,8 +28,8 @@ class ImageResource extends JsonResource
             'url' => $this->url,
             'imageable_type' => $this->imageable_type,
             'imageable' => $imageableResource,
-            'created_at' => $this->created_at??$this->created_at->format('d/m/Y H:i'),
-            'updated_at' => $this->updated_at??$this->updated_at->format('d/m/Y H:i'),
+            'created_at' => $this->created_at->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at->format('d/m/Y H:i'),
         ];
     }
 
