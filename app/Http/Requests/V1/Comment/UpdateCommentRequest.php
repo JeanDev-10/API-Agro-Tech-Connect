@@ -19,7 +19,7 @@ class UpdateCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'comment' => 'sometimes|string|max:100',
+            'comment' => 'sometimes|string|max:1000',
             'images' => 'sometimes|array|max:5',
             'images.*' => [
                 'image',

@@ -29,7 +29,7 @@ class CreateCommentTest extends TestCase
         $this->actingAs($this->user);
     }
 
-   
+
     public function test_create_comment_with_text_only_successfully()
     {
         $response = $this->postJson("/api/v1/posts/{$this->encryptedId}/comments", [
@@ -39,7 +39,7 @@ class CreateCommentTest extends TestCase
         $response->assertStatus(201);
     }
 
-   
+
     public function test_create_comment_with_images_successfully()
     {
         $images = [
@@ -56,7 +56,7 @@ class CreateCommentTest extends TestCase
         $this->assertCount(2, $response->json('data.images'));
     }
 
-   
+
     public function test_fails_when_comment_images_exceed_max_size()
     {
         $largeImage = UploadedFile::fake()->image('large.jpg')->size(4000); // 4MB
@@ -69,7 +69,7 @@ class CreateCommentTest extends TestCase
         $response->assertStatus(422);
     }
 
-   
+
     public function test_fails_with_invalid_comment_image_format()
     {
         $invalidFile = UploadedFile::fake()->create('document.pdf', 1000);
@@ -82,7 +82,7 @@ class CreateCommentTest extends TestCase
         $response->assertStatus(422);
     }
 
-   
+
     public function test_fails_when_uploading_more_than_5_images()
     {
         $images = [];
@@ -98,7 +98,7 @@ class CreateCommentTest extends TestCase
         $response->assertStatus(422);
     }
 
-   
+
     public function test_comment_validation_errors()
     {
         // Caso 1: Falta comentario
@@ -107,16 +107,16 @@ class CreateCommentTest extends TestCase
 
         // Caso 2: Comentario muy largo
         $response2 = $this->postJson("/api/v1/posts/{$this->encryptedId}/comments", [
-            'comment' => str_repeat('a', 101)
+            'comment' => str_repeat('a', 1001)
         ]);
         $response2->assertStatus(422);
     }
 
-   
+
     public function test_fails_when_post_not_found()
     {
         $nonExistentId = encrypt(999999);
-        
+
         $response = $this->postJson("/api/v1/posts/{$nonExistentId}/comments", [
             'comment' => 'Comentario en post inexistente'
         ]);
@@ -124,11 +124,11 @@ class CreateCommentTest extends TestCase
         $response->assertStatus(404);
     }
 
-   
+
     public function test_fails_with_tampered_id()
     {
         $tamperedId = 'invalid_encrypted_string';
-        
+
         $response = $this->postJson("/api/v1/posts/{$tamperedId}/comments", [
             'comment' => 'Comentario con ID alterado'
         ]);

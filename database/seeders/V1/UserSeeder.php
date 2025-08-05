@@ -13,11 +13,11 @@ class UserSeeder extends Seeder
     {
         // Usuario admin
         $admin = User::create([
-            'name' => 'Admin',
-            'lastname' => 'System',
-            'username' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('Admin123@'),
+            'name' => "Frowen",
+            'lastname' => 'Sacón',
+            'username' => 'FrowenS10',
+            'email' => "agrotechconnect@gmail.com",
+            'password' => bcrypt("R7pwA3vLz!9eQ"),
             'registration_method' => 'local',
             'email_verified_at' => now(),
         ]);
@@ -33,9 +33,9 @@ class UserSeeder extends Seeder
         Permission::firstOrCreate(["name" => "replyComment.create-complaint"]);
         Permission::firstOrCreate(["name" => "admin.delete-account"]);
         $admin->assignRole("admin");
-        $admin_role->syncPermissions(['user.change-password','user.upload-avatar','admin.delete-account']);
-        $client_role->syncPermissions(['user.change-password', 'user.upload-avatar','post.create-complaint','comment.create-complaint','replyComment.create-complaint','user.delete-account']);
-        $client_role_social->syncPermissions(['user.delete-account-social','post.create-complaint','comment.create-complaint','replyComment.create-complaint']);
+        $admin_role->syncPermissions(['user.change-password', 'user.upload-avatar', 'admin.delete-account']);
+        $client_role->syncPermissions(['user.change-password', 'user.upload-avatar', 'post.create-complaint', 'comment.create-complaint', 'replyComment.create-complaint', 'user.delete-account']);
+        $client_role_social->syncPermissions(['user.delete-account-social', 'post.create-complaint', 'comment.create-complaint', 'replyComment.create-complaint']);
 
         User::factory()->count(50)->create()->each(function ($user) {
             if ($user->registration_method == 'local')

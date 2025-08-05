@@ -120,7 +120,7 @@ class PostUpdateTest extends TestCase
     {
         // Descripción muy larga
         $response1 = $this->postJson("/api/v1/posts/{$this->encryptedId}", [
-            'description' => str_repeat('a', 251)
+            'description' => str_repeat('a', 3001)
         ]);
         $response1->assertStatus(422);
 

@@ -119,7 +119,7 @@ class PostCreateTest extends TestCase
         // Caso 2: Descripción muy larga
         $response2 = $this->postJson('/api/v1/posts', [
             'title' => 'Título',
-            'description' => str_repeat('a', 251)
+            'description' => str_repeat('a', 3001)
         ]);
         $response2->assertStatus(422);
     }

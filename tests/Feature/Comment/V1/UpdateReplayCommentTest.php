@@ -136,7 +136,7 @@ class UpdateReplayCommentTest extends TestCase
         // Respuesta muy larga
         $response1 = $this->postJson(
             "/api/v1/posts/{$this->encryptedPostId}/replaycomments/{$this->encryptedReplyId}",
-            ['comment' => str_repeat('a', 101)]
+            ['comment' => str_repeat('a', 1001)]
         );
         $response1->assertStatus(422);
 

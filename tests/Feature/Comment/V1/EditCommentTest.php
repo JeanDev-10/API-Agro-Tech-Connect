@@ -126,7 +126,7 @@ class EditCommentTest extends TestCase
     {
         // Comentario muy largo
         $response1 = $this->postJson("/api/v1/posts/{$this->encryptedPostId}/comments/{$this->encryptedCommentId}", [
-            'comment' => str_repeat('a', 101)
+            'comment' => str_repeat('a', 1001)
         ]);
         $response1->assertStatus(422);
 
