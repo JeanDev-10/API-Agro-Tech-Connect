@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
             'name' => "Frowen",
             'lastname' => 'Sacón',
             'username' => 'FrowenS10',
-            'email' => "agrotechconnect@gmail.com",
+            'email' => "agrotechconnect2025@gmail.com",
             'password' => bcrypt("R7pwA3vLz!9eQ"),
             'registration_method' => 'local',
             'email_verified_at' => now(),

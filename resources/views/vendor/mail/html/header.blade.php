@@ -5,7 +5,8 @@
 @if (trim($slot) === 'Laravel')
 <img src="https://laravel.com/img/notification-logo.png" class="logo" alt="Laravel Logo">
 @else
-<img src="{{ asset('assets/logo_agrotechconnectsinlienzosobrante.png') }}" class="logo" alt="Agro Tech Connect Logo">
+<img src="https://i.ibb.co/TBqsQnFM/logo-agrotechconnectsinlienzosobrante.png" class="logo" alt="Agro Tech Connect Logo">
+{{-- <img src="{{ asset('assets/logo_agrotechconnectsinlienzosobrante.png') }}" class="logo" alt="Agro Tech Connect Logo"> --}}
 @endif
 </a>
 </td>
