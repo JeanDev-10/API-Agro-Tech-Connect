@@ -27,17 +27,17 @@ class DatabaseSeeder extends Seeder
 
         //call a seeder
         $this->call(UserSeeder::class);
-        $this->call(UserInformationSeeder::class);
-        $this->call(RangeSeeder::class);
-        $this->call(RangeUserSeeder::class);
-        $this->call(OldPasswordSeeder::class);
-        $this->call(FollowSeeder::class);
-        $this->call(PostSeeder::class);
-        $this->call(CommentSeeder::class);
-        $this->call(ReplayCommentSeeder::class);
-        $this->call(ImageSeeder::class);
-        $this->call(ReactionSeeder::class);
-        $this->call(ComplaintSeeder::class);
+        //$this->call(UserInformationSeeder::class);
+        //$this->call(RangeSeeder::class);
+        //$this->call(RangeUserSeeder::class);
+        //$this->call(OldPasswordSeeder::class);
+        //$this->call(FollowSeeder::class);
+        //$this->call(PostSeeder::class);
+        //$this->call(CommentSeeder::class);
+        //$this->call(ReplayCommentSeeder::class);
+        //$this->call(ImageSeeder::class);
+        //$this->call(ReactionSeeder::class);
+        //$this->call(ComplaintSeeder::class);
 
     }
 }
