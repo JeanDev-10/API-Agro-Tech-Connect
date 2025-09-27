@@ -29,7 +29,7 @@ class RegisterAuthRequest extends FormRequest
             'name' => 'required|string|min:3|max:20',
             'lastname' => 'required|string|min:3|max:20',
             'username' => 'required|string|min:3|max:10|unique:users,username',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'email' => 'required|string|email|max:255',
             'password' => [
                 'required',
                 'string',
@@ -49,5 +49,5 @@ class RegisterAuthRequest extends FormRequest
         throw new HttpResponseException(
             ApiResponse::error('Error de validación',422,$errors)
         );
-    } 
+    }
 }
