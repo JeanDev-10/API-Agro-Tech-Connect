@@ -19,8 +19,11 @@
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
+        "mailgun/mailgun-php": "^4.3",
         "predis/predis": "^3.2",
-        "spatie/laravel-permission": "^6.16"
+        "spatie/laravel-permission": "^6.16",
+        "symfony/http-client": "^7.3",
+        "symfony/mailgun-mailer": "^7.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
