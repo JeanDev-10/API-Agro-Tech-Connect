@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests\V1\Auth;
-
+use Illuminate\Validation\Rule;
 use App\Http\Responses\V1\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -29,7 +29,15 @@ class RegisterAuthRequest extends FormRequest
             'name' => 'required|string|min:3|max:20',
             'lastname' => 'required|string|min:3|max:20',
             'username' => 'required|string|min:3|max:10|unique:users,username',
-            'email' => 'required|string|email|max:255',
+            'email' => [
+            'required',
+            'string',
+            'email',
+            'max:255',
+            Rule::unique('users', 'email')->where(function ($query) {
+                    return $query->where('registration_method', 'local');
+                }),
+            ],
             'password' => [
                 'required',
                 'string',
