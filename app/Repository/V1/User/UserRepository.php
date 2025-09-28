@@ -49,7 +49,7 @@ class UserRepository implements UserRepositoryInterface
         // Eliminar tokens
         $userData = $user->replicate();
         $userData->setHidden([]);
-        if ($user->image()->exists()) {
+        if ($user->image()->exists() && $user->registration_method == 'local') {
             $fileDeleted = $this->imageService->deleteImage($user->image->image_Uuid);
             if (!$fileDeleted) {
                 throw new Exception("No se pudo eliminar el archivo físico del avatar");

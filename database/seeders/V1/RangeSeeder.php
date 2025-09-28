@@ -45,7 +45,7 @@ class RangeSeeder extends Seeder
                 'min_range' => 1000,
                 'max_range' => 2499,
                 'description' => 'Tus aportes son reconocidos y respetados por la comunidad.',
-                'image_url' => $this->getImageUrl('veterano.png')
+                'image_url' => $this->getImageUrl('experto.png')
             ],
             [
                 'name' => 'Experto',
@@ -59,14 +59,14 @@ class RangeSeeder extends Seeder
                 'min_range' => 5000,
                 'max_range' => 9999,
                 'description' => 'Tus comentarios son referencia para otros usuarios.',
-                'image_url' => $this->getImageUrl('maestro.png')
+                'image_url' => $this->getImageUrl('experto.png')
             ],
             [
                 'name' => 'Gran Maestro',
                 'min_range' => 10000,
                 'max_range' => 24999,
                 'description' => 'Eres un pilar de la comunidad. ¡Tu experiencia es invaluable!',
-                'image_url' => $this->getImageUrl('gran_maestro.png')
+                'image_url' => $this->getImageUrl('experto.png')
             ],
             [
                 'name' => 'Leyenda',

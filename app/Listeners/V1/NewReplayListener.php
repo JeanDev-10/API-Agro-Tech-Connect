@@ -18,7 +18,6 @@ class NewReplayListener
         if (!$this->shouldNotify($event->replier, $event->parentComment->user)) {
             return; // No enviar notificación si el usuario es el mismo
         }
-         $
         $event->parentComment->user->notify(new NewReplayCommentNotification($event->reply, $event->parentComment,$event->replier));
     }
 }
