@@ -2,17 +2,15 @@
 
 namespace App\Providers;
 
-use App\Models\V1\Post;
-use App\Policies\V1\PostPolicy;
-use App\Providers\V1\RepositoryServiceProvider;
+use App\Interfaces\V1\Images\ImageServiceInterface;
+use App\Services\V1\ImageServiceCloudinary;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
+        $this->app->bind(ImageServiceInterface::class, ImageServiceCloudinary::class);
     }
 
     /**

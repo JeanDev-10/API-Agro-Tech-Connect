@@ -17,7 +17,7 @@ use App\Http\Middleware\V1\ThrottleVerificationEmails;
 use Illuminate\Support\Facades\Route;
 
 // 50 peticiones por minuto maximo
- //Route::middleware('throttle:50,1')->group(function () {
+ Route::middleware('throttle:50,1')->group(function () {
     Route::group(['middleware' => ["auth:sanctum"]], function () {
 
         Route::controller(AuthController::class)->group(function () {
@@ -162,4 +162,4 @@ use Illuminate\Support\Facades\Route;
         });
     });
 
- //});
+ });

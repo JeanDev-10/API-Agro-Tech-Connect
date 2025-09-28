@@ -13,6 +13,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "cloudinary-labs/cloudinary-laravel": "^3.0",
         "dedoc/scramble": "^0.12.16",
         "kreait/firebase-php": "^7.18",
         "laravel-lang/common": "^6.7",

@@ -36,6 +36,9 @@ php artisan key:generate
 # Levantar los contenedores con Docker
 ./vendor/bin/sail up -d
 
+#levantar solo mysql redis mailpit
+./vendor/bin/sail up -d mysql redis mailpit
+
 # Ejecutar migraciones y seeders
 ./vendor/bin/sail artisan migrate --seed
 

@@ -4,6 +4,7 @@ namespace App\Repository\V1\User;
 
 use App\Events\V1\UserChangePasswordEvent;
 use App\Events\V1\UserDeletedAccountEvent;
+use App\Interfaces\V1\Images\ImageServiceInterface;
 use App\Interfaces\V1\User\UserRepositoryInterface;
 use App\Models\V1\Post;
 use App\Services\V1\ImageService;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class UserRepository implements UserRepositoryInterface
 {
 
-    public function __construct(private readonly ImageService $imageService) {}
+    public function __construct(private readonly ImageServiceInterface $imageService) {}
     public function changePassword($user, Request $request)
     {
         $user->password = bcrypt($request->new_password);
@@ -49,10 +50,12 @@ class UserRepository implements UserRepositoryInterface
         // Eliminar tokens
         $userData = $user->replicate();
         $userData->setHidden([]);
-        if ($user->image()->exists() && $user->registration_method == 'local') {
-            $fileDeleted = $this->imageService->deleteImage($user->image->image_Uuid);
-            if (!$fileDeleted) {
-                throw new Exception("No se pudo eliminar el archivo físico del avatar");
+        if ($user->image()->exists()) {
+            if($user->registration_method == 'local'){
+                $fileDeleted = $this->imageService->deleteImage($user->image->image_Uuid);
+                if (!$fileDeleted) {
+                    throw new Exception("No se pudo eliminar el archivo físico del avatar");
+                }
             }
             $user->image()->delete();
         }
