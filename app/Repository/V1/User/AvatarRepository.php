@@ -11,7 +11,7 @@ use Exception;
 
 class AvatarRepository implements AvatarRepositoryInterface
 {
-    protected string $folder = 'Agro Tech Connect/avatars';
+    protected string $folder = 'agrotechconnect/avatars';
 
     public function __construct(private ImageServiceInterface $imageService)
     {

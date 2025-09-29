@@ -44,7 +44,7 @@ class CommentRepository implements CommentRepositoryInterface
         if ($images && count($images) > 0) {
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
-                'Agro Tech Connect/comments/replies/images'
+                'agrotechconnect/comments/replies/images'
             );
 
             foreach ($uploadedImages as $image) {
@@ -72,7 +72,7 @@ class CommentRepository implements CommentRepositoryInterface
             // Subir nuevas imágenes
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
-                'Agro Tech Connect/comments/replies/images'
+                'agrotechconnect/comments/replies/images'
             );
 
             foreach ($uploadedImages as $image) {

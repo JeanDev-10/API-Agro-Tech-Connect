@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\V1\Images\ImageServiceInterface;
+use App\Services\V1\ImageService;
 use App\Services\V1\ImageServiceCloudinary;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;

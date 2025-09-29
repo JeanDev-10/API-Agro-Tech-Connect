@@ -76,7 +76,7 @@ class PostRepository implements PostRepositoryInterface
     {
         $uploadedImages = $this->imageService->uploadImages(
             $images,
-            'Agro Tech Connect/posts/images'
+            'agrotechconnect/posts/images'
         );
 
         foreach ($uploadedImages as $image) {
@@ -249,7 +249,7 @@ class PostRepository implements PostRepositoryInterface
         if ($images && count($images) > 0) {
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
-                'Agro Tech Connect/comments/images'
+                'agrotechconnect/comments/images'
             );
 
             foreach ($uploadedImages as $image) {
@@ -279,7 +279,7 @@ class PostRepository implements PostRepositoryInterface
             // Subir nuevas imágenes
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
-                'Agro Tech Connect/comments/images'
+                'agrotechconnect/comments/images'
             );
             foreach ($uploadedImages as $image) {
                 $comment->images()->create([
