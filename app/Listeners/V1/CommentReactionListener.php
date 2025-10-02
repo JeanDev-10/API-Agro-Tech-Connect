@@ -6,14 +6,20 @@ use App\Events\V1\CommentReactionEvent;
 use App\Models\V1\Range;
 use App\Notifications\V1\NewReactionNotification;
 use App\Notifications\V1\NewRangeAchievedNotification;
+use App\Traits\V1\SkipsSelfNotification;
 
 class CommentReactionListener
 {
+    use SkipsSelfNotification; //trait para evitar notificaciones a uno mismo
+
     /**
      * Handle the event.
      */
     public function handle(CommentReactionEvent $event): void
     {
+        if (!$this->shouldNotify($event->reaction->user, $event->comment->user)) {
+            return; // No enviar notificación si el usuario es el mismo
+        }
         // Notificar al dueño del comentario sobre la nueva reacción
         $event->comment->user->notify(
             new NewReactionNotification($event->comment, $event->reaction)

@@ -4,16 +4,16 @@ namespace App\Repository\V1\Comment;
 
 use App\Events\V1\CommentReactionEvent;
 use App\Interfaces\V1\Comment\CommentRepositoryInterface;
+use App\Interfaces\V1\Images\ImageServiceInterface;
 use App\Models\V1\Comment;
 use App\Models\V1\ReplayComment;
-use App\Services\V1\ImageService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CommentRepository implements CommentRepositoryInterface
 {
     public function __construct(
-        protected ImageService $imageService,
+        protected ImageServiceInterface $imageService,
     ) {}
     public function getReplayComments(Comment $comment)
     {
@@ -44,7 +44,7 @@ class CommentRepository implements CommentRepositoryInterface
         if ($images && count($images) > 0) {
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
-                'comments/replies/images'
+                'agrotechconnect/comments/replies/images'
             );
 
             foreach ($uploadedImages as $image) {
@@ -72,7 +72,7 @@ class CommentRepository implements CommentRepositoryInterface
             // Subir nuevas imágenes
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
-                'comments/replies/images'
+                'agrotechconnect/comments/replies/images'
             );
 
             foreach ($uploadedImages as $image) {

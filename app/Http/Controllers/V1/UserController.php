@@ -11,6 +11,7 @@ use App\Models\V1\User;
 use App\Repository\V1\Auth\AuthRepository;
 use App\Repository\V1\User\UserRepository;
 use Exception;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -26,6 +27,7 @@ class UserController extends Controller
             DB::beginTransaction();
             $user = $this->authRepository->userLoggedIn();
             $this->userRepository->changePassword($user, $request);
+            event(new PasswordReset($user));
             DB::commit();
             return ApiResponse::success(
                 'Contraseña actualizada correctamente',

@@ -13,13 +13,18 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "cloudinary-labs/cloudinary-laravel": "^3.0",
         "dedoc/scramble": "^0.12.16",
         "kreait/firebase-php": "^7.18",
         "laravel-lang/common": "^6.7",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "spatie/laravel-permission": "^6.16"
+        "mailgun/mailgun-php": "^4.3",
+        "predis/predis": "^3.2",
+        "spatie/laravel-permission": "^6.16",
+        "symfony/http-client": "^7.3",
+        "symfony/mailgun-mailer": "^7.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

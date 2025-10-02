@@ -2,11 +2,12 @@
 
 namespace App\Services\V1;
 
+use App\Interfaces\V1\Images\ImageServiceInterface;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class ImageService
+class ImageService implements ImageServiceInterface
 {
     /**
      * Sube una o varias imágenes al almacenamiento local
