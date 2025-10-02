@@ -20,7 +20,7 @@ class ComplaintController extends Controller
 {
 
     public function __construct(private ComplaintRepository $complaintRepository, private AuthRepository $authRepository) {}
-    
+
 
 
 
@@ -35,6 +35,10 @@ class ComplaintController extends Controller
             $post = Post::find(Crypt::decrypt($id));
             if(!$post) {
                 return ApiResponse::error('La publicación no existe', 404);
+            }
+            // Validar que el usuario no se denuncie a sí mismo
+            if ($post->user_id == $user->id) {
+                return ApiResponse::error('No puedes denunciar tu propia publicación', 422);
             }
             // Verificar límite de denuncias
             if ($this->complaintRepository->hasReachedComplaintLimit($user, $post)) {
@@ -70,6 +74,10 @@ class ComplaintController extends Controller
             if(!$comment) {
                 return ApiResponse::error('El comentario no existe', 404);
             }
+            // Validar que el usuario no se denuncie a sí mismo
+            if ($comment->user_id == $user->id) {
+                return ApiResponse::error('No puedes denunciar tu propio comentario', 422);
+            }
             // Verificar límite de denuncias
             if ($this->complaintRepository->hasReachedComplaintLimitComment($user, $comment)) {
                 return ApiResponse::error('Has alcanzado el límite de denuncias para este comentario', 422);
@@ -104,6 +112,10 @@ class ComplaintController extends Controller
             if(!$comment) {
                 return ApiResponse::error('La respuesta a comentario no existe', 404);
             }
+            // Validar que el usuario no se denuncie a sí mismo
+            if ($comment->user_id == $user->id) {
+                return ApiResponse::error('No puedes denunciar tu propia respuesta a comentario', 422);
+            }
             // Verificar límite de denuncias
             if ($this->complaintRepository->hasReachedComplaintLimitReplayComment($user, $comment)) {
                 return ApiResponse::error('Has alcanzado el límite de denuncias para esta respuesta a comentario', 422);
@@ -130,5 +142,5 @@ class ComplaintController extends Controller
         }
     }
 
-    
+
 }

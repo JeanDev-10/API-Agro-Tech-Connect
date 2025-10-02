@@ -5,6 +5,7 @@ namespace App\Repository\V1\Post;
 use App\Events\V1\NewPostEvent;
 use App\Events\V1\PostReactionEvent;
 use App\Http\Responses\V1\ApiResponse;
+use App\Interfaces\V1\Images\ImageServiceInterface;
 use App\Interfaces\V1\Post\PostRepositoryInterface;
 use App\Models\V1\Comment;
 use App\Models\V1\Post;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class PostRepository implements PostRepositoryInterface
 {
     public function __construct(
-        protected ImageService $imageService,
+        protected ImageServiceInterface $imageService,
         protected AuthRepository $authRepository
     ) {}
     public function index($filters)
@@ -75,7 +76,7 @@ class PostRepository implements PostRepositoryInterface
     {
         $uploadedImages = $this->imageService->uploadImages(
             $images,
-            'posts/images'
+            'agrotechconnect/posts/images'
         );
 
         foreach ($uploadedImages as $image) {
@@ -248,7 +249,7 @@ class PostRepository implements PostRepositoryInterface
         if ($images && count($images) > 0) {
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
-                'comments/images'
+                'agrotechconnect/comments/images'
             );
 
             foreach ($uploadedImages as $image) {
@@ -278,7 +279,7 @@ class PostRepository implements PostRepositoryInterface
             // Subir nuevas imágenes
             $uploadedImages = $this->imageService->uploadImages(
                 $images,
-                'comments/images'
+                'agrotechconnect/comments/images'
             );
             foreach ($uploadedImages as $image) {
                 $comment->images()->create([

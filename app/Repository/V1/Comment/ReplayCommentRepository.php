@@ -4,6 +4,7 @@ namespace App\Repository\V1\Comment;
 
 use App\Events\V1\ReplayCommentReactionEvent;
 use App\Interfaces\V1\Comment\ReplayCommentRepositoryInterface;
+use App\Interfaces\V1\Images\ImageServiceInterface;
 use App\Models\V1\ReplayComment;
 use App\Services\V1\ImageService;
 use Exception;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ReplayCommentRepository implements ReplayCommentRepositoryInterface
 {
     public function __construct(
-        protected ImageService $imageService,
+        protected ImageServiceInterface $imageService,
     ) {}
     public function show($comment)
     {

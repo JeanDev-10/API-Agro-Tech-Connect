@@ -2,6 +2,7 @@
 
 namespace App\Repository\V1\User;
 
+use App\Interfaces\V1\Images\ImageServiceInterface;
 use App\Interfaces\V1\User\AvatarRepositoryInterface;
 use App\Models\V1\Image;
 use App\Models\V1\User;
@@ -10,9 +11,9 @@ use Exception;
 
 class AvatarRepository implements AvatarRepositoryInterface
 {
-    protected string $folder = 'avatars';
+    protected string $folder = 'agrotechconnect/avatars';
 
-    public function __construct(private ImageService $imageService)
+    public function __construct(private ImageServiceInterface $imageService)
     {
     }
 
